@@ -1,0 +1,3 @@
+festival_guest_homepage:
+    pattern:  /hello/{name}
+    defaults: { _controller: FestivalGuestBundle:Default:index }

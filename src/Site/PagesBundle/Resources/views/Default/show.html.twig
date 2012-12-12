@@ -1,0 +1,17 @@
+{% extends "SitePagesBundle::layout.html.twig" %}
+
+{% block title pages.title ~ " - Madkim Madencilik" %}
+
+{% block content_header '' %}
+
+{% block content %}
+
+{% if pages.id is defined  %}
+
+        <h1>{{ pages.title }}</h1>
+        <p>{{ pages.content }}</p>
+    {% else %}
+        <li>No page found</li>
+{% endif %}
+{% endblock %}
+

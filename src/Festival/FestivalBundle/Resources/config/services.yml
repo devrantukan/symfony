@@ -1,0 +1,7 @@
+parameters:
+#    festival_festival.example.class: Festival\FestivalBundle\Example
+
+services:
+#    festival_festival.example:
+#        class: %festival_festival.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database name="default" namespace="Festival\FestivalBundle\Model" defaultIdMethod="native">
+    <table name="festival">
+        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
+        <column name="title" type="varchar" primaryString="true" size="100" />
+	<column name="slug" type="varchar" primaryString="true" size="100" />
+        <column name="desc" type="longvarchar" />
+	<column name="lang" type="varchar" primaryString="true" size="2" />
+        <column name="start" type="date" />
+        <column name="end" type="date" />
+        <column name="lat" type="decimal" />
+        <column name="lon" type="decimal" />
+        <column name="official_site_url" type="varchar" primaryString="true" size="100" /> 
+        <column name="facebook_url" type="varchar" primaryString="true" size="100" />
+        <column name="twitter_url" type="varchar" primaryString="true" size="100" />
+        <column name="youtube_url" type="varchar" primaryString="true" size="100" />
+        <column name="wikipedia_url" type="varchar" primaryString="true" size="100" />
+        <column name="rss_url" type="varchar" primaryString="true" size="100" />
+        <column name="country" type="varchar" primaryString="true" size="100" />
+        <column name="location" type="varchar" primaryString="true" size="100" />                
+    </table>
+</database>

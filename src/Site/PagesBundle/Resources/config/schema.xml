@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database name="default" namespace="Site\PagesBundle\Model" defaultIdMethod="native">
+    <table name="pages">
+        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
+		<column name="master_id" type="integer" required="true" />
+        <column name="title" type="varchar" primaryString="true" size="100" />
+		<column name="slug" type="varchar" primaryString="true" size="100" />
+        <column name="content" type="longvarchar" />
+		<column name="lang" type="varchar" primaryString="true" size="2" />
+		<column name="images" type="longvarchar" />
+		<column name="meta_keywords" type="longvarchar" />
+		<column name="meta_description" type="longvarchar" />
+    </table>
+</database>

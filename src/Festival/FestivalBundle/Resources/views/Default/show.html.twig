@@ -1,0 +1,26 @@
+{% extends "FestivalFestivalBundle::layout.html.twig" %}
+
+{% block title festival.title  %}
+
+{% block content_header '' %}
+
+{% block content %}
+{% if festival.id is defined  %}
+        <li>{{ festival.title }}</li>
+        <li>{{ festival.desc }}</li>
+        <li>{{ festival.start|date('d/m/Y') }}-{{ festival.end|date('d/m/Y') }}</li>
+        <li>{{ festival.lat }}</li>
+        <li>{{ festival.lon }}</li>
+        <li><a href="{{ festival.officialSiteUrl }}">{{ festival.officialSiteUrl }}</a></li>
+        <li>{{ festival.facebookUrl }}</li>
+        <li>{{ festival.twitterUrl }}</li>
+        <li>{{ festival.youtubeUrl }}</li>
+        <li>{{ festival.wikipediaUrl }}</li>
+        <li>{{ festival.rssUrl }}</li>
+        <li>{{ festival.country }}</li>
+        <li>{{ festival.location }}</li>
+    {% else %}
+        <li>No festival found</li>
+{% endif %}
+{% endblock %}
+

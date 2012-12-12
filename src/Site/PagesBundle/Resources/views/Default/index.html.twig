@@ -1,0 +1,8 @@
+<div class="one-third column feature">
+						<h2>İlanlar</h2>
+						{% for ilan in ilanlar %}
+         					<li>{{ ilan }}</li>
+    					{% else %}
+      						  <li>No festivals found</li>
+						{% endfor %}
+</div>

@@ -1,0 +1,20 @@
+site_pages:
+    resource: "@SitePagesBundle/Resources/config/routing.yml"
+    prefix:   /
+
+festival_festival:
+    resource: "@FestivalFestivalBundle/Resources/config/routing.yml"
+    prefix:   /
+
+festival_guest:
+    resource: "@FestivalGuestBundle/Resources/config/routing.yml"
+    prefix:   /
+
+festival_user:
+    resource: "@FestivalUserBundle/Resources/config/routing.yml"
+    prefix:   /
+
+# Internal routing configuration to handle ESI
+#_internal:
+#    resource: "@FrameworkBundle/Resources/config/routing/internal.xml"
+#    prefix:   /_internal
