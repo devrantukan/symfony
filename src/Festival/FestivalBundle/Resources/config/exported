@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database defaultIdMethod="native" name="mydb">
+  <table name="url_type">
+    <column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true"/>
+    <column name="description" type="VARCHAR" size="45" required="true"/>
+    <unique name="URL_TYPE_DESC_UNIQUE">
+      <unique-column name="description" size="45"/>
+    </unique>
+  </table>
+  <table name="festival_url">
+    <column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true"/>
+    <column name="url" type="VARCHAR" size="90" required="true"/>
+    <column name="type_id" type="INTEGER" required="true"/>
+    <column name="festival_id" type="INTEGER"/>
+    <foreign-key name="FK_FEST_URL_TYPE_ID" foreignTable="url_type">
+      <reference local="type_id" foreign="id"/>
+    </foreign-key>
+    <unique name="FEST_URL_UNIQUE">
+      <unique-column name="url" size="90"/>
+    </unique>
+    <index name="FK_FEST_URL_TYPE_ID_idx">
+      <index-column name="type_id"/>
+    </index>
+  </table>
+  <table name="festival_location">
+    <column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true"/>
+    <column name="name" type="VARCHAR" size="45" required="true"/>
+    <column name="country" type="VARCHAR" size="45" required="true"/>
+    <column name="state" type="VARCHAR" size="45"/>
+    <column name="city" type="VARCHAR" size="45" required="true"/>
+    <column name="latitude" type="VARCHAR" size="45" required="true"/>
+    <column name="logtitude" type="VARCHAR" size="45" required="true"/>
+    <column name="festival_location_content_id" type="INTEGER"/>
+    <foreign-key name="FK_LOCATION_CONTENT_ID" foreignTable="festival_location_content">
+      <reference local="festival_location_content_id" foreign="id"/>
+    </foreign-key>
+    <index name="FK_LOCATION_CONTENT_ID_idx">
+      <index-column name="festival_location_content_id"/>
+    </index>
+  </table>
+  <table name="festival_content">
+    <column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true"/>
+    <column name="type_id" type="INTEGER"/>
+    <column name="festival_id" type="INTEGER" required="true"/>
+    <column name="title" type="VARCHAR" size="45" required="true"/>
+    <column name="subtitle" type="VARCHAR" size="90"/>
+    <column name="content" type="CLOB" size="16777215"/>
+    <column name="visitor" type="INTEGER"/>
+    <column name="user_id" type="INTEGER" required="true"/>
+  </table>
+  <table name="festival_location_content">
+    <column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true"/>
+    <column name="type_id" type="INTEGER"/>
+    <column name="related_id" type="INTEGER" required="true"/>
+    <column name="title" type="VARCHAR" size="45" required="true"/>
+    <column name="subtitle" type="VARCHAR" size="90"/>
+    <column name="content" type="CLOB" size="4294967295"/>
+    <column name="user_id" type="INTEGER" required="true"/>
+  </table>
+  <table name="festival">
+    <column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true"/>
+    <column name="type_id" type="INTEGER"/>
+    <column name="name" type="VARCHAR" size="45" required="true"/>
+    <column name="start_date" type="TIMESTAMP" required="true"/>
+    <column name="end_date" type="TIMESTAMP" required="true"/>
+    <column name="festival_location_id" type="INTEGER"/>
+    <column name="festival_content_id" type="INTEGER"/>
+    <column name="festival_url_id" type="INTEGER"/>
+    <column name="slug" type="VARCHAR" size="45"/>
+    <column name="lang" type="VARCHAR" size="2"/>
+    <foreign-key name="FK_FEST_TYPE_ID" foreignTable="festival_type">
+      <reference local="type_id" foreign="id"/>
+    </foreign-key>
+    <foreign-key name="FK_FEST_LOCATION_ID" foreignTable="festival_location">
+      <reference local="festival_location_id" foreign="id"/>
+    </foreign-key>
+    <foreign-key name="FK_FEST_CONTENT_ID" foreignTable="festival_content">
+      <reference local="festival_content_id" foreign="id"/>
+    </foreign-key>
+    <foreign-key name="FK_FEST_URL_ID" foreignTable="festival_url">
+      <reference local="festival_url_id" foreign="id"/>
+    </foreign-key>
+    <index name="FK_FEST_TYPE_ID_idx">
+      <index-column name="type_id"/>
+    </index>
+    <index name="FK_FEST_LOCATION_ID_idx">
+      <index-column name="festival_location_id"/>
+    </index>
+    <index name="FK_FEST_CONTENT_idx">
+      <index-column name="festival_content_id"/>
+    </index>
+    <index name="FK_FEST_URL_ID_idx">
+      <index-column name="festival_url_id"/>
+    </index>
+  </table>
+  <table name="festival_type">
+    <column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true"/>
+    <column name="description" type="VARCHAR" size="45" required="true"/>
+    <unique name="UI_FESTIVAL_TYPE">
+      <unique-column name="description" size="45"/>
+    </unique>
+  </table>
+</database>
+
+
+---------
+old festival table 
+
+    <table name="festival">
+        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
+        <column name="title" type="varchar" primaryString="true" size="100" />
+	<column name="slug" type="varchar" primaryString="true" size="100" />
+        <column name="desc" type="longvarchar" />
+	<column name="lang" type="varchar" primaryString="true" size="2" />
+        <column name="start" type="date" />
+        <column name="end" type="date" />
+        <column name="lat" type="decimal" />
+        <column name="lon" type="decimal" />
+        <column name="official_site_url" type="varchar" primaryString="true" size="100" /> 
+        <column name="facebook_url" type="varchar" primaryString="true" size="100" />
+        <column name="twitter_url" type="varchar" primaryString="true" size="100" />
+        <column name="youtube_url" type="varchar" primaryString="true" size="100" />
+        <column name="wikipedia_url" type="varchar" primaryString="true" size="100" />
+        <column name="rss_url" type="varchar" primaryString="true" size="100" />
+        <column name="country" type="varchar" primaryString="true" size="100" />
+        <column name="location" type="varchar" primaryString="true" size="100" />                
+    </table>
+
+
+
+

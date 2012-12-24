@@ -9,8 +9,8 @@
   ================================================== -->
 	<meta charset="utf-8">
 	<title>{% block title %}Demo Bundle{% endblock %}</title>
-	<meta name="description" content="">
-	<meta name="author" content="">
+	<meta name="description" content="{% block description %}{% endblock %}">
+	<meta name="keywords" content="{% block keywords %}{% endblock %}">
 
 	<!-- Mobile Specific Metas
   ================================================== -->
@@ -39,7 +39,6 @@
 
 </head>
 <body>
-
 	<div class="page">
 
 		<div class="band header">

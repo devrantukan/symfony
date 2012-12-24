@@ -10,7 +10,11 @@ use \Propel;
 use \PropelException;
 use \PropelPDO;
 use Festival\FestivalBundle\Model\Festival;
+use Festival\FestivalBundle\Model\FestivalContentPeer;
+use Festival\FestivalBundle\Model\FestivalLocationPeer;
 use Festival\FestivalBundle\Model\FestivalPeer;
+use Festival\FestivalBundle\Model\FestivalTypePeer;
+use Festival\FestivalBundle\Model\FestivalUrlPeer;
 use Festival\FestivalBundle\Model\map\FestivalTableMap;
 
 abstract class BaseFestivalPeer
@@ -29,64 +33,43 @@ abstract class BaseFestivalPeer
     const TM_CLASS = 'FestivalTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 17;
+    const NUM_COLUMNS = 10;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 17;
+    const NUM_HYDRATE_COLUMNS = 10;
 
     /** the column name for the ID field */
     const ID = 'festival.ID';
 
-    /** the column name for the TITLE field */
-    const TITLE = 'festival.TITLE';
+    /** the column name for the TYPE_ID field */
+    const TYPE_ID = 'festival.TYPE_ID';
+
+    /** the column name for the FESTIVAL_CONTENT_TITLE field */
+    const FESTIVAL_CONTENT_TITLE = 'festival.FESTIVAL_CONTENT_TITLE';
+
+    /** the column name for the START_DATE field */
+    const START_DATE = 'festival.START_DATE';
+
+    /** the column name for the END_DATE field */
+    const END_DATE = 'festival.END_DATE';
+
+    /** the column name for the FESTIVAL_LOCATION_ID field */
+    const FESTIVAL_LOCATION_ID = 'festival.FESTIVAL_LOCATION_ID';
+
+    /** the column name for the FESTIVAL_CONTENT_ID field */
+    const FESTIVAL_CONTENT_ID = 'festival.FESTIVAL_CONTENT_ID';
+
+    /** the column name for the FESTIVAL_URL_ID field */
+    const FESTIVAL_URL_ID = 'festival.FESTIVAL_URL_ID';
 
     /** the column name for the SLUG field */
     const SLUG = 'festival.SLUG';
 
-    /** the column name for the DESC field */
-    const DESC = 'festival.DESC';
-
     /** the column name for the LANG field */
     const LANG = 'festival.LANG';
-
-    /** the column name for the START field */
-    const START = 'festival.START';
-
-    /** the column name for the END field */
-    const END = 'festival.END';
-
-    /** the column name for the LAT field */
-    const LAT = 'festival.LAT';
-
-    /** the column name for the LON field */
-    const LON = 'festival.LON';
-
-    /** the column name for the OFFICIAL_SITE_URL field */
-    const OFFICIAL_SITE_URL = 'festival.OFFICIAL_SITE_URL';
-
-    /** the column name for the FACEBOOK_URL field */
-    const FACEBOOK_URL = 'festival.FACEBOOK_URL';
-
-    /** the column name for the TWITTER_URL field */
-    const TWITTER_URL = 'festival.TWITTER_URL';
-
-    /** the column name for the YOUTUBE_URL field */
-    const YOUTUBE_URL = 'festival.YOUTUBE_URL';
-
-    /** the column name for the WIKIPEDIA_URL field */
-    const WIKIPEDIA_URL = 'festival.WIKIPEDIA_URL';
-
-    /** the column name for the RSS_URL field */
-    const RSS_URL = 'festival.RSS_URL';
-
-    /** the column name for the COUNTRY field */
-    const COUNTRY = 'festival.COUNTRY';
-
-    /** the column name for the LOCATION field */
-    const LOCATION = 'festival.LOCATION';
 
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -107,12 +90,12 @@ abstract class BaseFestivalPeer
      * e.g. FestivalPeer::$fieldNames[FestivalPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('Id', 'Title', 'Slug', 'Desc', 'Lang', 'Start', 'End', 'Lat', 'Lon', 'OfficialSiteUrl', 'FacebookUrl', 'TwitterUrl', 'YoutubeUrl', 'WikipediaUrl', 'RssUrl', 'Country', 'Location', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'title', 'slug', 'desc', 'lang', 'start', 'end', 'lat', 'lon', 'officialSiteUrl', 'facebookUrl', 'twitterUrl', 'youtubeUrl', 'wikipediaUrl', 'rssUrl', 'country', 'location', ),
-        BasePeer::TYPE_COLNAME => array (FestivalPeer::ID, FestivalPeer::TITLE, FestivalPeer::SLUG, FestivalPeer::DESC, FestivalPeer::LANG, FestivalPeer::START, FestivalPeer::END, FestivalPeer::LAT, FestivalPeer::LON, FestivalPeer::OFFICIAL_SITE_URL, FestivalPeer::FACEBOOK_URL, FestivalPeer::TWITTER_URL, FestivalPeer::YOUTUBE_URL, FestivalPeer::WIKIPEDIA_URL, FestivalPeer::RSS_URL, FestivalPeer::COUNTRY, FestivalPeer::LOCATION, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'TITLE', 'SLUG', 'DESC', 'LANG', 'START', 'END', 'LAT', 'LON', 'OFFICIAL_SITE_URL', 'FACEBOOK_URL', 'TWITTER_URL', 'YOUTUBE_URL', 'WIKIPEDIA_URL', 'RSS_URL', 'COUNTRY', 'LOCATION', ),
-        BasePeer::TYPE_FIELDNAME => array ('id', 'title', 'slug', 'desc', 'lang', 'start', 'end', 'lat', 'lon', 'official_site_url', 'facebook_url', 'twitter_url', 'youtube_url', 'wikipedia_url', 'rss_url', 'country', 'location', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, )
+        BasePeer::TYPE_PHPNAME => array ('Id', 'TypeId', 'FestivalContentTitle', 'StartDate', 'EndDate', 'FestivalLocationId', 'FestivalContentId', 'FestivalUrlId', 'Slug', 'Lang', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'typeId', 'festivalContentTitle', 'startDate', 'endDate', 'festivalLocationId', 'festivalContentId', 'festivalUrlId', 'slug', 'lang', ),
+        BasePeer::TYPE_COLNAME => array (FestivalPeer::ID, FestivalPeer::TYPE_ID, FestivalPeer::FESTIVAL_CONTENT_TITLE, FestivalPeer::START_DATE, FestivalPeer::END_DATE, FestivalPeer::FESTIVAL_LOCATION_ID, FestivalPeer::FESTIVAL_CONTENT_ID, FestivalPeer::FESTIVAL_URL_ID, FestivalPeer::SLUG, FestivalPeer::LANG, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'TYPE_ID', 'FESTIVAL_CONTENT_TITLE', 'START_DATE', 'END_DATE', 'FESTIVAL_LOCATION_ID', 'FESTIVAL_CONTENT_ID', 'FESTIVAL_URL_ID', 'SLUG', 'LANG', ),
+        BasePeer::TYPE_FIELDNAME => array ('id', 'type_id', 'festival_content_title', 'start_date', 'end_date', 'festival_location_id', 'festival_content_id', 'festival_url_id', 'slug', 'lang', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
     );
 
     /**
@@ -122,12 +105,12 @@ abstract class BaseFestivalPeer
      * e.g. FestivalPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Title' => 1, 'Slug' => 2, 'Desc' => 3, 'Lang' => 4, 'Start' => 5, 'End' => 6, 'Lat' => 7, 'Lon' => 8, 'OfficialSiteUrl' => 9, 'FacebookUrl' => 10, 'TwitterUrl' => 11, 'YoutubeUrl' => 12, 'WikipediaUrl' => 13, 'RssUrl' => 14, 'Country' => 15, 'Location' => 16, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'title' => 1, 'slug' => 2, 'desc' => 3, 'lang' => 4, 'start' => 5, 'end' => 6, 'lat' => 7, 'lon' => 8, 'officialSiteUrl' => 9, 'facebookUrl' => 10, 'twitterUrl' => 11, 'youtubeUrl' => 12, 'wikipediaUrl' => 13, 'rssUrl' => 14, 'country' => 15, 'location' => 16, ),
-        BasePeer::TYPE_COLNAME => array (FestivalPeer::ID => 0, FestivalPeer::TITLE => 1, FestivalPeer::SLUG => 2, FestivalPeer::DESC => 3, FestivalPeer::LANG => 4, FestivalPeer::START => 5, FestivalPeer::END => 6, FestivalPeer::LAT => 7, FestivalPeer::LON => 8, FestivalPeer::OFFICIAL_SITE_URL => 9, FestivalPeer::FACEBOOK_URL => 10, FestivalPeer::TWITTER_URL => 11, FestivalPeer::YOUTUBE_URL => 12, FestivalPeer::WIKIPEDIA_URL => 13, FestivalPeer::RSS_URL => 14, FestivalPeer::COUNTRY => 15, FestivalPeer::LOCATION => 16, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'TITLE' => 1, 'SLUG' => 2, 'DESC' => 3, 'LANG' => 4, 'START' => 5, 'END' => 6, 'LAT' => 7, 'LON' => 8, 'OFFICIAL_SITE_URL' => 9, 'FACEBOOK_URL' => 10, 'TWITTER_URL' => 11, 'YOUTUBE_URL' => 12, 'WIKIPEDIA_URL' => 13, 'RSS_URL' => 14, 'COUNTRY' => 15, 'LOCATION' => 16, ),
-        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'title' => 1, 'slug' => 2, 'desc' => 3, 'lang' => 4, 'start' => 5, 'end' => 6, 'lat' => 7, 'lon' => 8, 'official_site_url' => 9, 'facebook_url' => 10, 'twitter_url' => 11, 'youtube_url' => 12, 'wikipedia_url' => 13, 'rss_url' => 14, 'country' => 15, 'location' => 16, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, )
+        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'TypeId' => 1, 'FestivalContentTitle' => 2, 'StartDate' => 3, 'EndDate' => 4, 'FestivalLocationId' => 5, 'FestivalContentId' => 6, 'FestivalUrlId' => 7, 'Slug' => 8, 'Lang' => 9, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'typeId' => 1, 'festivalContentTitle' => 2, 'startDate' => 3, 'endDate' => 4, 'festivalLocationId' => 5, 'festivalContentId' => 6, 'festivalUrlId' => 7, 'slug' => 8, 'lang' => 9, ),
+        BasePeer::TYPE_COLNAME => array (FestivalPeer::ID => 0, FestivalPeer::TYPE_ID => 1, FestivalPeer::FESTIVAL_CONTENT_TITLE => 2, FestivalPeer::START_DATE => 3, FestivalPeer::END_DATE => 4, FestivalPeer::FESTIVAL_LOCATION_ID => 5, FestivalPeer::FESTIVAL_CONTENT_ID => 6, FestivalPeer::FESTIVAL_URL_ID => 7, FestivalPeer::SLUG => 8, FestivalPeer::LANG => 9, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'TYPE_ID' => 1, 'FESTIVAL_CONTENT_TITLE' => 2, 'START_DATE' => 3, 'END_DATE' => 4, 'FESTIVAL_LOCATION_ID' => 5, 'FESTIVAL_CONTENT_ID' => 6, 'FESTIVAL_URL_ID' => 7, 'SLUG' => 8, 'LANG' => 9, ),
+        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'type_id' => 1, 'festival_content_title' => 2, 'start_date' => 3, 'end_date' => 4, 'festival_location_id' => 5, 'festival_content_id' => 6, 'festival_url_id' => 7, 'slug' => 8, 'lang' => 9, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
     );
 
     /**
@@ -202,40 +185,26 @@ abstract class BaseFestivalPeer
     {
         if (null === $alias) {
             $criteria->addSelectColumn(FestivalPeer::ID);
-            $criteria->addSelectColumn(FestivalPeer::TITLE);
+            $criteria->addSelectColumn(FestivalPeer::TYPE_ID);
+            $criteria->addSelectColumn(FestivalPeer::FESTIVAL_CONTENT_TITLE);
+            $criteria->addSelectColumn(FestivalPeer::START_DATE);
+            $criteria->addSelectColumn(FestivalPeer::END_DATE);
+            $criteria->addSelectColumn(FestivalPeer::FESTIVAL_LOCATION_ID);
+            $criteria->addSelectColumn(FestivalPeer::FESTIVAL_CONTENT_ID);
+            $criteria->addSelectColumn(FestivalPeer::FESTIVAL_URL_ID);
             $criteria->addSelectColumn(FestivalPeer::SLUG);
-            $criteria->addSelectColumn(FestivalPeer::DESC);
             $criteria->addSelectColumn(FestivalPeer::LANG);
-            $criteria->addSelectColumn(FestivalPeer::START);
-            $criteria->addSelectColumn(FestivalPeer::END);
-            $criteria->addSelectColumn(FestivalPeer::LAT);
-            $criteria->addSelectColumn(FestivalPeer::LON);
-            $criteria->addSelectColumn(FestivalPeer::OFFICIAL_SITE_URL);
-            $criteria->addSelectColumn(FestivalPeer::FACEBOOK_URL);
-            $criteria->addSelectColumn(FestivalPeer::TWITTER_URL);
-            $criteria->addSelectColumn(FestivalPeer::YOUTUBE_URL);
-            $criteria->addSelectColumn(FestivalPeer::WIKIPEDIA_URL);
-            $criteria->addSelectColumn(FestivalPeer::RSS_URL);
-            $criteria->addSelectColumn(FestivalPeer::COUNTRY);
-            $criteria->addSelectColumn(FestivalPeer::LOCATION);
         } else {
             $criteria->addSelectColumn($alias . '.ID');
-            $criteria->addSelectColumn($alias . '.TITLE');
+            $criteria->addSelectColumn($alias . '.TYPE_ID');
+            $criteria->addSelectColumn($alias . '.FESTIVAL_CONTENT_TITLE');
+            $criteria->addSelectColumn($alias . '.START_DATE');
+            $criteria->addSelectColumn($alias . '.END_DATE');
+            $criteria->addSelectColumn($alias . '.FESTIVAL_LOCATION_ID');
+            $criteria->addSelectColumn($alias . '.FESTIVAL_CONTENT_ID');
+            $criteria->addSelectColumn($alias . '.FESTIVAL_URL_ID');
             $criteria->addSelectColumn($alias . '.SLUG');
-            $criteria->addSelectColumn($alias . '.DESC');
             $criteria->addSelectColumn($alias . '.LANG');
-            $criteria->addSelectColumn($alias . '.START');
-            $criteria->addSelectColumn($alias . '.END');
-            $criteria->addSelectColumn($alias . '.LAT');
-            $criteria->addSelectColumn($alias . '.LON');
-            $criteria->addSelectColumn($alias . '.OFFICIAL_SITE_URL');
-            $criteria->addSelectColumn($alias . '.FACEBOOK_URL');
-            $criteria->addSelectColumn($alias . '.TWITTER_URL');
-            $criteria->addSelectColumn($alias . '.YOUTUBE_URL');
-            $criteria->addSelectColumn($alias . '.WIKIPEDIA_URL');
-            $criteria->addSelectColumn($alias . '.RSS_URL');
-            $criteria->addSelectColumn($alias . '.COUNTRY');
-            $criteria->addSelectColumn($alias . '.LOCATION');
         }
     }
 
@@ -529,6 +498,1381 @@ abstract class BaseFestivalPeer
         }
 
         return array($obj, $col);
+    }
+
+
+    /**
+     * Returns the number of rows matching criteria, joining the related FestivalType table
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return int Number of matching rows.
+     */
+    public static function doCountJoinFestivalType(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        // we're going to modify criteria, so copy it first
+        $criteria = clone $criteria;
+
+        // We need to set the primary table name, since in the case that there are no WHERE columns
+        // it will be impossible for the BasePeer::createSelectSql() method to determine which
+        // tables go into the FROM clause.
+        $criteria->setPrimaryTableName(FestivalPeer::TABLE_NAME);
+
+        if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+            $criteria->setDistinct();
+        }
+
+        if (!$criteria->hasSelectClause()) {
+            FestivalPeer::addSelectColumns($criteria);
+        }
+
+        $criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
+
+        // Set the correct dbName
+        $criteria->setDbName(FestivalPeer::DATABASE_NAME);
+
+        if ($con === null) {
+            $con = Propel::getConnection(FestivalPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+        }
+
+        $criteria->addJoin(FestivalPeer::TYPE_ID, FestivalTypePeer::ID, $join_behavior);
+
+        $stmt = BasePeer::doCount($criteria, $con);
+
+        if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $count = (int) $row[0];
+        } else {
+            $count = 0; // no rows returned; we infer that means 0 matches.
+        }
+        $stmt->closeCursor();
+
+        return $count;
+    }
+
+
+    /**
+     * Returns the number of rows matching criteria, joining the related FestivalLocation table
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return int Number of matching rows.
+     */
+    public static function doCountJoinFestivalLocation(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        // we're going to modify criteria, so copy it first
+        $criteria = clone $criteria;
+
+        // We need to set the primary table name, since in the case that there are no WHERE columns
+        // it will be impossible for the BasePeer::createSelectSql() method to determine which
+        // tables go into the FROM clause.
+        $criteria->setPrimaryTableName(FestivalPeer::TABLE_NAME);
+
+        if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+            $criteria->setDistinct();
+        }
+
+        if (!$criteria->hasSelectClause()) {
+            FestivalPeer::addSelectColumns($criteria);
+        }
+
+        $criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
+
+        // Set the correct dbName
+        $criteria->setDbName(FestivalPeer::DATABASE_NAME);
+
+        if ($con === null) {
+            $con = Propel::getConnection(FestivalPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+        }
+
+        $criteria->addJoin(FestivalPeer::FESTIVAL_LOCATION_ID, FestivalLocationPeer::ID, $join_behavior);
+
+        $stmt = BasePeer::doCount($criteria, $con);
+
+        if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $count = (int) $row[0];
+        } else {
+            $count = 0; // no rows returned; we infer that means 0 matches.
+        }
+        $stmt->closeCursor();
+
+        return $count;
+    }
+
+
+    /**
+     * Returns the number of rows matching criteria, joining the related FestivalContent table
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return int Number of matching rows.
+     */
+    public static function doCountJoinFestivalContent(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        // we're going to modify criteria, so copy it first
+        $criteria = clone $criteria;
+
+        // We need to set the primary table name, since in the case that there are no WHERE columns
+        // it will be impossible for the BasePeer::createSelectSql() method to determine which
+        // tables go into the FROM clause.
+        $criteria->setPrimaryTableName(FestivalPeer::TABLE_NAME);
+
+        if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+            $criteria->setDistinct();
+        }
+
+        if (!$criteria->hasSelectClause()) {
+            FestivalPeer::addSelectColumns($criteria);
+        }
+
+        $criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
+
+        // Set the correct dbName
+        $criteria->setDbName(FestivalPeer::DATABASE_NAME);
+
+        if ($con === null) {
+            $con = Propel::getConnection(FestivalPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+        }
+
+        $criteria->addJoin(FestivalPeer::FESTIVAL_CONTENT_ID, FestivalContentPeer::ID, $join_behavior);
+
+        $stmt = BasePeer::doCount($criteria, $con);
+
+        if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $count = (int) $row[0];
+        } else {
+            $count = 0; // no rows returned; we infer that means 0 matches.
+        }
+        $stmt->closeCursor();
+
+        return $count;
+    }
+
+
+    /**
+     * Returns the number of rows matching criteria, joining the related FestivalUrl table
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return int Number of matching rows.
+     */
+    public static function doCountJoinFestivalUrl(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        // we're going to modify criteria, so copy it first
+        $criteria = clone $criteria;
+
+        // We need to set the primary table name, since in the case that there are no WHERE columns
+        // it will be impossible for the BasePeer::createSelectSql() method to determine which
+        // tables go into the FROM clause.
+        $criteria->setPrimaryTableName(FestivalPeer::TABLE_NAME);
+
+        if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+            $criteria->setDistinct();
+        }
+
+        if (!$criteria->hasSelectClause()) {
+            FestivalPeer::addSelectColumns($criteria);
+        }
+
+        $criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
+
+        // Set the correct dbName
+        $criteria->setDbName(FestivalPeer::DATABASE_NAME);
+
+        if ($con === null) {
+            $con = Propel::getConnection(FestivalPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+        }
+
+        $criteria->addJoin(FestivalPeer::FESTIVAL_URL_ID, FestivalUrlPeer::ID, $join_behavior);
+
+        $stmt = BasePeer::doCount($criteria, $con);
+
+        if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $count = (int) $row[0];
+        } else {
+            $count = 0; // no rows returned; we infer that means 0 matches.
+        }
+        $stmt->closeCursor();
+
+        return $count;
+    }
+
+
+    /**
+     * Selects a collection of Festival objects pre-filled with their FestivalType objects.
+     * @param      Criteria  $criteria
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return array           Array of Festival objects.
+     * @throws PropelException Any exceptions caught during processing will be
+     *		 rethrown wrapped into a PropelException.
+     */
+    public static function doSelectJoinFestivalType(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $criteria = clone $criteria;
+
+        // Set the correct dbName if it has not been overridden
+        if ($criteria->getDbName() == Propel::getDefaultDB()) {
+            $criteria->setDbName(FestivalPeer::DATABASE_NAME);
+        }
+
+        FestivalPeer::addSelectColumns($criteria);
+        $startcol = FestivalPeer::NUM_HYDRATE_COLUMNS;
+        FestivalTypePeer::addSelectColumns($criteria);
+
+        $criteria->addJoin(FestivalPeer::TYPE_ID, FestivalTypePeer::ID, $join_behavior);
+
+        $stmt = BasePeer::doSelect($criteria, $con);
+        $results = array();
+
+        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $key1 = FestivalPeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = FestivalPeer::getInstanceFromPool($key1))) {
+                // We no longer rehydrate the object, since this can cause data loss.
+                // See http://www.propelorm.org/ticket/509
+                // $obj1->hydrate($row, 0, true); // rehydrate
+            } else {
+
+                $cls = FestivalPeer::getOMClass();
+
+                $obj1 = new $cls();
+                $obj1->hydrate($row);
+                FestivalPeer::addInstanceToPool($obj1, $key1);
+            } // if $obj1 already loaded
+
+            $key2 = FestivalTypePeer::getPrimaryKeyHashFromRow($row, $startcol);
+            if ($key2 !== null) {
+                $obj2 = FestivalTypePeer::getInstanceFromPool($key2);
+                if (!$obj2) {
+
+                    $cls = FestivalTypePeer::getOMClass();
+
+                    $obj2 = new $cls();
+                    $obj2->hydrate($row, $startcol);
+                    FestivalTypePeer::addInstanceToPool($obj2, $key2);
+                } // if obj2 already loaded
+
+                // Add the $obj1 (Festival) to $obj2 (FestivalType)
+                $obj2->addFestival($obj1);
+
+            } // if joined row was not null
+
+            $results[] = $obj1;
+        }
+        $stmt->closeCursor();
+
+        return $results;
+    }
+
+
+    /**
+     * Selects a collection of Festival objects pre-filled with their FestivalLocation objects.
+     * @param      Criteria  $criteria
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return array           Array of Festival objects.
+     * @throws PropelException Any exceptions caught during processing will be
+     *		 rethrown wrapped into a PropelException.
+     */
+    public static function doSelectJoinFestivalLocation(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $criteria = clone $criteria;
+
+        // Set the correct dbName if it has not been overridden
+        if ($criteria->getDbName() == Propel::getDefaultDB()) {
+            $criteria->setDbName(FestivalPeer::DATABASE_NAME);
+        }
+
+        FestivalPeer::addSelectColumns($criteria);
+        $startcol = FestivalPeer::NUM_HYDRATE_COLUMNS;
+        FestivalLocationPeer::addSelectColumns($criteria);
+
+        $criteria->addJoin(FestivalPeer::FESTIVAL_LOCATION_ID, FestivalLocationPeer::ID, $join_behavior);
+
+        $stmt = BasePeer::doSelect($criteria, $con);
+        $results = array();
+
+        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $key1 = FestivalPeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = FestivalPeer::getInstanceFromPool($key1))) {
+                // We no longer rehydrate the object, since this can cause data loss.
+                // See http://www.propelorm.org/ticket/509
+                // $obj1->hydrate($row, 0, true); // rehydrate
+            } else {
+
+                $cls = FestivalPeer::getOMClass();
+
+                $obj1 = new $cls();
+                $obj1->hydrate($row);
+                FestivalPeer::addInstanceToPool($obj1, $key1);
+            } // if $obj1 already loaded
+
+            $key2 = FestivalLocationPeer::getPrimaryKeyHashFromRow($row, $startcol);
+            if ($key2 !== null) {
+                $obj2 = FestivalLocationPeer::getInstanceFromPool($key2);
+                if (!$obj2) {
+
+                    $cls = FestivalLocationPeer::getOMClass();
+
+                    $obj2 = new $cls();
+                    $obj2->hydrate($row, $startcol);
+                    FestivalLocationPeer::addInstanceToPool($obj2, $key2);
+                } // if obj2 already loaded
+
+                // Add the $obj1 (Festival) to $obj2 (FestivalLocation)
+                $obj2->addFestival($obj1);
+
+            } // if joined row was not null
+
+            $results[] = $obj1;
+        }
+        $stmt->closeCursor();
+
+        return $results;
+    }
+
+
+    /**
+     * Selects a collection of Festival objects pre-filled with their FestivalContent objects.
+     * @param      Criteria  $criteria
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return array           Array of Festival objects.
+     * @throws PropelException Any exceptions caught during processing will be
+     *		 rethrown wrapped into a PropelException.
+     */
+    public static function doSelectJoinFestivalContent(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $criteria = clone $criteria;
+
+        // Set the correct dbName if it has not been overridden
+        if ($criteria->getDbName() == Propel::getDefaultDB()) {
+            $criteria->setDbName(FestivalPeer::DATABASE_NAME);
+        }
+
+        FestivalPeer::addSelectColumns($criteria);
+        $startcol = FestivalPeer::NUM_HYDRATE_COLUMNS;
+        FestivalContentPeer::addSelectColumns($criteria);
+
+        $criteria->addJoin(FestivalPeer::FESTIVAL_CONTENT_ID, FestivalContentPeer::ID, $join_behavior);
+
+        $stmt = BasePeer::doSelect($criteria, $con);
+        $results = array();
+
+        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $key1 = FestivalPeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = FestivalPeer::getInstanceFromPool($key1))) {
+                // We no longer rehydrate the object, since this can cause data loss.
+                // See http://www.propelorm.org/ticket/509
+                // $obj1->hydrate($row, 0, true); // rehydrate
+            } else {
+
+                $cls = FestivalPeer::getOMClass();
+
+                $obj1 = new $cls();
+                $obj1->hydrate($row);
+                FestivalPeer::addInstanceToPool($obj1, $key1);
+            } // if $obj1 already loaded
+
+            $key2 = FestivalContentPeer::getPrimaryKeyHashFromRow($row, $startcol);
+            if ($key2 !== null) {
+                $obj2 = FestivalContentPeer::getInstanceFromPool($key2);
+                if (!$obj2) {
+
+                    $cls = FestivalContentPeer::getOMClass();
+
+                    $obj2 = new $cls();
+                    $obj2->hydrate($row, $startcol);
+                    FestivalContentPeer::addInstanceToPool($obj2, $key2);
+                } // if obj2 already loaded
+
+                // Add the $obj1 (Festival) to $obj2 (FestivalContent)
+                $obj2->addFestival($obj1);
+
+            } // if joined row was not null
+
+            $results[] = $obj1;
+        }
+        $stmt->closeCursor();
+
+        return $results;
+    }
+
+
+    /**
+     * Selects a collection of Festival objects pre-filled with their FestivalUrl objects.
+     * @param      Criteria  $criteria
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return array           Array of Festival objects.
+     * @throws PropelException Any exceptions caught during processing will be
+     *		 rethrown wrapped into a PropelException.
+     */
+    public static function doSelectJoinFestivalUrl(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $criteria = clone $criteria;
+
+        // Set the correct dbName if it has not been overridden
+        if ($criteria->getDbName() == Propel::getDefaultDB()) {
+            $criteria->setDbName(FestivalPeer::DATABASE_NAME);
+        }
+
+        FestivalPeer::addSelectColumns($criteria);
+        $startcol = FestivalPeer::NUM_HYDRATE_COLUMNS;
+        FestivalUrlPeer::addSelectColumns($criteria);
+
+        $criteria->addJoin(FestivalPeer::FESTIVAL_URL_ID, FestivalUrlPeer::ID, $join_behavior);
+
+        $stmt = BasePeer::doSelect($criteria, $con);
+        $results = array();
+
+        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $key1 = FestivalPeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = FestivalPeer::getInstanceFromPool($key1))) {
+                // We no longer rehydrate the object, since this can cause data loss.
+                // See http://www.propelorm.org/ticket/509
+                // $obj1->hydrate($row, 0, true); // rehydrate
+            } else {
+
+                $cls = FestivalPeer::getOMClass();
+
+                $obj1 = new $cls();
+                $obj1->hydrate($row);
+                FestivalPeer::addInstanceToPool($obj1, $key1);
+            } // if $obj1 already loaded
+
+            $key2 = FestivalUrlPeer::getPrimaryKeyHashFromRow($row, $startcol);
+            if ($key2 !== null) {
+                $obj2 = FestivalUrlPeer::getInstanceFromPool($key2);
+                if (!$obj2) {
+
+                    $cls = FestivalUrlPeer::getOMClass();
+
+                    $obj2 = new $cls();
+                    $obj2->hydrate($row, $startcol);
+                    FestivalUrlPeer::addInstanceToPool($obj2, $key2);
+                } // if obj2 already loaded
+
+                // Add the $obj1 (Festival) to $obj2 (FestivalUrl)
+                $obj2->addFestival($obj1);
+
+            } // if joined row was not null
+
+            $results[] = $obj1;
+        }
+        $stmt->closeCursor();
+
+        return $results;
+    }
+
+
+    /**
+     * Returns the number of rows matching criteria, joining all related tables
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return int Number of matching rows.
+     */
+    public static function doCountJoinAll(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        // we're going to modify criteria, so copy it first
+        $criteria = clone $criteria;
+
+        // We need to set the primary table name, since in the case that there are no WHERE columns
+        // it will be impossible for the BasePeer::createSelectSql() method to determine which
+        // tables go into the FROM clause.
+        $criteria->setPrimaryTableName(FestivalPeer::TABLE_NAME);
+
+        if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+            $criteria->setDistinct();
+        }
+
+        if (!$criteria->hasSelectClause()) {
+            FestivalPeer::addSelectColumns($criteria);
+        }
+
+        $criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
+
+        // Set the correct dbName
+        $criteria->setDbName(FestivalPeer::DATABASE_NAME);
+
+        if ($con === null) {
+            $con = Propel::getConnection(FestivalPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+        }
+
+        $criteria->addJoin(FestivalPeer::TYPE_ID, FestivalTypePeer::ID, $join_behavior);
+
+        $criteria->addJoin(FestivalPeer::FESTIVAL_LOCATION_ID, FestivalLocationPeer::ID, $join_behavior);
+
+        $criteria->addJoin(FestivalPeer::FESTIVAL_CONTENT_ID, FestivalContentPeer::ID, $join_behavior);
+
+        $criteria->addJoin(FestivalPeer::FESTIVAL_URL_ID, FestivalUrlPeer::ID, $join_behavior);
+
+        $stmt = BasePeer::doCount($criteria, $con);
+
+        if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $count = (int) $row[0];
+        } else {
+            $count = 0; // no rows returned; we infer that means 0 matches.
+        }
+        $stmt->closeCursor();
+
+        return $count;
+    }
+
+    /**
+     * Selects a collection of Festival objects pre-filled with all related objects.
+     *
+     * @param      Criteria  $criteria
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return array           Array of Festival objects.
+     * @throws PropelException Any exceptions caught during processing will be
+     *		 rethrown wrapped into a PropelException.
+     */
+    public static function doSelectJoinAll(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $criteria = clone $criteria;
+
+        // Set the correct dbName if it has not been overridden
+        if ($criteria->getDbName() == Propel::getDefaultDB()) {
+            $criteria->setDbName(FestivalPeer::DATABASE_NAME);
+        }
+
+        FestivalPeer::addSelectColumns($criteria);
+        $startcol2 = FestivalPeer::NUM_HYDRATE_COLUMNS;
+
+        FestivalTypePeer::addSelectColumns($criteria);
+        $startcol3 = $startcol2 + FestivalTypePeer::NUM_HYDRATE_COLUMNS;
+
+        FestivalLocationPeer::addSelectColumns($criteria);
+        $startcol4 = $startcol3 + FestivalLocationPeer::NUM_HYDRATE_COLUMNS;
+
+        FestivalContentPeer::addSelectColumns($criteria);
+        $startcol5 = $startcol4 + FestivalContentPeer::NUM_HYDRATE_COLUMNS;
+
+        FestivalUrlPeer::addSelectColumns($criteria);
+        $startcol6 = $startcol5 + FestivalUrlPeer::NUM_HYDRATE_COLUMNS;
+
+        $criteria->addJoin(FestivalPeer::TYPE_ID, FestivalTypePeer::ID, $join_behavior);
+
+        $criteria->addJoin(FestivalPeer::FESTIVAL_LOCATION_ID, FestivalLocationPeer::ID, $join_behavior);
+
+        $criteria->addJoin(FestivalPeer::FESTIVAL_CONTENT_ID, FestivalContentPeer::ID, $join_behavior);
+
+        $criteria->addJoin(FestivalPeer::FESTIVAL_URL_ID, FestivalUrlPeer::ID, $join_behavior);
+
+        $stmt = BasePeer::doSelect($criteria, $con);
+        $results = array();
+
+        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $key1 = FestivalPeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = FestivalPeer::getInstanceFromPool($key1))) {
+                // We no longer rehydrate the object, since this can cause data loss.
+                // See http://www.propelorm.org/ticket/509
+                // $obj1->hydrate($row, 0, true); // rehydrate
+            } else {
+                $cls = FestivalPeer::getOMClass();
+
+                $obj1 = new $cls();
+                $obj1->hydrate($row);
+                FestivalPeer::addInstanceToPool($obj1, $key1);
+            } // if obj1 already loaded
+
+            // Add objects for joined FestivalType rows
+
+            $key2 = FestivalTypePeer::getPrimaryKeyHashFromRow($row, $startcol2);
+            if ($key2 !== null) {
+                $obj2 = FestivalTypePeer::getInstanceFromPool($key2);
+                if (!$obj2) {
+
+                    $cls = FestivalTypePeer::getOMClass();
+
+                    $obj2 = new $cls();
+                    $obj2->hydrate($row, $startcol2);
+                    FestivalTypePeer::addInstanceToPool($obj2, $key2);
+                } // if obj2 loaded
+
+                // Add the $obj1 (Festival) to the collection in $obj2 (FestivalType)
+                $obj2->addFestival($obj1);
+            } // if joined row not null
+
+            // Add objects for joined FestivalLocation rows
+
+            $key3 = FestivalLocationPeer::getPrimaryKeyHashFromRow($row, $startcol3);
+            if ($key3 !== null) {
+                $obj3 = FestivalLocationPeer::getInstanceFromPool($key3);
+                if (!$obj3) {
+
+                    $cls = FestivalLocationPeer::getOMClass();
+
+                    $obj3 = new $cls();
+                    $obj3->hydrate($row, $startcol3);
+                    FestivalLocationPeer::addInstanceToPool($obj3, $key3);
+                } // if obj3 loaded
+
+                // Add the $obj1 (Festival) to the collection in $obj3 (FestivalLocation)
+                $obj3->addFestival($obj1);
+            } // if joined row not null
+
+            // Add objects for joined FestivalContent rows
+
+            $key4 = FestivalContentPeer::getPrimaryKeyHashFromRow($row, $startcol4);
+            if ($key4 !== null) {
+                $obj4 = FestivalContentPeer::getInstanceFromPool($key4);
+                if (!$obj4) {
+
+                    $cls = FestivalContentPeer::getOMClass();
+
+                    $obj4 = new $cls();
+                    $obj4->hydrate($row, $startcol4);
+                    FestivalContentPeer::addInstanceToPool($obj4, $key4);
+                } // if obj4 loaded
+
+                // Add the $obj1 (Festival) to the collection in $obj4 (FestivalContent)
+                $obj4->addFestival($obj1);
+            } // if joined row not null
+
+            // Add objects for joined FestivalUrl rows
+
+            $key5 = FestivalUrlPeer::getPrimaryKeyHashFromRow($row, $startcol5);
+            if ($key5 !== null) {
+                $obj5 = FestivalUrlPeer::getInstanceFromPool($key5);
+                if (!$obj5) {
+
+                    $cls = FestivalUrlPeer::getOMClass();
+
+                    $obj5 = new $cls();
+                    $obj5->hydrate($row, $startcol5);
+                    FestivalUrlPeer::addInstanceToPool($obj5, $key5);
+                } // if obj5 loaded
+
+                // Add the $obj1 (Festival) to the collection in $obj5 (FestivalUrl)
+                $obj5->addFestival($obj1);
+            } // if joined row not null
+
+            $results[] = $obj1;
+        }
+        $stmt->closeCursor();
+
+        return $results;
+    }
+
+
+    /**
+     * Returns the number of rows matching criteria, joining the related FestivalType table
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return int Number of matching rows.
+     */
+    public static function doCountJoinAllExceptFestivalType(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        // we're going to modify criteria, so copy it first
+        $criteria = clone $criteria;
+
+        // We need to set the primary table name, since in the case that there are no WHERE columns
+        // it will be impossible for the BasePeer::createSelectSql() method to determine which
+        // tables go into the FROM clause.
+        $criteria->setPrimaryTableName(FestivalPeer::TABLE_NAME);
+
+        if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+            $criteria->setDistinct();
+        }
+
+        if (!$criteria->hasSelectClause()) {
+            FestivalPeer::addSelectColumns($criteria);
+        }
+
+        $criteria->clearOrderByColumns(); // ORDER BY should not affect count
+
+        // Set the correct dbName
+        $criteria->setDbName(FestivalPeer::DATABASE_NAME);
+
+        if ($con === null) {
+            $con = Propel::getConnection(FestivalPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+        }
+
+        $criteria->addJoin(FestivalPeer::FESTIVAL_LOCATION_ID, FestivalLocationPeer::ID, $join_behavior);
+
+        $criteria->addJoin(FestivalPeer::FESTIVAL_CONTENT_ID, FestivalContentPeer::ID, $join_behavior);
+
+        $criteria->addJoin(FestivalPeer::FESTIVAL_URL_ID, FestivalUrlPeer::ID, $join_behavior);
+
+        $stmt = BasePeer::doCount($criteria, $con);
+
+        if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $count = (int) $row[0];
+        } else {
+            $count = 0; // no rows returned; we infer that means 0 matches.
+        }
+        $stmt->closeCursor();
+
+        return $count;
+    }
+
+
+    /**
+     * Returns the number of rows matching criteria, joining the related FestivalLocation table
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return int Number of matching rows.
+     */
+    public static function doCountJoinAllExceptFestivalLocation(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        // we're going to modify criteria, so copy it first
+        $criteria = clone $criteria;
+
+        // We need to set the primary table name, since in the case that there are no WHERE columns
+        // it will be impossible for the BasePeer::createSelectSql() method to determine which
+        // tables go into the FROM clause.
+        $criteria->setPrimaryTableName(FestivalPeer::TABLE_NAME);
+
+        if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+            $criteria->setDistinct();
+        }
+
+        if (!$criteria->hasSelectClause()) {
+            FestivalPeer::addSelectColumns($criteria);
+        }
+
+        $criteria->clearOrderByColumns(); // ORDER BY should not affect count
+
+        // Set the correct dbName
+        $criteria->setDbName(FestivalPeer::DATABASE_NAME);
+
+        if ($con === null) {
+            $con = Propel::getConnection(FestivalPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+        }
+
+        $criteria->addJoin(FestivalPeer::TYPE_ID, FestivalTypePeer::ID, $join_behavior);
+
+        $criteria->addJoin(FestivalPeer::FESTIVAL_CONTENT_ID, FestivalContentPeer::ID, $join_behavior);
+
+        $criteria->addJoin(FestivalPeer::FESTIVAL_URL_ID, FestivalUrlPeer::ID, $join_behavior);
+
+        $stmt = BasePeer::doCount($criteria, $con);
+
+        if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $count = (int) $row[0];
+        } else {
+            $count = 0; // no rows returned; we infer that means 0 matches.
+        }
+        $stmt->closeCursor();
+
+        return $count;
+    }
+
+
+    /**
+     * Returns the number of rows matching criteria, joining the related FestivalContent table
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return int Number of matching rows.
+     */
+    public static function doCountJoinAllExceptFestivalContent(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        // we're going to modify criteria, so copy it first
+        $criteria = clone $criteria;
+
+        // We need to set the primary table name, since in the case that there are no WHERE columns
+        // it will be impossible for the BasePeer::createSelectSql() method to determine which
+        // tables go into the FROM clause.
+        $criteria->setPrimaryTableName(FestivalPeer::TABLE_NAME);
+
+        if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+            $criteria->setDistinct();
+        }
+
+        if (!$criteria->hasSelectClause()) {
+            FestivalPeer::addSelectColumns($criteria);
+        }
+
+        $criteria->clearOrderByColumns(); // ORDER BY should not affect count
+
+        // Set the correct dbName
+        $criteria->setDbName(FestivalPeer::DATABASE_NAME);
+
+        if ($con === null) {
+            $con = Propel::getConnection(FestivalPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+        }
+
+        $criteria->addJoin(FestivalPeer::TYPE_ID, FestivalTypePeer::ID, $join_behavior);
+
+        $criteria->addJoin(FestivalPeer::FESTIVAL_LOCATION_ID, FestivalLocationPeer::ID, $join_behavior);
+
+        $criteria->addJoin(FestivalPeer::FESTIVAL_URL_ID, FestivalUrlPeer::ID, $join_behavior);
+
+        $stmt = BasePeer::doCount($criteria, $con);
+
+        if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $count = (int) $row[0];
+        } else {
+            $count = 0; // no rows returned; we infer that means 0 matches.
+        }
+        $stmt->closeCursor();
+
+        return $count;
+    }
+
+
+    /**
+     * Returns the number of rows matching criteria, joining the related FestivalUrl table
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return int Number of matching rows.
+     */
+    public static function doCountJoinAllExceptFestivalUrl(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        // we're going to modify criteria, so copy it first
+        $criteria = clone $criteria;
+
+        // We need to set the primary table name, since in the case that there are no WHERE columns
+        // it will be impossible for the BasePeer::createSelectSql() method to determine which
+        // tables go into the FROM clause.
+        $criteria->setPrimaryTableName(FestivalPeer::TABLE_NAME);
+
+        if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+            $criteria->setDistinct();
+        }
+
+        if (!$criteria->hasSelectClause()) {
+            FestivalPeer::addSelectColumns($criteria);
+        }
+
+        $criteria->clearOrderByColumns(); // ORDER BY should not affect count
+
+        // Set the correct dbName
+        $criteria->setDbName(FestivalPeer::DATABASE_NAME);
+
+        if ($con === null) {
+            $con = Propel::getConnection(FestivalPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+        }
+
+        $criteria->addJoin(FestivalPeer::TYPE_ID, FestivalTypePeer::ID, $join_behavior);
+
+        $criteria->addJoin(FestivalPeer::FESTIVAL_LOCATION_ID, FestivalLocationPeer::ID, $join_behavior);
+
+        $criteria->addJoin(FestivalPeer::FESTIVAL_CONTENT_ID, FestivalContentPeer::ID, $join_behavior);
+
+        $stmt = BasePeer::doCount($criteria, $con);
+
+        if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $count = (int) $row[0];
+        } else {
+            $count = 0; // no rows returned; we infer that means 0 matches.
+        }
+        $stmt->closeCursor();
+
+        return $count;
+    }
+
+
+    /**
+     * Selects a collection of Festival objects pre-filled with all related objects except FestivalType.
+     *
+     * @param      Criteria  $criteria
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return array           Array of Festival objects.
+     * @throws PropelException Any exceptions caught during processing will be
+     *		 rethrown wrapped into a PropelException.
+     */
+    public static function doSelectJoinAllExceptFestivalType(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $criteria = clone $criteria;
+
+        // Set the correct dbName if it has not been overridden
+        // $criteria->getDbName() will return the same object if not set to another value
+        // so == check is okay and faster
+        if ($criteria->getDbName() == Propel::getDefaultDB()) {
+            $criteria->setDbName(FestivalPeer::DATABASE_NAME);
+        }
+
+        FestivalPeer::addSelectColumns($criteria);
+        $startcol2 = FestivalPeer::NUM_HYDRATE_COLUMNS;
+
+        FestivalLocationPeer::addSelectColumns($criteria);
+        $startcol3 = $startcol2 + FestivalLocationPeer::NUM_HYDRATE_COLUMNS;
+
+        FestivalContentPeer::addSelectColumns($criteria);
+        $startcol4 = $startcol3 + FestivalContentPeer::NUM_HYDRATE_COLUMNS;
+
+        FestivalUrlPeer::addSelectColumns($criteria);
+        $startcol5 = $startcol4 + FestivalUrlPeer::NUM_HYDRATE_COLUMNS;
+
+        $criteria->addJoin(FestivalPeer::FESTIVAL_LOCATION_ID, FestivalLocationPeer::ID, $join_behavior);
+
+        $criteria->addJoin(FestivalPeer::FESTIVAL_CONTENT_ID, FestivalContentPeer::ID, $join_behavior);
+
+        $criteria->addJoin(FestivalPeer::FESTIVAL_URL_ID, FestivalUrlPeer::ID, $join_behavior);
+
+
+        $stmt = BasePeer::doSelect($criteria, $con);
+        $results = array();
+
+        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $key1 = FestivalPeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = FestivalPeer::getInstanceFromPool($key1))) {
+                // We no longer rehydrate the object, since this can cause data loss.
+                // See http://www.propelorm.org/ticket/509
+                // $obj1->hydrate($row, 0, true); // rehydrate
+            } else {
+                $cls = FestivalPeer::getOMClass();
+
+                $obj1 = new $cls();
+                $obj1->hydrate($row);
+                FestivalPeer::addInstanceToPool($obj1, $key1);
+            } // if obj1 already loaded
+
+                // Add objects for joined FestivalLocation rows
+
+                $key2 = FestivalLocationPeer::getPrimaryKeyHashFromRow($row, $startcol2);
+                if ($key2 !== null) {
+                    $obj2 = FestivalLocationPeer::getInstanceFromPool($key2);
+                    if (!$obj2) {
+
+                        $cls = FestivalLocationPeer::getOMClass();
+
+                    $obj2 = new $cls();
+                    $obj2->hydrate($row, $startcol2);
+                    FestivalLocationPeer::addInstanceToPool($obj2, $key2);
+                } // if $obj2 already loaded
+
+                // Add the $obj1 (Festival) to the collection in $obj2 (FestivalLocation)
+                $obj2->addFestival($obj1);
+
+            } // if joined row is not null
+
+                // Add objects for joined FestivalContent rows
+
+                $key3 = FestivalContentPeer::getPrimaryKeyHashFromRow($row, $startcol3);
+                if ($key3 !== null) {
+                    $obj3 = FestivalContentPeer::getInstanceFromPool($key3);
+                    if (!$obj3) {
+
+                        $cls = FestivalContentPeer::getOMClass();
+
+                    $obj3 = new $cls();
+                    $obj3->hydrate($row, $startcol3);
+                    FestivalContentPeer::addInstanceToPool($obj3, $key3);
+                } // if $obj3 already loaded
+
+                // Add the $obj1 (Festival) to the collection in $obj3 (FestivalContent)
+                $obj3->addFestival($obj1);
+
+            } // if joined row is not null
+
+                // Add objects for joined FestivalUrl rows
+
+                $key4 = FestivalUrlPeer::getPrimaryKeyHashFromRow($row, $startcol4);
+                if ($key4 !== null) {
+                    $obj4 = FestivalUrlPeer::getInstanceFromPool($key4);
+                    if (!$obj4) {
+
+                        $cls = FestivalUrlPeer::getOMClass();
+
+                    $obj4 = new $cls();
+                    $obj4->hydrate($row, $startcol4);
+                    FestivalUrlPeer::addInstanceToPool($obj4, $key4);
+                } // if $obj4 already loaded
+
+                // Add the $obj1 (Festival) to the collection in $obj4 (FestivalUrl)
+                $obj4->addFestival($obj1);
+
+            } // if joined row is not null
+
+            $results[] = $obj1;
+        }
+        $stmt->closeCursor();
+
+        return $results;
+    }
+
+
+    /**
+     * Selects a collection of Festival objects pre-filled with all related objects except FestivalLocation.
+     *
+     * @param      Criteria  $criteria
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return array           Array of Festival objects.
+     * @throws PropelException Any exceptions caught during processing will be
+     *		 rethrown wrapped into a PropelException.
+     */
+    public static function doSelectJoinAllExceptFestivalLocation(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $criteria = clone $criteria;
+
+        // Set the correct dbName if it has not been overridden
+        // $criteria->getDbName() will return the same object if not set to another value
+        // so == check is okay and faster
+        if ($criteria->getDbName() == Propel::getDefaultDB()) {
+            $criteria->setDbName(FestivalPeer::DATABASE_NAME);
+        }
+
+        FestivalPeer::addSelectColumns($criteria);
+        $startcol2 = FestivalPeer::NUM_HYDRATE_COLUMNS;
+
+        FestivalTypePeer::addSelectColumns($criteria);
+        $startcol3 = $startcol2 + FestivalTypePeer::NUM_HYDRATE_COLUMNS;
+
+        FestivalContentPeer::addSelectColumns($criteria);
+        $startcol4 = $startcol3 + FestivalContentPeer::NUM_HYDRATE_COLUMNS;
+
+        FestivalUrlPeer::addSelectColumns($criteria);
+        $startcol5 = $startcol4 + FestivalUrlPeer::NUM_HYDRATE_COLUMNS;
+
+        $criteria->addJoin(FestivalPeer::TYPE_ID, FestivalTypePeer::ID, $join_behavior);
+
+        $criteria->addJoin(FestivalPeer::FESTIVAL_CONTENT_ID, FestivalContentPeer::ID, $join_behavior);
+
+        $criteria->addJoin(FestivalPeer::FESTIVAL_URL_ID, FestivalUrlPeer::ID, $join_behavior);
+
+
+        $stmt = BasePeer::doSelect($criteria, $con);
+        $results = array();
+
+        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $key1 = FestivalPeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = FestivalPeer::getInstanceFromPool($key1))) {
+                // We no longer rehydrate the object, since this can cause data loss.
+                // See http://www.propelorm.org/ticket/509
+                // $obj1->hydrate($row, 0, true); // rehydrate
+            } else {
+                $cls = FestivalPeer::getOMClass();
+
+                $obj1 = new $cls();
+                $obj1->hydrate($row);
+                FestivalPeer::addInstanceToPool($obj1, $key1);
+            } // if obj1 already loaded
+
+                // Add objects for joined FestivalType rows
+
+                $key2 = FestivalTypePeer::getPrimaryKeyHashFromRow($row, $startcol2);
+                if ($key2 !== null) {
+                    $obj2 = FestivalTypePeer::getInstanceFromPool($key2);
+                    if (!$obj2) {
+
+                        $cls = FestivalTypePeer::getOMClass();
+
+                    $obj2 = new $cls();
+                    $obj2->hydrate($row, $startcol2);
+                    FestivalTypePeer::addInstanceToPool($obj2, $key2);
+                } // if $obj2 already loaded
+
+                // Add the $obj1 (Festival) to the collection in $obj2 (FestivalType)
+                $obj2->addFestival($obj1);
+
+            } // if joined row is not null
+
+                // Add objects for joined FestivalContent rows
+
+                $key3 = FestivalContentPeer::getPrimaryKeyHashFromRow($row, $startcol3);
+                if ($key3 !== null) {
+                    $obj3 = FestivalContentPeer::getInstanceFromPool($key3);
+                    if (!$obj3) {
+
+                        $cls = FestivalContentPeer::getOMClass();
+
+                    $obj3 = new $cls();
+                    $obj3->hydrate($row, $startcol3);
+                    FestivalContentPeer::addInstanceToPool($obj3, $key3);
+                } // if $obj3 already loaded
+
+                // Add the $obj1 (Festival) to the collection in $obj3 (FestivalContent)
+                $obj3->addFestival($obj1);
+
+            } // if joined row is not null
+
+                // Add objects for joined FestivalUrl rows
+
+                $key4 = FestivalUrlPeer::getPrimaryKeyHashFromRow($row, $startcol4);
+                if ($key4 !== null) {
+                    $obj4 = FestivalUrlPeer::getInstanceFromPool($key4);
+                    if (!$obj4) {
+
+                        $cls = FestivalUrlPeer::getOMClass();
+
+                    $obj4 = new $cls();
+                    $obj4->hydrate($row, $startcol4);
+                    FestivalUrlPeer::addInstanceToPool($obj4, $key4);
+                } // if $obj4 already loaded
+
+                // Add the $obj1 (Festival) to the collection in $obj4 (FestivalUrl)
+                $obj4->addFestival($obj1);
+
+            } // if joined row is not null
+
+            $results[] = $obj1;
+        }
+        $stmt->closeCursor();
+
+        return $results;
+    }
+
+
+    /**
+     * Selects a collection of Festival objects pre-filled with all related objects except FestivalContent.
+     *
+     * @param      Criteria  $criteria
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return array           Array of Festival objects.
+     * @throws PropelException Any exceptions caught during processing will be
+     *		 rethrown wrapped into a PropelException.
+     */
+    public static function doSelectJoinAllExceptFestivalContent(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $criteria = clone $criteria;
+
+        // Set the correct dbName if it has not been overridden
+        // $criteria->getDbName() will return the same object if not set to another value
+        // so == check is okay and faster
+        if ($criteria->getDbName() == Propel::getDefaultDB()) {
+            $criteria->setDbName(FestivalPeer::DATABASE_NAME);
+        }
+
+        FestivalPeer::addSelectColumns($criteria);
+        $startcol2 = FestivalPeer::NUM_HYDRATE_COLUMNS;
+
+        FestivalTypePeer::addSelectColumns($criteria);
+        $startcol3 = $startcol2 + FestivalTypePeer::NUM_HYDRATE_COLUMNS;
+
+        FestivalLocationPeer::addSelectColumns($criteria);
+        $startcol4 = $startcol3 + FestivalLocationPeer::NUM_HYDRATE_COLUMNS;
+
+        FestivalUrlPeer::addSelectColumns($criteria);
+        $startcol5 = $startcol4 + FestivalUrlPeer::NUM_HYDRATE_COLUMNS;
+
+        $criteria->addJoin(FestivalPeer::TYPE_ID, FestivalTypePeer::ID, $join_behavior);
+
+        $criteria->addJoin(FestivalPeer::FESTIVAL_LOCATION_ID, FestivalLocationPeer::ID, $join_behavior);
+
+        $criteria->addJoin(FestivalPeer::FESTIVAL_URL_ID, FestivalUrlPeer::ID, $join_behavior);
+
+
+        $stmt = BasePeer::doSelect($criteria, $con);
+        $results = array();
+
+        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $key1 = FestivalPeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = FestivalPeer::getInstanceFromPool($key1))) {
+                // We no longer rehydrate the object, since this can cause data loss.
+                // See http://www.propelorm.org/ticket/509
+                // $obj1->hydrate($row, 0, true); // rehydrate
+            } else {
+                $cls = FestivalPeer::getOMClass();
+
+                $obj1 = new $cls();
+                $obj1->hydrate($row);
+                FestivalPeer::addInstanceToPool($obj1, $key1);
+            } // if obj1 already loaded
+
+                // Add objects for joined FestivalType rows
+
+                $key2 = FestivalTypePeer::getPrimaryKeyHashFromRow($row, $startcol2);
+                if ($key2 !== null) {
+                    $obj2 = FestivalTypePeer::getInstanceFromPool($key2);
+                    if (!$obj2) {
+
+                        $cls = FestivalTypePeer::getOMClass();
+
+                    $obj2 = new $cls();
+                    $obj2->hydrate($row, $startcol2);
+                    FestivalTypePeer::addInstanceToPool($obj2, $key2);
+                } // if $obj2 already loaded
+
+                // Add the $obj1 (Festival) to the collection in $obj2 (FestivalType)
+                $obj2->addFestival($obj1);
+
+            } // if joined row is not null
+
+                // Add objects for joined FestivalLocation rows
+
+                $key3 = FestivalLocationPeer::getPrimaryKeyHashFromRow($row, $startcol3);
+                if ($key3 !== null) {
+                    $obj3 = FestivalLocationPeer::getInstanceFromPool($key3);
+                    if (!$obj3) {
+
+                        $cls = FestivalLocationPeer::getOMClass();
+
+                    $obj3 = new $cls();
+                    $obj3->hydrate($row, $startcol3);
+                    FestivalLocationPeer::addInstanceToPool($obj3, $key3);
+                } // if $obj3 already loaded
+
+                // Add the $obj1 (Festival) to the collection in $obj3 (FestivalLocation)
+                $obj3->addFestival($obj1);
+
+            } // if joined row is not null
+
+                // Add objects for joined FestivalUrl rows
+
+                $key4 = FestivalUrlPeer::getPrimaryKeyHashFromRow($row, $startcol4);
+                if ($key4 !== null) {
+                    $obj4 = FestivalUrlPeer::getInstanceFromPool($key4);
+                    if (!$obj4) {
+
+                        $cls = FestivalUrlPeer::getOMClass();
+
+                    $obj4 = new $cls();
+                    $obj4->hydrate($row, $startcol4);
+                    FestivalUrlPeer::addInstanceToPool($obj4, $key4);
+                } // if $obj4 already loaded
+
+                // Add the $obj1 (Festival) to the collection in $obj4 (FestivalUrl)
+                $obj4->addFestival($obj1);
+
+            } // if joined row is not null
+
+            $results[] = $obj1;
+        }
+        $stmt->closeCursor();
+
+        return $results;
+    }
+
+
+    /**
+     * Selects a collection of Festival objects pre-filled with all related objects except FestivalUrl.
+     *
+     * @param      Criteria  $criteria
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return array           Array of Festival objects.
+     * @throws PropelException Any exceptions caught during processing will be
+     *		 rethrown wrapped into a PropelException.
+     */
+    public static function doSelectJoinAllExceptFestivalUrl(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $criteria = clone $criteria;
+
+        // Set the correct dbName if it has not been overridden
+        // $criteria->getDbName() will return the same object if not set to another value
+        // so == check is okay and faster
+        if ($criteria->getDbName() == Propel::getDefaultDB()) {
+            $criteria->setDbName(FestivalPeer::DATABASE_NAME);
+        }
+
+        FestivalPeer::addSelectColumns($criteria);
+        $startcol2 = FestivalPeer::NUM_HYDRATE_COLUMNS;
+
+        FestivalTypePeer::addSelectColumns($criteria);
+        $startcol3 = $startcol2 + FestivalTypePeer::NUM_HYDRATE_COLUMNS;
+
+        FestivalLocationPeer::addSelectColumns($criteria);
+        $startcol4 = $startcol3 + FestivalLocationPeer::NUM_HYDRATE_COLUMNS;
+
+        FestivalContentPeer::addSelectColumns($criteria);
+        $startcol5 = $startcol4 + FestivalContentPeer::NUM_HYDRATE_COLUMNS;
+
+        $criteria->addJoin(FestivalPeer::TYPE_ID, FestivalTypePeer::ID, $join_behavior);
+
+        $criteria->addJoin(FestivalPeer::FESTIVAL_LOCATION_ID, FestivalLocationPeer::ID, $join_behavior);
+
+        $criteria->addJoin(FestivalPeer::FESTIVAL_CONTENT_ID, FestivalContentPeer::ID, $join_behavior);
+
+
+        $stmt = BasePeer::doSelect($criteria, $con);
+        $results = array();
+
+        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $key1 = FestivalPeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = FestivalPeer::getInstanceFromPool($key1))) {
+                // We no longer rehydrate the object, since this can cause data loss.
+                // See http://www.propelorm.org/ticket/509
+                // $obj1->hydrate($row, 0, true); // rehydrate
+            } else {
+                $cls = FestivalPeer::getOMClass();
+
+                $obj1 = new $cls();
+                $obj1->hydrate($row);
+                FestivalPeer::addInstanceToPool($obj1, $key1);
+            } // if obj1 already loaded
+
+                // Add objects for joined FestivalType rows
+
+                $key2 = FestivalTypePeer::getPrimaryKeyHashFromRow($row, $startcol2);
+                if ($key2 !== null) {
+                    $obj2 = FestivalTypePeer::getInstanceFromPool($key2);
+                    if (!$obj2) {
+
+                        $cls = FestivalTypePeer::getOMClass();
+
+                    $obj2 = new $cls();
+                    $obj2->hydrate($row, $startcol2);
+                    FestivalTypePeer::addInstanceToPool($obj2, $key2);
+                } // if $obj2 already loaded
+
+                // Add the $obj1 (Festival) to the collection in $obj2 (FestivalType)
+                $obj2->addFestival($obj1);
+
+            } // if joined row is not null
+
+                // Add objects for joined FestivalLocation rows
+
+                $key3 = FestivalLocationPeer::getPrimaryKeyHashFromRow($row, $startcol3);
+                if ($key3 !== null) {
+                    $obj3 = FestivalLocationPeer::getInstanceFromPool($key3);
+                    if (!$obj3) {
+
+                        $cls = FestivalLocationPeer::getOMClass();
+
+                    $obj3 = new $cls();
+                    $obj3->hydrate($row, $startcol3);
+                    FestivalLocationPeer::addInstanceToPool($obj3, $key3);
+                } // if $obj3 already loaded
+
+                // Add the $obj1 (Festival) to the collection in $obj3 (FestivalLocation)
+                $obj3->addFestival($obj1);
+
+            } // if joined row is not null
+
+                // Add objects for joined FestivalContent rows
+
+                $key4 = FestivalContentPeer::getPrimaryKeyHashFromRow($row, $startcol4);
+                if ($key4 !== null) {
+                    $obj4 = FestivalContentPeer::getInstanceFromPool($key4);
+                    if (!$obj4) {
+
+                        $cls = FestivalContentPeer::getOMClass();
+
+                    $obj4 = new $cls();
+                    $obj4->hydrate($row, $startcol4);
+                    FestivalContentPeer::addInstanceToPool($obj4, $key4);
+                } // if $obj4 already loaded
+
+                // Add the $obj1 (Festival) to the collection in $obj4 (FestivalContent)
+                $obj4->addFestival($obj1);
+
+            } // if joined row is not null
+
+            $results[] = $obj1;
+        }
+        $stmt->closeCursor();
+
+        return $results;
     }
 
     /**

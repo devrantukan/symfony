@@ -14,8 +14,16 @@ use \PropelDateTime;
 use \PropelException;
 use \PropelPDO;
 use Festival\FestivalBundle\Model\Festival;
+use Festival\FestivalBundle\Model\FestivalContent;
+use Festival\FestivalBundle\Model\FestivalContentQuery;
+use Festival\FestivalBundle\Model\FestivalLocation;
+use Festival\FestivalBundle\Model\FestivalLocationQuery;
 use Festival\FestivalBundle\Model\FestivalPeer;
 use Festival\FestivalBundle\Model\FestivalQuery;
+use Festival\FestivalBundle\Model\FestivalType;
+use Festival\FestivalBundle\Model\FestivalTypeQuery;
+use Festival\FestivalBundle\Model\FestivalUrl;
+use Festival\FestivalBundle\Model\FestivalUrlQuery;
 
 abstract class BaseFestival extends BaseObject implements Persistent
 {
@@ -45,10 +53,46 @@ abstract class BaseFestival extends BaseObject implements Persistent
     protected $id;
 
     /**
-     * The value for the title field.
+     * The value for the type_id field.
+     * @var        int
+     */
+    protected $type_id;
+
+    /**
+     * The value for the festival_content_title field.
      * @var        string
      */
-    protected $title;
+    protected $festival_content_title;
+
+    /**
+     * The value for the start_date field.
+     * @var        string
+     */
+    protected $start_date;
+
+    /**
+     * The value for the end_date field.
+     * @var        string
+     */
+    protected $end_date;
+
+    /**
+     * The value for the festival_location_id field.
+     * @var        int
+     */
+    protected $festival_location_id;
+
+    /**
+     * The value for the festival_content_id field.
+     * @var        int
+     */
+    protected $festival_content_id;
+
+    /**
+     * The value for the festival_url_id field.
+     * @var        int
+     */
+    protected $festival_url_id;
 
     /**
      * The value for the slug field.
@@ -57,88 +101,30 @@ abstract class BaseFestival extends BaseObject implements Persistent
     protected $slug;
 
     /**
-     * The value for the desc field.
-     * @var        string
-     */
-    protected $desc;
-
-    /**
      * The value for the lang field.
      * @var        string
      */
     protected $lang;
 
     /**
-     * The value for the start field.
-     * @var        string
+     * @var        FestivalType
      */
-    protected $start;
+    protected $aFestivalType;
 
     /**
-     * The value for the end field.
-     * @var        string
+     * @var        FestivalLocation
      */
-    protected $end;
+    protected $aFestivalLocation;
 
     /**
-     * The value for the lat field.
-     * @var        string
+     * @var        FestivalContent
      */
-    protected $lat;
+    protected $aFestivalContent;
 
     /**
-     * The value for the lon field.
-     * @var        string
+     * @var        FestivalUrl
      */
-    protected $lon;
-
-    /**
-     * The value for the official_site_url field.
-     * @var        string
-     */
-    protected $official_site_url;
-
-    /**
-     * The value for the facebook_url field.
-     * @var        string
-     */
-    protected $facebook_url;
-
-    /**
-     * The value for the twitter_url field.
-     * @var        string
-     */
-    protected $twitter_url;
-
-    /**
-     * The value for the youtube_url field.
-     * @var        string
-     */
-    protected $youtube_url;
-
-    /**
-     * The value for the wikipedia_url field.
-     * @var        string
-     */
-    protected $wikipedia_url;
-
-    /**
-     * The value for the rss_url field.
-     * @var        string
-     */
-    protected $rss_url;
-
-    /**
-     * The value for the country field.
-     * @var        string
-     */
-    protected $country;
-
-    /**
-     * The value for the location field.
-     * @var        string
-     */
-    protected $location;
+    protected $aFestivalUrl;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -165,13 +151,127 @@ abstract class BaseFestival extends BaseObject implements Persistent
     }
 
     /**
-     * Get the [title] column value.
+     * Get the [type_id] column value.
+     *
+     * @return int
+     */
+    public function getTypeId()
+    {
+        return $this->type_id;
+    }
+
+    /**
+     * Get the [festival_content_title] column value.
      *
      * @return string
      */
-    public function getTitle()
+    public function getFestivalContentTitle()
     {
-        return $this->title;
+        return $this->festival_content_title;
+    }
+
+    /**
+     * Get the [optionally formatted] temporal [start_date] column value.
+     *
+     *
+     * @param string $format The date/time format string (either date()-style or strftime()-style).
+     *				 If format is null, then the raw DateTime object will be returned.
+     * @return mixed Formatted date/time value as string or DateTime object (if format is null), null if column is null, and 0 if column value is 0000-00-00 00:00:00
+     * @throws PropelException - if unable to parse/validate the date/time value.
+     */
+    public function getStartDate($format = null)
+    {
+        if ($this->start_date === null) {
+            return null;
+        }
+
+        if ($this->start_date === '0000-00-00 00:00:00') {
+            // while technically this is not a default value of null,
+            // this seems to be closest in meaning.
+            return null;
+        } else {
+            try {
+                $dt = new DateTime($this->start_date);
+            } catch (Exception $x) {
+                throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->start_date, true), $x);
+            }
+        }
+
+        if ($format === null) {
+            // Because propel.useDateTimeClass is true, we return a DateTime object.
+            return $dt;
+        } elseif (strpos($format, '%') !== false) {
+            return strftime($format, $dt->format('U'));
+        } else {
+            return $dt->format($format);
+        }
+    }
+
+    /**
+     * Get the [optionally formatted] temporal [end_date] column value.
+     *
+     *
+     * @param string $format The date/time format string (either date()-style or strftime()-style).
+     *				 If format is null, then the raw DateTime object will be returned.
+     * @return mixed Formatted date/time value as string or DateTime object (if format is null), null if column is null, and 0 if column value is 0000-00-00 00:00:00
+     * @throws PropelException - if unable to parse/validate the date/time value.
+     */
+    public function getEndDate($format = null)
+    {
+        if ($this->end_date === null) {
+            return null;
+        }
+
+        if ($this->end_date === '0000-00-00 00:00:00') {
+            // while technically this is not a default value of null,
+            // this seems to be closest in meaning.
+            return null;
+        } else {
+            try {
+                $dt = new DateTime($this->end_date);
+            } catch (Exception $x) {
+                throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->end_date, true), $x);
+            }
+        }
+
+        if ($format === null) {
+            // Because propel.useDateTimeClass is true, we return a DateTime object.
+            return $dt;
+        } elseif (strpos($format, '%') !== false) {
+            return strftime($format, $dt->format('U'));
+        } else {
+            return $dt->format($format);
+        }
+    }
+
+    /**
+     * Get the [festival_location_id] column value.
+     *
+     * @return int
+     */
+    public function getFestivalLocationId()
+    {
+        return $this->festival_location_id;
+    }
+
+    /**
+     * Get the [festival_content_id] column value.
+     *
+     * @return int
+     */
+    public function getFestivalContentId()
+    {
+        return $this->festival_content_id;
+    }
+
+    /**
+     * Get the [festival_url_id] column value.
+     *
+     * @return int
+     */
+    public function getFestivalUrlId()
+    {
+        return $this->festival_url_id;
     }
 
     /**
@@ -185,16 +285,6 @@ abstract class BaseFestival extends BaseObject implements Persistent
     }
 
     /**
-     * Get the [desc] column value.
-     *
-     * @return string
-     */
-    public function getDesc()
-    {
-        return $this->desc;
-    }
-
-    /**
      * Get the [lang] column value.
      *
      * @return string
@@ -202,180 +292,6 @@ abstract class BaseFestival extends BaseObject implements Persistent
     public function getLang()
     {
         return $this->lang;
-    }
-
-    /**
-     * Get the [optionally formatted] temporal [start] column value.
-     *
-     *
-     * @param string $format The date/time format string (either date()-style or strftime()-style).
-     *				 If format is null, then the raw DateTime object will be returned.
-     * @return mixed Formatted date/time value as string or DateTime object (if format is null), null if column is null, and 0 if column value is 0000-00-00
-     * @throws PropelException - if unable to parse/validate the date/time value.
-     */
-    public function getStart($format = null)
-    {
-        if ($this->start === null) {
-            return null;
-        }
-
-        if ($this->start === '0000-00-00') {
-            // while technically this is not a default value of null,
-            // this seems to be closest in meaning.
-            return null;
-        } else {
-            try {
-                $dt = new DateTime($this->start);
-            } catch (Exception $x) {
-                throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->start, true), $x);
-            }
-        }
-
-        if ($format === null) {
-            // Because propel.useDateTimeClass is true, we return a DateTime object.
-            return $dt;
-        } elseif (strpos($format, '%') !== false) {
-            return strftime($format, $dt->format('U'));
-        } else {
-            return $dt->format($format);
-        }
-    }
-
-    /**
-     * Get the [optionally formatted] temporal [end] column value.
-     *
-     *
-     * @param string $format The date/time format string (either date()-style or strftime()-style).
-     *				 If format is null, then the raw DateTime object will be returned.
-     * @return mixed Formatted date/time value as string or DateTime object (if format is null), null if column is null, and 0 if column value is 0000-00-00
-     * @throws PropelException - if unable to parse/validate the date/time value.
-     */
-    public function getEnd($format = null)
-    {
-        if ($this->end === null) {
-            return null;
-        }
-
-        if ($this->end === '0000-00-00') {
-            // while technically this is not a default value of null,
-            // this seems to be closest in meaning.
-            return null;
-        } else {
-            try {
-                $dt = new DateTime($this->end);
-            } catch (Exception $x) {
-                throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->end, true), $x);
-            }
-        }
-
-        if ($format === null) {
-            // Because propel.useDateTimeClass is true, we return a DateTime object.
-            return $dt;
-        } elseif (strpos($format, '%') !== false) {
-            return strftime($format, $dt->format('U'));
-        } else {
-            return $dt->format($format);
-        }
-    }
-
-    /**
-     * Get the [lat] column value.
-     *
-     * @return string
-     */
-    public function getLat()
-    {
-        return $this->lat;
-    }
-
-    /**
-     * Get the [lon] column value.
-     *
-     * @return string
-     */
-    public function getLon()
-    {
-        return $this->lon;
-    }
-
-    /**
-     * Get the [official_site_url] column value.
-     *
-     * @return string
-     */
-    public function getOfficialSiteUrl()
-    {
-        return $this->official_site_url;
-    }
-
-    /**
-     * Get the [facebook_url] column value.
-     *
-     * @return string
-     */
-    public function getFacebookUrl()
-    {
-        return $this->facebook_url;
-    }
-
-    /**
-     * Get the [twitter_url] column value.
-     *
-     * @return string
-     */
-    public function getTwitterUrl()
-    {
-        return $this->twitter_url;
-    }
-
-    /**
-     * Get the [youtube_url] column value.
-     *
-     * @return string
-     */
-    public function getYoutubeUrl()
-    {
-        return $this->youtube_url;
-    }
-
-    /**
-     * Get the [wikipedia_url] column value.
-     *
-     * @return string
-     */
-    public function getWikipediaUrl()
-    {
-        return $this->wikipedia_url;
-    }
-
-    /**
-     * Get the [rss_url] column value.
-     *
-     * @return string
-     */
-    public function getRssUrl()
-    {
-        return $this->rss_url;
-    }
-
-    /**
-     * Get the [country] column value.
-     *
-     * @return string
-     */
-    public function getCountry()
-    {
-        return $this->country;
-    }
-
-    /**
-     * Get the [location] column value.
-     *
-     * @return string
-     */
-    public function getLocation()
-    {
-        return $this->location;
     }
 
     /**
@@ -400,25 +316,171 @@ abstract class BaseFestival extends BaseObject implements Persistent
     } // setId()
 
     /**
-     * Set the value of [title] column.
+     * Set the value of [type_id] column.
+     *
+     * @param int $v new value
+     * @return Festival The current object (for fluent API support)
+     */
+    public function setTypeId($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->type_id !== $v) {
+            $this->type_id = $v;
+            $this->modifiedColumns[] = FestivalPeer::TYPE_ID;
+        }
+
+        if ($this->aFestivalType !== null && $this->aFestivalType->getId() !== $v) {
+            $this->aFestivalType = null;
+        }
+
+
+        return $this;
+    } // setTypeId()
+
+    /**
+     * Set the value of [festival_content_title] column.
      *
      * @param string $v new value
      * @return Festival The current object (for fluent API support)
      */
-    public function setTitle($v)
+    public function setFestivalContentTitle($v)
     {
         if ($v !== null) {
             $v = (string) $v;
         }
 
-        if ($this->title !== $v) {
-            $this->title = $v;
-            $this->modifiedColumns[] = FestivalPeer::TITLE;
+        if ($this->festival_content_title !== $v) {
+            $this->festival_content_title = $v;
+            $this->modifiedColumns[] = FestivalPeer::FESTIVAL_CONTENT_TITLE;
         }
 
 
         return $this;
-    } // setTitle()
+    } // setFestivalContentTitle()
+
+    /**
+     * Sets the value of [start_date] column to a normalized version of the date/time value specified.
+     *
+     * @param mixed $v string, integer (timestamp), or DateTime value.
+     *               Empty strings are treated as null.
+     * @return Festival The current object (for fluent API support)
+     */
+    public function setStartDate($v)
+    {
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
+        if ($this->start_date !== null || $dt !== null) {
+            $currentDateAsString = ($this->start_date !== null && $tmpDt = new DateTime($this->start_date)) ? $tmpDt->format('Y-m-d H:i:s') : null;
+            $newDateAsString = $dt ? $dt->format('Y-m-d H:i:s') : null;
+            if ($currentDateAsString !== $newDateAsString) {
+                $this->start_date = $newDateAsString;
+                $this->modifiedColumns[] = FestivalPeer::START_DATE;
+            }
+        } // if either are not null
+
+
+        return $this;
+    } // setStartDate()
+
+    /**
+     * Sets the value of [end_date] column to a normalized version of the date/time value specified.
+     *
+     * @param mixed $v string, integer (timestamp), or DateTime value.
+     *               Empty strings are treated as null.
+     * @return Festival The current object (for fluent API support)
+     */
+    public function setEndDate($v)
+    {
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
+        if ($this->end_date !== null || $dt !== null) {
+            $currentDateAsString = ($this->end_date !== null && $tmpDt = new DateTime($this->end_date)) ? $tmpDt->format('Y-m-d H:i:s') : null;
+            $newDateAsString = $dt ? $dt->format('Y-m-d H:i:s') : null;
+            if ($currentDateAsString !== $newDateAsString) {
+                $this->end_date = $newDateAsString;
+                $this->modifiedColumns[] = FestivalPeer::END_DATE;
+            }
+        } // if either are not null
+
+
+        return $this;
+    } // setEndDate()
+
+    /**
+     * Set the value of [festival_location_id] column.
+     *
+     * @param int $v new value
+     * @return Festival The current object (for fluent API support)
+     */
+    public function setFestivalLocationId($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->festival_location_id !== $v) {
+            $this->festival_location_id = $v;
+            $this->modifiedColumns[] = FestivalPeer::FESTIVAL_LOCATION_ID;
+        }
+
+        if ($this->aFestivalLocation !== null && $this->aFestivalLocation->getId() !== $v) {
+            $this->aFestivalLocation = null;
+        }
+
+
+        return $this;
+    } // setFestivalLocationId()
+
+    /**
+     * Set the value of [festival_content_id] column.
+     *
+     * @param int $v new value
+     * @return Festival The current object (for fluent API support)
+     */
+    public function setFestivalContentId($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->festival_content_id !== $v) {
+            $this->festival_content_id = $v;
+            $this->modifiedColumns[] = FestivalPeer::FESTIVAL_CONTENT_ID;
+        }
+
+        if ($this->aFestivalContent !== null && $this->aFestivalContent->getId() !== $v) {
+            $this->aFestivalContent = null;
+        }
+
+
+        return $this;
+    } // setFestivalContentId()
+
+    /**
+     * Set the value of [festival_url_id] column.
+     *
+     * @param int $v new value
+     * @return Festival The current object (for fluent API support)
+     */
+    public function setFestivalUrlId($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->festival_url_id !== $v) {
+            $this->festival_url_id = $v;
+            $this->modifiedColumns[] = FestivalPeer::FESTIVAL_URL_ID;
+        }
+
+        if ($this->aFestivalUrl !== null && $this->aFestivalUrl->getId() !== $v) {
+            $this->aFestivalUrl = null;
+        }
+
+
+        return $this;
+    } // setFestivalUrlId()
 
     /**
      * Set the value of [slug] column.
@@ -442,27 +504,6 @@ abstract class BaseFestival extends BaseObject implements Persistent
     } // setSlug()
 
     /**
-     * Set the value of [desc] column.
-     *
-     * @param string $v new value
-     * @return Festival The current object (for fluent API support)
-     */
-    public function setDesc($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->desc !== $v) {
-            $this->desc = $v;
-            $this->modifiedColumns[] = FestivalPeer::DESC;
-        }
-
-
-        return $this;
-    } // setDesc()
-
-    /**
      * Set the value of [lang] column.
      *
      * @param string $v new value
@@ -482,262 +523,6 @@ abstract class BaseFestival extends BaseObject implements Persistent
 
         return $this;
     } // setLang()
-
-    /**
-     * Sets the value of [start] column to a normalized version of the date/time value specified.
-     *
-     * @param mixed $v string, integer (timestamp), or DateTime value.
-     *               Empty strings are treated as null.
-     * @return Festival The current object (for fluent API support)
-     */
-    public function setStart($v)
-    {
-        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
-        if ($this->start !== null || $dt !== null) {
-            $currentDateAsString = ($this->start !== null && $tmpDt = new DateTime($this->start)) ? $tmpDt->format('Y-m-d') : null;
-            $newDateAsString = $dt ? $dt->format('Y-m-d') : null;
-            if ($currentDateAsString !== $newDateAsString) {
-                $this->start = $newDateAsString;
-                $this->modifiedColumns[] = FestivalPeer::START;
-            }
-        } // if either are not null
-
-
-        return $this;
-    } // setStart()
-
-    /**
-     * Sets the value of [end] column to a normalized version of the date/time value specified.
-     *
-     * @param mixed $v string, integer (timestamp), or DateTime value.
-     *               Empty strings are treated as null.
-     * @return Festival The current object (for fluent API support)
-     */
-    public function setEnd($v)
-    {
-        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
-        if ($this->end !== null || $dt !== null) {
-            $currentDateAsString = ($this->end !== null && $tmpDt = new DateTime($this->end)) ? $tmpDt->format('Y-m-d') : null;
-            $newDateAsString = $dt ? $dt->format('Y-m-d') : null;
-            if ($currentDateAsString !== $newDateAsString) {
-                $this->end = $newDateAsString;
-                $this->modifiedColumns[] = FestivalPeer::END;
-            }
-        } // if either are not null
-
-
-        return $this;
-    } // setEnd()
-
-    /**
-     * Set the value of [lat] column.
-     *
-     * @param string $v new value
-     * @return Festival The current object (for fluent API support)
-     */
-    public function setLat($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->lat !== $v) {
-            $this->lat = $v;
-            $this->modifiedColumns[] = FestivalPeer::LAT;
-        }
-
-
-        return $this;
-    } // setLat()
-
-    /**
-     * Set the value of [lon] column.
-     *
-     * @param string $v new value
-     * @return Festival The current object (for fluent API support)
-     */
-    public function setLon($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->lon !== $v) {
-            $this->lon = $v;
-            $this->modifiedColumns[] = FestivalPeer::LON;
-        }
-
-
-        return $this;
-    } // setLon()
-
-    /**
-     * Set the value of [official_site_url] column.
-     *
-     * @param string $v new value
-     * @return Festival The current object (for fluent API support)
-     */
-    public function setOfficialSiteUrl($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->official_site_url !== $v) {
-            $this->official_site_url = $v;
-            $this->modifiedColumns[] = FestivalPeer::OFFICIAL_SITE_URL;
-        }
-
-
-        return $this;
-    } // setOfficialSiteUrl()
-
-    /**
-     * Set the value of [facebook_url] column.
-     *
-     * @param string $v new value
-     * @return Festival The current object (for fluent API support)
-     */
-    public function setFacebookUrl($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->facebook_url !== $v) {
-            $this->facebook_url = $v;
-            $this->modifiedColumns[] = FestivalPeer::FACEBOOK_URL;
-        }
-
-
-        return $this;
-    } // setFacebookUrl()
-
-    /**
-     * Set the value of [twitter_url] column.
-     *
-     * @param string $v new value
-     * @return Festival The current object (for fluent API support)
-     */
-    public function setTwitterUrl($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->twitter_url !== $v) {
-            $this->twitter_url = $v;
-            $this->modifiedColumns[] = FestivalPeer::TWITTER_URL;
-        }
-
-
-        return $this;
-    } // setTwitterUrl()
-
-    /**
-     * Set the value of [youtube_url] column.
-     *
-     * @param string $v new value
-     * @return Festival The current object (for fluent API support)
-     */
-    public function setYoutubeUrl($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->youtube_url !== $v) {
-            $this->youtube_url = $v;
-            $this->modifiedColumns[] = FestivalPeer::YOUTUBE_URL;
-        }
-
-
-        return $this;
-    } // setYoutubeUrl()
-
-    /**
-     * Set the value of [wikipedia_url] column.
-     *
-     * @param string $v new value
-     * @return Festival The current object (for fluent API support)
-     */
-    public function setWikipediaUrl($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->wikipedia_url !== $v) {
-            $this->wikipedia_url = $v;
-            $this->modifiedColumns[] = FestivalPeer::WIKIPEDIA_URL;
-        }
-
-
-        return $this;
-    } // setWikipediaUrl()
-
-    /**
-     * Set the value of [rss_url] column.
-     *
-     * @param string $v new value
-     * @return Festival The current object (for fluent API support)
-     */
-    public function setRssUrl($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->rss_url !== $v) {
-            $this->rss_url = $v;
-            $this->modifiedColumns[] = FestivalPeer::RSS_URL;
-        }
-
-
-        return $this;
-    } // setRssUrl()
-
-    /**
-     * Set the value of [country] column.
-     *
-     * @param string $v new value
-     * @return Festival The current object (for fluent API support)
-     */
-    public function setCountry($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->country !== $v) {
-            $this->country = $v;
-            $this->modifiedColumns[] = FestivalPeer::COUNTRY;
-        }
-
-
-        return $this;
-    } // setCountry()
-
-    /**
-     * Set the value of [location] column.
-     *
-     * @param string $v new value
-     * @return Festival The current object (for fluent API support)
-     */
-    public function setLocation($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->location !== $v) {
-            $this->location = $v;
-            $this->modifiedColumns[] = FestivalPeer::LOCATION;
-        }
-
-
-        return $this;
-    } // setLocation()
 
     /**
      * Indicates whether the columns in this object are only set to default values.
@@ -772,22 +557,15 @@ abstract class BaseFestival extends BaseObject implements Persistent
         try {
 
             $this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
-            $this->title = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
-            $this->slug = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
-            $this->desc = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
-            $this->lang = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
-            $this->start = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
-            $this->end = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
-            $this->lat = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
-            $this->lon = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
-            $this->official_site_url = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
-            $this->facebook_url = ($row[$startcol + 10] !== null) ? (string) $row[$startcol + 10] : null;
-            $this->twitter_url = ($row[$startcol + 11] !== null) ? (string) $row[$startcol + 11] : null;
-            $this->youtube_url = ($row[$startcol + 12] !== null) ? (string) $row[$startcol + 12] : null;
-            $this->wikipedia_url = ($row[$startcol + 13] !== null) ? (string) $row[$startcol + 13] : null;
-            $this->rss_url = ($row[$startcol + 14] !== null) ? (string) $row[$startcol + 14] : null;
-            $this->country = ($row[$startcol + 15] !== null) ? (string) $row[$startcol + 15] : null;
-            $this->location = ($row[$startcol + 16] !== null) ? (string) $row[$startcol + 16] : null;
+            $this->type_id = ($row[$startcol + 1] !== null) ? (int) $row[$startcol + 1] : null;
+            $this->festival_content_title = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
+            $this->start_date = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
+            $this->end_date = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
+            $this->festival_location_id = ($row[$startcol + 5] !== null) ? (int) $row[$startcol + 5] : null;
+            $this->festival_content_id = ($row[$startcol + 6] !== null) ? (int) $row[$startcol + 6] : null;
+            $this->festival_url_id = ($row[$startcol + 7] !== null) ? (int) $row[$startcol + 7] : null;
+            $this->slug = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
+            $this->lang = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -796,7 +574,7 @@ abstract class BaseFestival extends BaseObject implements Persistent
                 $this->ensureConsistency();
             }
 
-            return $startcol + 17; // 17 = FestivalPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 10; // 10 = FestivalPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating Festival object", $e);
@@ -819,6 +597,18 @@ abstract class BaseFestival extends BaseObject implements Persistent
     public function ensureConsistency()
     {
 
+        if ($this->aFestivalType !== null && $this->type_id !== $this->aFestivalType->getId()) {
+            $this->aFestivalType = null;
+        }
+        if ($this->aFestivalLocation !== null && $this->festival_location_id !== $this->aFestivalLocation->getId()) {
+            $this->aFestivalLocation = null;
+        }
+        if ($this->aFestivalContent !== null && $this->festival_content_id !== $this->aFestivalContent->getId()) {
+            $this->aFestivalContent = null;
+        }
+        if ($this->aFestivalUrl !== null && $this->festival_url_id !== $this->aFestivalUrl->getId()) {
+            $this->aFestivalUrl = null;
+        }
     } // ensureConsistency
 
     /**
@@ -858,6 +648,10 @@ abstract class BaseFestival extends BaseObject implements Persistent
 
         if ($deep) {  // also de-associate any related objects?
 
+            $this->aFestivalType = null;
+            $this->aFestivalLocation = null;
+            $this->aFestivalContent = null;
+            $this->aFestivalUrl = null;
         } // if (deep)
     }
 
@@ -971,6 +765,39 @@ abstract class BaseFestival extends BaseObject implements Persistent
         if (!$this->alreadyInSave) {
             $this->alreadyInSave = true;
 
+            // We call the save method on the following object(s) if they
+            // were passed to this object by their coresponding set
+            // method.  This object relates to these object(s) by a
+            // foreign key reference.
+
+            if ($this->aFestivalType !== null) {
+                if ($this->aFestivalType->isModified() || $this->aFestivalType->isNew()) {
+                    $affectedRows += $this->aFestivalType->save($con);
+                }
+                $this->setFestivalType($this->aFestivalType);
+            }
+
+            if ($this->aFestivalLocation !== null) {
+                if ($this->aFestivalLocation->isModified() || $this->aFestivalLocation->isNew()) {
+                    $affectedRows += $this->aFestivalLocation->save($con);
+                }
+                $this->setFestivalLocation($this->aFestivalLocation);
+            }
+
+            if ($this->aFestivalContent !== null) {
+                if ($this->aFestivalContent->isModified() || $this->aFestivalContent->isNew()) {
+                    $affectedRows += $this->aFestivalContent->save($con);
+                }
+                $this->setFestivalContent($this->aFestivalContent);
+            }
+
+            if ($this->aFestivalUrl !== null) {
+                if ($this->aFestivalUrl->isModified() || $this->aFestivalUrl->isNew()) {
+                    $affectedRows += $this->aFestivalUrl->save($con);
+                }
+                $this->setFestivalUrl($this->aFestivalUrl);
+            }
+
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
                 if ($this->isNew()) {
@@ -1011,53 +838,32 @@ abstract class BaseFestival extends BaseObject implements Persistent
         if ($this->isColumnModified(FestivalPeer::ID)) {
             $modifiedColumns[':p' . $index++]  = '`ID`';
         }
-        if ($this->isColumnModified(FestivalPeer::TITLE)) {
-            $modifiedColumns[':p' . $index++]  = '`TITLE`';
+        if ($this->isColumnModified(FestivalPeer::TYPE_ID)) {
+            $modifiedColumns[':p' . $index++]  = '`TYPE_ID`';
+        }
+        if ($this->isColumnModified(FestivalPeer::FESTIVAL_CONTENT_TITLE)) {
+            $modifiedColumns[':p' . $index++]  = '`FESTIVAL_CONTENT_TITLE`';
+        }
+        if ($this->isColumnModified(FestivalPeer::START_DATE)) {
+            $modifiedColumns[':p' . $index++]  = '`START_DATE`';
+        }
+        if ($this->isColumnModified(FestivalPeer::END_DATE)) {
+            $modifiedColumns[':p' . $index++]  = '`END_DATE`';
+        }
+        if ($this->isColumnModified(FestivalPeer::FESTIVAL_LOCATION_ID)) {
+            $modifiedColumns[':p' . $index++]  = '`FESTIVAL_LOCATION_ID`';
+        }
+        if ($this->isColumnModified(FestivalPeer::FESTIVAL_CONTENT_ID)) {
+            $modifiedColumns[':p' . $index++]  = '`FESTIVAL_CONTENT_ID`';
+        }
+        if ($this->isColumnModified(FestivalPeer::FESTIVAL_URL_ID)) {
+            $modifiedColumns[':p' . $index++]  = '`FESTIVAL_URL_ID`';
         }
         if ($this->isColumnModified(FestivalPeer::SLUG)) {
             $modifiedColumns[':p' . $index++]  = '`SLUG`';
         }
-        if ($this->isColumnModified(FestivalPeer::DESC)) {
-            $modifiedColumns[':p' . $index++]  = '`DESC`';
-        }
         if ($this->isColumnModified(FestivalPeer::LANG)) {
             $modifiedColumns[':p' . $index++]  = '`LANG`';
-        }
-        if ($this->isColumnModified(FestivalPeer::START)) {
-            $modifiedColumns[':p' . $index++]  = '`START`';
-        }
-        if ($this->isColumnModified(FestivalPeer::END)) {
-            $modifiedColumns[':p' . $index++]  = '`END`';
-        }
-        if ($this->isColumnModified(FestivalPeer::LAT)) {
-            $modifiedColumns[':p' . $index++]  = '`LAT`';
-        }
-        if ($this->isColumnModified(FestivalPeer::LON)) {
-            $modifiedColumns[':p' . $index++]  = '`LON`';
-        }
-        if ($this->isColumnModified(FestivalPeer::OFFICIAL_SITE_URL)) {
-            $modifiedColumns[':p' . $index++]  = '`OFFICIAL_SITE_URL`';
-        }
-        if ($this->isColumnModified(FestivalPeer::FACEBOOK_URL)) {
-            $modifiedColumns[':p' . $index++]  = '`FACEBOOK_URL`';
-        }
-        if ($this->isColumnModified(FestivalPeer::TWITTER_URL)) {
-            $modifiedColumns[':p' . $index++]  = '`TWITTER_URL`';
-        }
-        if ($this->isColumnModified(FestivalPeer::YOUTUBE_URL)) {
-            $modifiedColumns[':p' . $index++]  = '`YOUTUBE_URL`';
-        }
-        if ($this->isColumnModified(FestivalPeer::WIKIPEDIA_URL)) {
-            $modifiedColumns[':p' . $index++]  = '`WIKIPEDIA_URL`';
-        }
-        if ($this->isColumnModified(FestivalPeer::RSS_URL)) {
-            $modifiedColumns[':p' . $index++]  = '`RSS_URL`';
-        }
-        if ($this->isColumnModified(FestivalPeer::COUNTRY)) {
-            $modifiedColumns[':p' . $index++]  = '`COUNTRY`';
-        }
-        if ($this->isColumnModified(FestivalPeer::LOCATION)) {
-            $modifiedColumns[':p' . $index++]  = '`LOCATION`';
         }
 
         $sql = sprintf(
@@ -1073,53 +879,32 @@ abstract class BaseFestival extends BaseObject implements Persistent
                     case '`ID`':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
-                    case '`TITLE`':
-                        $stmt->bindValue($identifier, $this->title, PDO::PARAM_STR);
+                    case '`TYPE_ID`':
+                        $stmt->bindValue($identifier, $this->type_id, PDO::PARAM_INT);
+                        break;
+                    case '`FESTIVAL_CONTENT_TITLE`':
+                        $stmt->bindValue($identifier, $this->festival_content_title, PDO::PARAM_STR);
+                        break;
+                    case '`START_DATE`':
+                        $stmt->bindValue($identifier, $this->start_date, PDO::PARAM_STR);
+                        break;
+                    case '`END_DATE`':
+                        $stmt->bindValue($identifier, $this->end_date, PDO::PARAM_STR);
+                        break;
+                    case '`FESTIVAL_LOCATION_ID`':
+                        $stmt->bindValue($identifier, $this->festival_location_id, PDO::PARAM_INT);
+                        break;
+                    case '`FESTIVAL_CONTENT_ID`':
+                        $stmt->bindValue($identifier, $this->festival_content_id, PDO::PARAM_INT);
+                        break;
+                    case '`FESTIVAL_URL_ID`':
+                        $stmt->bindValue($identifier, $this->festival_url_id, PDO::PARAM_INT);
                         break;
                     case '`SLUG`':
                         $stmt->bindValue($identifier, $this->slug, PDO::PARAM_STR);
                         break;
-                    case '`DESC`':
-                        $stmt->bindValue($identifier, $this->desc, PDO::PARAM_STR);
-                        break;
                     case '`LANG`':
                         $stmt->bindValue($identifier, $this->lang, PDO::PARAM_STR);
-                        break;
-                    case '`START`':
-                        $stmt->bindValue($identifier, $this->start, PDO::PARAM_STR);
-                        break;
-                    case '`END`':
-                        $stmt->bindValue($identifier, $this->end, PDO::PARAM_STR);
-                        break;
-                    case '`LAT`':
-                        $stmt->bindValue($identifier, $this->lat, PDO::PARAM_STR);
-                        break;
-                    case '`LON`':
-                        $stmt->bindValue($identifier, $this->lon, PDO::PARAM_STR);
-                        break;
-                    case '`OFFICIAL_SITE_URL`':
-                        $stmt->bindValue($identifier, $this->official_site_url, PDO::PARAM_STR);
-                        break;
-                    case '`FACEBOOK_URL`':
-                        $stmt->bindValue($identifier, $this->facebook_url, PDO::PARAM_STR);
-                        break;
-                    case '`TWITTER_URL`':
-                        $stmt->bindValue($identifier, $this->twitter_url, PDO::PARAM_STR);
-                        break;
-                    case '`YOUTUBE_URL`':
-                        $stmt->bindValue($identifier, $this->youtube_url, PDO::PARAM_STR);
-                        break;
-                    case '`WIKIPEDIA_URL`':
-                        $stmt->bindValue($identifier, $this->wikipedia_url, PDO::PARAM_STR);
-                        break;
-                    case '`RSS_URL`':
-                        $stmt->bindValue($identifier, $this->rss_url, PDO::PARAM_STR);
-                        break;
-                    case '`COUNTRY`':
-                        $stmt->bindValue($identifier, $this->country, PDO::PARAM_STR);
-                        break;
-                    case '`LOCATION`':
-                        $stmt->bindValue($identifier, $this->location, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -1215,6 +1000,36 @@ abstract class BaseFestival extends BaseObject implements Persistent
             $failureMap = array();
 
 
+            // We call the validate method on the following object(s) if they
+            // were passed to this object by their coresponding set
+            // method.  This object relates to these object(s) by a
+            // foreign key reference.
+
+            if ($this->aFestivalType !== null) {
+                if (!$this->aFestivalType->validate($columns)) {
+                    $failureMap = array_merge($failureMap, $this->aFestivalType->getValidationFailures());
+                }
+            }
+
+            if ($this->aFestivalLocation !== null) {
+                if (!$this->aFestivalLocation->validate($columns)) {
+                    $failureMap = array_merge($failureMap, $this->aFestivalLocation->getValidationFailures());
+                }
+            }
+
+            if ($this->aFestivalContent !== null) {
+                if (!$this->aFestivalContent->validate($columns)) {
+                    $failureMap = array_merge($failureMap, $this->aFestivalContent->getValidationFailures());
+                }
+            }
+
+            if ($this->aFestivalUrl !== null) {
+                if (!$this->aFestivalUrl->validate($columns)) {
+                    $failureMap = array_merge($failureMap, $this->aFestivalUrl->getValidationFailures());
+                }
+            }
+
+
             if (($retval = FestivalPeer::doValidate($this, $columns)) !== true) {
                 $failureMap = array_merge($failureMap, $retval);
             }
@@ -1259,52 +1074,31 @@ abstract class BaseFestival extends BaseObject implements Persistent
                 return $this->getId();
                 break;
             case 1:
-                return $this->getTitle();
+                return $this->getTypeId();
                 break;
             case 2:
-                return $this->getSlug();
+                return $this->getFestivalContentTitle();
                 break;
             case 3:
-                return $this->getDesc();
+                return $this->getStartDate();
                 break;
             case 4:
-                return $this->getLang();
+                return $this->getEndDate();
                 break;
             case 5:
-                return $this->getStart();
+                return $this->getFestivalLocationId();
                 break;
             case 6:
-                return $this->getEnd();
+                return $this->getFestivalContentId();
                 break;
             case 7:
-                return $this->getLat();
+                return $this->getFestivalUrlId();
                 break;
             case 8:
-                return $this->getLon();
+                return $this->getSlug();
                 break;
             case 9:
-                return $this->getOfficialSiteUrl();
-                break;
-            case 10:
-                return $this->getFacebookUrl();
-                break;
-            case 11:
-                return $this->getTwitterUrl();
-                break;
-            case 12:
-                return $this->getYoutubeUrl();
-                break;
-            case 13:
-                return $this->getWikipediaUrl();
-                break;
-            case 14:
-                return $this->getRssUrl();
-                break;
-            case 15:
-                return $this->getCountry();
-                break;
-            case 16:
-                return $this->getLocation();
+                return $this->getLang();
                 break;
             default:
                 return null;
@@ -1323,10 +1117,11 @@ abstract class BaseFestival extends BaseObject implements Persistent
      *                    Defaults to BasePeer::TYPE_PHPNAME.
      * @param     boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to true.
      * @param     array $alreadyDumpedObjects List of objects to skip to avoid recursion
+     * @param     boolean $includeForeignObjects (optional) Whether to include hydrated related objects. Default to FALSE.
      *
      * @return array an associative array containing the field names (as keys) and field values
      */
-    public function toArray($keyType = BasePeer::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array())
+    public function toArray($keyType = BasePeer::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
     {
         if (isset($alreadyDumpedObjects['Festival'][$this->getPrimaryKey()])) {
             return '*RECURSION*';
@@ -1335,23 +1130,30 @@ abstract class BaseFestival extends BaseObject implements Persistent
         $keys = FestivalPeer::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getId(),
-            $keys[1] => $this->getTitle(),
-            $keys[2] => $this->getSlug(),
-            $keys[3] => $this->getDesc(),
-            $keys[4] => $this->getLang(),
-            $keys[5] => $this->getStart(),
-            $keys[6] => $this->getEnd(),
-            $keys[7] => $this->getLat(),
-            $keys[8] => $this->getLon(),
-            $keys[9] => $this->getOfficialSiteUrl(),
-            $keys[10] => $this->getFacebookUrl(),
-            $keys[11] => $this->getTwitterUrl(),
-            $keys[12] => $this->getYoutubeUrl(),
-            $keys[13] => $this->getWikipediaUrl(),
-            $keys[14] => $this->getRssUrl(),
-            $keys[15] => $this->getCountry(),
-            $keys[16] => $this->getLocation(),
+            $keys[1] => $this->getTypeId(),
+            $keys[2] => $this->getFestivalContentTitle(),
+            $keys[3] => $this->getStartDate(),
+            $keys[4] => $this->getEndDate(),
+            $keys[5] => $this->getFestivalLocationId(),
+            $keys[6] => $this->getFestivalContentId(),
+            $keys[7] => $this->getFestivalUrlId(),
+            $keys[8] => $this->getSlug(),
+            $keys[9] => $this->getLang(),
         );
+        if ($includeForeignObjects) {
+            if (null !== $this->aFestivalType) {
+                $result['FestivalType'] = $this->aFestivalType->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aFestivalLocation) {
+                $result['FestivalLocation'] = $this->aFestivalLocation->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aFestivalContent) {
+                $result['FestivalContent'] = $this->aFestivalContent->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aFestivalUrl) {
+                $result['FestivalUrl'] = $this->aFestivalUrl->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+        }
 
         return $result;
     }
@@ -1389,52 +1191,31 @@ abstract class BaseFestival extends BaseObject implements Persistent
                 $this->setId($value);
                 break;
             case 1:
-                $this->setTitle($value);
+                $this->setTypeId($value);
                 break;
             case 2:
-                $this->setSlug($value);
+                $this->setFestivalContentTitle($value);
                 break;
             case 3:
-                $this->setDesc($value);
+                $this->setStartDate($value);
                 break;
             case 4:
-                $this->setLang($value);
+                $this->setEndDate($value);
                 break;
             case 5:
-                $this->setStart($value);
+                $this->setFestivalLocationId($value);
                 break;
             case 6:
-                $this->setEnd($value);
+                $this->setFestivalContentId($value);
                 break;
             case 7:
-                $this->setLat($value);
+                $this->setFestivalUrlId($value);
                 break;
             case 8:
-                $this->setLon($value);
+                $this->setSlug($value);
                 break;
             case 9:
-                $this->setOfficialSiteUrl($value);
-                break;
-            case 10:
-                $this->setFacebookUrl($value);
-                break;
-            case 11:
-                $this->setTwitterUrl($value);
-                break;
-            case 12:
-                $this->setYoutubeUrl($value);
-                break;
-            case 13:
-                $this->setWikipediaUrl($value);
-                break;
-            case 14:
-                $this->setRssUrl($value);
-                break;
-            case 15:
-                $this->setCountry($value);
-                break;
-            case 16:
-                $this->setLocation($value);
+                $this->setLang($value);
                 break;
         } // switch()
     }
@@ -1461,22 +1242,15 @@ abstract class BaseFestival extends BaseObject implements Persistent
         $keys = FestivalPeer::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
-        if (array_key_exists($keys[1], $arr)) $this->setTitle($arr[$keys[1]]);
-        if (array_key_exists($keys[2], $arr)) $this->setSlug($arr[$keys[2]]);
-        if (array_key_exists($keys[3], $arr)) $this->setDesc($arr[$keys[3]]);
-        if (array_key_exists($keys[4], $arr)) $this->setLang($arr[$keys[4]]);
-        if (array_key_exists($keys[5], $arr)) $this->setStart($arr[$keys[5]]);
-        if (array_key_exists($keys[6], $arr)) $this->setEnd($arr[$keys[6]]);
-        if (array_key_exists($keys[7], $arr)) $this->setLat($arr[$keys[7]]);
-        if (array_key_exists($keys[8], $arr)) $this->setLon($arr[$keys[8]]);
-        if (array_key_exists($keys[9], $arr)) $this->setOfficialSiteUrl($arr[$keys[9]]);
-        if (array_key_exists($keys[10], $arr)) $this->setFacebookUrl($arr[$keys[10]]);
-        if (array_key_exists($keys[11], $arr)) $this->setTwitterUrl($arr[$keys[11]]);
-        if (array_key_exists($keys[12], $arr)) $this->setYoutubeUrl($arr[$keys[12]]);
-        if (array_key_exists($keys[13], $arr)) $this->setWikipediaUrl($arr[$keys[13]]);
-        if (array_key_exists($keys[14], $arr)) $this->setRssUrl($arr[$keys[14]]);
-        if (array_key_exists($keys[15], $arr)) $this->setCountry($arr[$keys[15]]);
-        if (array_key_exists($keys[16], $arr)) $this->setLocation($arr[$keys[16]]);
+        if (array_key_exists($keys[1], $arr)) $this->setTypeId($arr[$keys[1]]);
+        if (array_key_exists($keys[2], $arr)) $this->setFestivalContentTitle($arr[$keys[2]]);
+        if (array_key_exists($keys[3], $arr)) $this->setStartDate($arr[$keys[3]]);
+        if (array_key_exists($keys[4], $arr)) $this->setEndDate($arr[$keys[4]]);
+        if (array_key_exists($keys[5], $arr)) $this->setFestivalLocationId($arr[$keys[5]]);
+        if (array_key_exists($keys[6], $arr)) $this->setFestivalContentId($arr[$keys[6]]);
+        if (array_key_exists($keys[7], $arr)) $this->setFestivalUrlId($arr[$keys[7]]);
+        if (array_key_exists($keys[8], $arr)) $this->setSlug($arr[$keys[8]]);
+        if (array_key_exists($keys[9], $arr)) $this->setLang($arr[$keys[9]]);
     }
 
     /**
@@ -1489,22 +1263,15 @@ abstract class BaseFestival extends BaseObject implements Persistent
         $criteria = new Criteria(FestivalPeer::DATABASE_NAME);
 
         if ($this->isColumnModified(FestivalPeer::ID)) $criteria->add(FestivalPeer::ID, $this->id);
-        if ($this->isColumnModified(FestivalPeer::TITLE)) $criteria->add(FestivalPeer::TITLE, $this->title);
+        if ($this->isColumnModified(FestivalPeer::TYPE_ID)) $criteria->add(FestivalPeer::TYPE_ID, $this->type_id);
+        if ($this->isColumnModified(FestivalPeer::FESTIVAL_CONTENT_TITLE)) $criteria->add(FestivalPeer::FESTIVAL_CONTENT_TITLE, $this->festival_content_title);
+        if ($this->isColumnModified(FestivalPeer::START_DATE)) $criteria->add(FestivalPeer::START_DATE, $this->start_date);
+        if ($this->isColumnModified(FestivalPeer::END_DATE)) $criteria->add(FestivalPeer::END_DATE, $this->end_date);
+        if ($this->isColumnModified(FestivalPeer::FESTIVAL_LOCATION_ID)) $criteria->add(FestivalPeer::FESTIVAL_LOCATION_ID, $this->festival_location_id);
+        if ($this->isColumnModified(FestivalPeer::FESTIVAL_CONTENT_ID)) $criteria->add(FestivalPeer::FESTIVAL_CONTENT_ID, $this->festival_content_id);
+        if ($this->isColumnModified(FestivalPeer::FESTIVAL_URL_ID)) $criteria->add(FestivalPeer::FESTIVAL_URL_ID, $this->festival_url_id);
         if ($this->isColumnModified(FestivalPeer::SLUG)) $criteria->add(FestivalPeer::SLUG, $this->slug);
-        if ($this->isColumnModified(FestivalPeer::DESC)) $criteria->add(FestivalPeer::DESC, $this->desc);
         if ($this->isColumnModified(FestivalPeer::LANG)) $criteria->add(FestivalPeer::LANG, $this->lang);
-        if ($this->isColumnModified(FestivalPeer::START)) $criteria->add(FestivalPeer::START, $this->start);
-        if ($this->isColumnModified(FestivalPeer::END)) $criteria->add(FestivalPeer::END, $this->end);
-        if ($this->isColumnModified(FestivalPeer::LAT)) $criteria->add(FestivalPeer::LAT, $this->lat);
-        if ($this->isColumnModified(FestivalPeer::LON)) $criteria->add(FestivalPeer::LON, $this->lon);
-        if ($this->isColumnModified(FestivalPeer::OFFICIAL_SITE_URL)) $criteria->add(FestivalPeer::OFFICIAL_SITE_URL, $this->official_site_url);
-        if ($this->isColumnModified(FestivalPeer::FACEBOOK_URL)) $criteria->add(FestivalPeer::FACEBOOK_URL, $this->facebook_url);
-        if ($this->isColumnModified(FestivalPeer::TWITTER_URL)) $criteria->add(FestivalPeer::TWITTER_URL, $this->twitter_url);
-        if ($this->isColumnModified(FestivalPeer::YOUTUBE_URL)) $criteria->add(FestivalPeer::YOUTUBE_URL, $this->youtube_url);
-        if ($this->isColumnModified(FestivalPeer::WIKIPEDIA_URL)) $criteria->add(FestivalPeer::WIKIPEDIA_URL, $this->wikipedia_url);
-        if ($this->isColumnModified(FestivalPeer::RSS_URL)) $criteria->add(FestivalPeer::RSS_URL, $this->rss_url);
-        if ($this->isColumnModified(FestivalPeer::COUNTRY)) $criteria->add(FestivalPeer::COUNTRY, $this->country);
-        if ($this->isColumnModified(FestivalPeer::LOCATION)) $criteria->add(FestivalPeer::LOCATION, $this->location);
 
         return $criteria;
     }
@@ -1568,22 +1335,27 @@ abstract class BaseFestival extends BaseObject implements Persistent
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
-        $copyObj->setTitle($this->getTitle());
+        $copyObj->setTypeId($this->getTypeId());
+        $copyObj->setFestivalContentTitle($this->getFestivalContentTitle());
+        $copyObj->setStartDate($this->getStartDate());
+        $copyObj->setEndDate($this->getEndDate());
+        $copyObj->setFestivalLocationId($this->getFestivalLocationId());
+        $copyObj->setFestivalContentId($this->getFestivalContentId());
+        $copyObj->setFestivalUrlId($this->getFestivalUrlId());
         $copyObj->setSlug($this->getSlug());
-        $copyObj->setDesc($this->getDesc());
         $copyObj->setLang($this->getLang());
-        $copyObj->setStart($this->getStart());
-        $copyObj->setEnd($this->getEnd());
-        $copyObj->setLat($this->getLat());
-        $copyObj->setLon($this->getLon());
-        $copyObj->setOfficialSiteUrl($this->getOfficialSiteUrl());
-        $copyObj->setFacebookUrl($this->getFacebookUrl());
-        $copyObj->setTwitterUrl($this->getTwitterUrl());
-        $copyObj->setYoutubeUrl($this->getYoutubeUrl());
-        $copyObj->setWikipediaUrl($this->getWikipediaUrl());
-        $copyObj->setRssUrl($this->getRssUrl());
-        $copyObj->setCountry($this->getCountry());
-        $copyObj->setLocation($this->getLocation());
+
+        if ($deepCopy && !$this->startCopy) {
+            // important: temporarily setNew(false) because this affects the behavior of
+            // the getter/setter methods for fkey referrer objects.
+            $copyObj->setNew(false);
+            // store object hash to prevent cycle
+            $this->startCopy = true;
+
+            //unflag object copy
+            $this->startCopy = false;
+        } // if ($deepCopy)
+
         if ($makeNew) {
             $copyObj->setNew(true);
             $copyObj->setId(NULL); // this is a auto-increment column, so set to default value
@@ -1631,27 +1403,224 @@ abstract class BaseFestival extends BaseObject implements Persistent
     }
 
     /**
+     * Declares an association between this object and a FestivalType object.
+     *
+     * @param             FestivalType $v
+     * @return Festival The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setFestivalType(FestivalType $v = null)
+    {
+        if ($v === null) {
+            $this->setTypeId(NULL);
+        } else {
+            $this->setTypeId($v->getId());
+        }
+
+        $this->aFestivalType = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the FestivalType object, it will not be re-added.
+        if ($v !== null) {
+            $v->addFestival($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated FestivalType object
+     *
+     * @param PropelPDO $con Optional Connection object.
+     * @return FestivalType The associated FestivalType object.
+     * @throws PropelException
+     */
+    public function getFestivalType(PropelPDO $con = null)
+    {
+        if ($this->aFestivalType === null && ($this->type_id !== null)) {
+            $this->aFestivalType = FestivalTypeQuery::create()->findPk($this->type_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aFestivalType->addFestivals($this);
+             */
+        }
+
+        return $this->aFestivalType;
+    }
+
+    /**
+     * Declares an association between this object and a FestivalLocation object.
+     *
+     * @param             FestivalLocation $v
+     * @return Festival The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setFestivalLocation(FestivalLocation $v = null)
+    {
+        if ($v === null) {
+            $this->setFestivalLocationId(NULL);
+        } else {
+            $this->setFestivalLocationId($v->getId());
+        }
+
+        $this->aFestivalLocation = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the FestivalLocation object, it will not be re-added.
+        if ($v !== null) {
+            $v->addFestival($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated FestivalLocation object
+     *
+     * @param PropelPDO $con Optional Connection object.
+     * @return FestivalLocation The associated FestivalLocation object.
+     * @throws PropelException
+     */
+    public function getFestivalLocation(PropelPDO $con = null)
+    {
+        if ($this->aFestivalLocation === null && ($this->festival_location_id !== null)) {
+            $this->aFestivalLocation = FestivalLocationQuery::create()->findPk($this->festival_location_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aFestivalLocation->addFestivals($this);
+             */
+        }
+
+        return $this->aFestivalLocation;
+    }
+
+    /**
+     * Declares an association between this object and a FestivalContent object.
+     *
+     * @param             FestivalContent $v
+     * @return Festival The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setFestivalContent(FestivalContent $v = null)
+    {
+        if ($v === null) {
+            $this->setFestivalContentId(NULL);
+        } else {
+            $this->setFestivalContentId($v->getId());
+        }
+
+        $this->aFestivalContent = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the FestivalContent object, it will not be re-added.
+        if ($v !== null) {
+            $v->addFestival($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated FestivalContent object
+     *
+     * @param PropelPDO $con Optional Connection object.
+     * @return FestivalContent The associated FestivalContent object.
+     * @throws PropelException
+     */
+    public function getFestivalContent(PropelPDO $con = null)
+    {
+        if ($this->aFestivalContent === null && ($this->festival_content_id !== null)) {
+            $this->aFestivalContent = FestivalContentQuery::create()->findPk($this->festival_content_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aFestivalContent->addFestivals($this);
+             */
+        }
+
+        return $this->aFestivalContent;
+    }
+
+    /**
+     * Declares an association between this object and a FestivalUrl object.
+     *
+     * @param             FestivalUrl $v
+     * @return Festival The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setFestivalUrl(FestivalUrl $v = null)
+    {
+        if ($v === null) {
+            $this->setFestivalUrlId(NULL);
+        } else {
+            $this->setFestivalUrlId($v->getId());
+        }
+
+        $this->aFestivalUrl = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the FestivalUrl object, it will not be re-added.
+        if ($v !== null) {
+            $v->addFestival($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated FestivalUrl object
+     *
+     * @param PropelPDO $con Optional Connection object.
+     * @return FestivalUrl The associated FestivalUrl object.
+     * @throws PropelException
+     */
+    public function getFestivalUrl(PropelPDO $con = null)
+    {
+        if ($this->aFestivalUrl === null && ($this->festival_url_id !== null)) {
+            $this->aFestivalUrl = FestivalUrlQuery::create()->findPk($this->festival_url_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aFestivalUrl->addFestivals($this);
+             */
+        }
+
+        return $this->aFestivalUrl;
+    }
+
+    /**
      * Clears the current object and sets all attributes to their default values
      */
     public function clear()
     {
         $this->id = null;
-        $this->title = null;
+        $this->type_id = null;
+        $this->festival_content_title = null;
+        $this->start_date = null;
+        $this->end_date = null;
+        $this->festival_location_id = null;
+        $this->festival_content_id = null;
+        $this->festival_url_id = null;
         $this->slug = null;
-        $this->desc = null;
         $this->lang = null;
-        $this->start = null;
-        $this->end = null;
-        $this->lat = null;
-        $this->lon = null;
-        $this->official_site_url = null;
-        $this->facebook_url = null;
-        $this->twitter_url = null;
-        $this->youtube_url = null;
-        $this->wikipedia_url = null;
-        $this->rss_url = null;
-        $this->country = null;
-        $this->location = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
         $this->clearAllReferences();
@@ -1674,16 +1643,20 @@ abstract class BaseFestival extends BaseObject implements Persistent
         if ($deep) {
         } // if ($deep)
 
+        $this->aFestivalType = null;
+        $this->aFestivalLocation = null;
+        $this->aFestivalContent = null;
+        $this->aFestivalUrl = null;
     }
 
     /**
      * return the string representation of this object
      *
-     * @return string The value of the 'title' column
+     * @return string
      */
     public function __toString()
     {
-        return (string) $this->getTitle();
+        return (string) $this->exportTo(FestivalPeer::DEFAULT_STRING_FORMAT);
     }
 
     /**

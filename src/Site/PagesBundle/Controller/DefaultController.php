@@ -49,7 +49,6 @@ class DefaultController extends Controller
 
 		$ilanlar = $this->retrieveTweetsAction('devrantukan', 'webstagram');
 		
-	
 		 
 		return $this->render('SitePagesBundle:Default:show.html.twig', array('pages' => $pages, 'ilanlar' => $ilanlar, 'duyurular' => $duyurular , 'images' => $images));
 	}
@@ -73,6 +72,14 @@ class DefaultController extends Controller
 				 
 				if(preg_match("/".$hashtag."/i", $text))
 				{
+					//$text= preg_replace("/(^|[\n ])([\w]*?)((ht|f)tp(s)?:\/\/[\w]+[^ \,\"\n\r\t<]*)/is", "$1$2<a href=\"$3\" >$3</a>", $text);
+					//$text= preg_replace("/(^|[\n ])([\w]*?)((www|ftp)\.[^ \,\"\t\n\r<]*)/is", "$1$2<a href=\"http://$3\" >$3</a>", $text);
+					//$text= preg_replace("/(^|[\n ])([a-z0-9&\-_\.]+?)@([\w\-]+\.([\w\-\.]+)+)/i", "$1<a href=\"mailto:$2@$3\">$2@$3</a>", $text);
+					$text = preg_replace("/((http(s?):\/\/)|(www\.))([\w\.]+)([a-zA-Z0-9?&%.;:\/=+_-]+)/i", "<a href='http$3://$4$5$6' target='_blank'>$2$4$5$6</a>", $text);
+					
+					$text = rtrim( preg_replace('/#[^\s]+\s?/', '', $text) );
+					//$text = preg_replace('/((www|http:\/\/)\S+)/', '<a href="$1">$1</a>', $text);
+					//$text = preg_replace("/http:\/\/(.*?)\/\.?$/", "<a target=\"_blank\" href=\"http://$1\">http://$1</a>", $text);
 					$arrTwet[] = $text;
 				}
 			}

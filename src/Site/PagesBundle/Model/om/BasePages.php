@@ -79,6 +79,18 @@ abstract class BasePages extends BaseObject implements Persistent
     protected $images;
 
     /**
+     * The value for the meta_keywords field.
+     * @var        string
+     */
+    protected $meta_keywords;
+
+    /**
+     * The value for the meta_description field.
+     * @var        string
+     */
+    protected $meta_description;
+
+    /**
      * Flag to prevent endless save loop, if this object is referenced
      * by another object which falls in this transaction.
      * @var        boolean
@@ -160,6 +172,26 @@ abstract class BasePages extends BaseObject implements Persistent
     public function getImages()
     {
         return $this->images;
+    }
+
+    /**
+     * Get the [meta_keywords] column value.
+     *
+     * @return string
+     */
+    public function getMetaKeywords()
+    {
+        return $this->meta_keywords;
+    }
+
+    /**
+     * Get the [meta_description] column value.
+     *
+     * @return string
+     */
+    public function getMetaDescription()
+    {
+        return $this->meta_description;
     }
 
     /**
@@ -310,6 +342,48 @@ abstract class BasePages extends BaseObject implements Persistent
     } // setImages()
 
     /**
+     * Set the value of [meta_keywords] column.
+     *
+     * @param string $v new value
+     * @return Pages The current object (for fluent API support)
+     */
+    public function setMetaKeywords($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->meta_keywords !== $v) {
+            $this->meta_keywords = $v;
+            $this->modifiedColumns[] = PagesPeer::META_KEYWORDS;
+        }
+
+
+        return $this;
+    } // setMetaKeywords()
+
+    /**
+     * Set the value of [meta_description] column.
+     *
+     * @param string $v new value
+     * @return Pages The current object (for fluent API support)
+     */
+    public function setMetaDescription($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->meta_description !== $v) {
+            $this->meta_description = $v;
+            $this->modifiedColumns[] = PagesPeer::META_DESCRIPTION;
+        }
+
+
+        return $this;
+    } // setMetaDescription()
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -348,6 +422,8 @@ abstract class BasePages extends BaseObject implements Persistent
             $this->content = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
             $this->lang = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
             $this->images = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
+            $this->meta_keywords = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
+            $this->meta_description = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -356,7 +432,7 @@ abstract class BasePages extends BaseObject implements Persistent
                 $this->ensureConsistency();
             }
 
-            return $startcol + 7; // 7 = PagesPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 9; // 9 = PagesPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating Pages object", $e);
@@ -589,6 +665,12 @@ abstract class BasePages extends BaseObject implements Persistent
         if ($this->isColumnModified(PagesPeer::IMAGES)) {
             $modifiedColumns[':p' . $index++]  = '`IMAGES`';
         }
+        if ($this->isColumnModified(PagesPeer::META_KEYWORDS)) {
+            $modifiedColumns[':p' . $index++]  = '`META_KEYWORDS`';
+        }
+        if ($this->isColumnModified(PagesPeer::META_DESCRIPTION)) {
+            $modifiedColumns[':p' . $index++]  = '`META_DESCRIPTION`';
+        }
 
         $sql = sprintf(
             'INSERT INTO `pages` (%s) VALUES (%s)',
@@ -620,6 +702,12 @@ abstract class BasePages extends BaseObject implements Persistent
                         break;
                     case '`IMAGES`':
                         $stmt->bindValue($identifier, $this->images, PDO::PARAM_STR);
+                        break;
+                    case '`META_KEYWORDS`':
+                        $stmt->bindValue($identifier, $this->meta_keywords, PDO::PARAM_STR);
+                        break;
+                    case '`META_DESCRIPTION`':
+                        $stmt->bindValue($identifier, $this->meta_description, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -776,6 +864,12 @@ abstract class BasePages extends BaseObject implements Persistent
             case 6:
                 return $this->getImages();
                 break;
+            case 7:
+                return $this->getMetaKeywords();
+                break;
+            case 8:
+                return $this->getMetaDescription();
+                break;
             default:
                 return null;
                 break;
@@ -811,6 +905,8 @@ abstract class BasePages extends BaseObject implements Persistent
             $keys[4] => $this->getContent(),
             $keys[5] => $this->getLang(),
             $keys[6] => $this->getImages(),
+            $keys[7] => $this->getMetaKeywords(),
+            $keys[8] => $this->getMetaDescription(),
         );
 
         return $result;
@@ -866,6 +962,12 @@ abstract class BasePages extends BaseObject implements Persistent
             case 6:
                 $this->setImages($value);
                 break;
+            case 7:
+                $this->setMetaKeywords($value);
+                break;
+            case 8:
+                $this->setMetaDescription($value);
+                break;
         } // switch()
     }
 
@@ -897,6 +999,8 @@ abstract class BasePages extends BaseObject implements Persistent
         if (array_key_exists($keys[4], $arr)) $this->setContent($arr[$keys[4]]);
         if (array_key_exists($keys[5], $arr)) $this->setLang($arr[$keys[5]]);
         if (array_key_exists($keys[6], $arr)) $this->setImages($arr[$keys[6]]);
+        if (array_key_exists($keys[7], $arr)) $this->setMetaKeywords($arr[$keys[7]]);
+        if (array_key_exists($keys[8], $arr)) $this->setMetaDescription($arr[$keys[8]]);
     }
 
     /**
@@ -915,6 +1019,8 @@ abstract class BasePages extends BaseObject implements Persistent
         if ($this->isColumnModified(PagesPeer::CONTENT)) $criteria->add(PagesPeer::CONTENT, $this->content);
         if ($this->isColumnModified(PagesPeer::LANG)) $criteria->add(PagesPeer::LANG, $this->lang);
         if ($this->isColumnModified(PagesPeer::IMAGES)) $criteria->add(PagesPeer::IMAGES, $this->images);
+        if ($this->isColumnModified(PagesPeer::META_KEYWORDS)) $criteria->add(PagesPeer::META_KEYWORDS, $this->meta_keywords);
+        if ($this->isColumnModified(PagesPeer::META_DESCRIPTION)) $criteria->add(PagesPeer::META_DESCRIPTION, $this->meta_description);
 
         return $criteria;
     }
@@ -984,6 +1090,8 @@ abstract class BasePages extends BaseObject implements Persistent
         $copyObj->setContent($this->getContent());
         $copyObj->setLang($this->getLang());
         $copyObj->setImages($this->getImages());
+        $copyObj->setMetaKeywords($this->getMetaKeywords());
+        $copyObj->setMetaDescription($this->getMetaDescription());
         if ($makeNew) {
             $copyObj->setNew(true);
             $copyObj->setId(NULL); // this is a auto-increment column, so set to default value
@@ -1042,6 +1150,8 @@ abstract class BasePages extends BaseObject implements Persistent
         $this->content = null;
         $this->lang = null;
         $this->images = null;
+        $this->meta_keywords = null;
+        $this->meta_description = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
         $this->clearAllReferences();

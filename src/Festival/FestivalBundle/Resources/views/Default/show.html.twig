@@ -1,24 +1,33 @@
 {% extends "FestivalFestivalBundle::layout.html.twig" %}
 
-{% block title festival.title  %}
+{% block title festival.festivalContentTitle %}
 
 {% block content_header '' %}
 
 {% block content %}
 {% if festival.id is defined  %}
-        <li>{{ festival.title }}</li>
-        <li>{{ festival.desc }}</li>
-        <li>{{ festival.start|date('d/m/Y') }}-{{ festival.end|date('d/m/Y') }}</li>
-        <li>{{ festival.lat }}</li>
-        <li>{{ festival.lon }}</li>
-        <li><a href="{{ festival.officialSiteUrl }}">{{ festival.officialSiteUrl }}</a></li>
-        <li>{{ festival.facebookUrl }}</li>
-        <li>{{ festival.twitterUrl }}</li>
-        <li>{{ festival.youtubeUrl }}</li>
-        <li>{{ festival.wikipediaUrl }}</li>
-        <li>{{ festival.rssUrl }}</li>
-        <li>{{ festival.country }}</li>
-        <li>{{ festival.location }}</li>
+        <li>{{ festival.festivalContentTitle }}</li>
+        <li>{{ festival.startDate|date('d/m/Y') }}-{{ festival.endDate|date('d/m/Y') }}</li>
+        <li>{{ festival_content.title }}</li>
+        <li>{{ festival_content.subtitle }}</li>
+        <li>{{ festival_content.content }}</li>
+        <li>{{ festival_content.visitor }}</li>
+        <li>{{ festival_location.name }}</li>
+        <li>{{ festival_location.country }}</li>
+{% if festival_location.state is defined  %}
+        <li>{{ festival_location.state }}</li>
+{% endif %}
+        <li>{{ festival_location.city }}</li>
+        <li>{{ festival_location.latitude }}</li>
+        <li>{{ festival_location.longtitude }}</li>
+        <li>{{ festival_location_content.title }}</li>
+        <li>{{ festival_location_content.subtitle }}</li>
+        <li>{{ festival_location_content.content }}</li>
+        <li>{{ festival_type.description }}</li>
+        <li>{{ festival_url_type.description }} url:</li>
+        <li>{{ festival_url.url }}</li>
+
+        
     {% else %}
         <li>No festival found</li>
 {% endif %}

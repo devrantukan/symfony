@@ -29,13 +29,13 @@ abstract class BasePagesPeer
     const TM_CLASS = 'PagesTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 7;
+    const NUM_COLUMNS = 9;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 7;
+    const NUM_HYDRATE_COLUMNS = 9;
 
     /** the column name for the ID field */
     const ID = 'pages.ID';
@@ -58,6 +58,12 @@ abstract class BasePagesPeer
     /** the column name for the IMAGES field */
     const IMAGES = 'pages.IMAGES';
 
+    /** the column name for the META_KEYWORDS field */
+    const META_KEYWORDS = 'pages.META_KEYWORDS';
+
+    /** the column name for the META_DESCRIPTION field */
+    const META_DESCRIPTION = 'pages.META_DESCRIPTION';
+
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
 
@@ -77,12 +83,12 @@ abstract class BasePagesPeer
      * e.g. PagesPeer::$fieldNames[PagesPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('Id', 'MasterId', 'Title', 'Slug', 'Content', 'Lang', 'Images', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'masterId', 'title', 'slug', 'content', 'lang', 'images', ),
-        BasePeer::TYPE_COLNAME => array (PagesPeer::ID, PagesPeer::MASTER_ID, PagesPeer::TITLE, PagesPeer::SLUG, PagesPeer::CONTENT, PagesPeer::LANG, PagesPeer::IMAGES, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'MASTER_ID', 'TITLE', 'SLUG', 'CONTENT', 'LANG', 'IMAGES', ),
-        BasePeer::TYPE_FIELDNAME => array ('id', 'master_id', 'title', 'slug', 'content', 'lang', 'images', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, )
+        BasePeer::TYPE_PHPNAME => array ('Id', 'MasterId', 'Title', 'Slug', 'Content', 'Lang', 'Images', 'MetaKeywords', 'MetaDescription', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'masterId', 'title', 'slug', 'content', 'lang', 'images', 'metaKeywords', 'metaDescription', ),
+        BasePeer::TYPE_COLNAME => array (PagesPeer::ID, PagesPeer::MASTER_ID, PagesPeer::TITLE, PagesPeer::SLUG, PagesPeer::CONTENT, PagesPeer::LANG, PagesPeer::IMAGES, PagesPeer::META_KEYWORDS, PagesPeer::META_DESCRIPTION, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'MASTER_ID', 'TITLE', 'SLUG', 'CONTENT', 'LANG', 'IMAGES', 'META_KEYWORDS', 'META_DESCRIPTION', ),
+        BasePeer::TYPE_FIELDNAME => array ('id', 'master_id', 'title', 'slug', 'content', 'lang', 'images', 'meta_keywords', 'meta_description', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, )
     );
 
     /**
@@ -92,12 +98,12 @@ abstract class BasePagesPeer
      * e.g. PagesPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'MasterId' => 1, 'Title' => 2, 'Slug' => 3, 'Content' => 4, 'Lang' => 5, 'Images' => 6, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'masterId' => 1, 'title' => 2, 'slug' => 3, 'content' => 4, 'lang' => 5, 'images' => 6, ),
-        BasePeer::TYPE_COLNAME => array (PagesPeer::ID => 0, PagesPeer::MASTER_ID => 1, PagesPeer::TITLE => 2, PagesPeer::SLUG => 3, PagesPeer::CONTENT => 4, PagesPeer::LANG => 5, PagesPeer::IMAGES => 6, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'MASTER_ID' => 1, 'TITLE' => 2, 'SLUG' => 3, 'CONTENT' => 4, 'LANG' => 5, 'IMAGES' => 6, ),
-        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'master_id' => 1, 'title' => 2, 'slug' => 3, 'content' => 4, 'lang' => 5, 'images' => 6, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, )
+        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'MasterId' => 1, 'Title' => 2, 'Slug' => 3, 'Content' => 4, 'Lang' => 5, 'Images' => 6, 'MetaKeywords' => 7, 'MetaDescription' => 8, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'masterId' => 1, 'title' => 2, 'slug' => 3, 'content' => 4, 'lang' => 5, 'images' => 6, 'metaKeywords' => 7, 'metaDescription' => 8, ),
+        BasePeer::TYPE_COLNAME => array (PagesPeer::ID => 0, PagesPeer::MASTER_ID => 1, PagesPeer::TITLE => 2, PagesPeer::SLUG => 3, PagesPeer::CONTENT => 4, PagesPeer::LANG => 5, PagesPeer::IMAGES => 6, PagesPeer::META_KEYWORDS => 7, PagesPeer::META_DESCRIPTION => 8, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'MASTER_ID' => 1, 'TITLE' => 2, 'SLUG' => 3, 'CONTENT' => 4, 'LANG' => 5, 'IMAGES' => 6, 'META_KEYWORDS' => 7, 'META_DESCRIPTION' => 8, ),
+        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'master_id' => 1, 'title' => 2, 'slug' => 3, 'content' => 4, 'lang' => 5, 'images' => 6, 'meta_keywords' => 7, 'meta_description' => 8, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, )
     );
 
     /**
@@ -178,6 +184,8 @@ abstract class BasePagesPeer
             $criteria->addSelectColumn(PagesPeer::CONTENT);
             $criteria->addSelectColumn(PagesPeer::LANG);
             $criteria->addSelectColumn(PagesPeer::IMAGES);
+            $criteria->addSelectColumn(PagesPeer::META_KEYWORDS);
+            $criteria->addSelectColumn(PagesPeer::META_DESCRIPTION);
         } else {
             $criteria->addSelectColumn($alias . '.ID');
             $criteria->addSelectColumn($alias . '.MASTER_ID');
@@ -186,6 +194,8 @@ abstract class BasePagesPeer
             $criteria->addSelectColumn($alias . '.CONTENT');
             $criteria->addSelectColumn($alias . '.LANG');
             $criteria->addSelectColumn($alias . '.IMAGES');
+            $criteria->addSelectColumn($alias . '.META_KEYWORDS');
+            $criteria->addSelectColumn($alias . '.META_DESCRIPTION');
         }
     }
 

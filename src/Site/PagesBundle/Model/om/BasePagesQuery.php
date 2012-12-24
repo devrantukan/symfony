@@ -22,6 +22,8 @@ use Site\PagesBundle\Model\PagesQuery;
  * @method PagesQuery orderByContent($order = Criteria::ASC) Order by the content column
  * @method PagesQuery orderByLang($order = Criteria::ASC) Order by the lang column
  * @method PagesQuery orderByImages($order = Criteria::ASC) Order by the images column
+ * @method PagesQuery orderByMetaKeywords($order = Criteria::ASC) Order by the meta_keywords column
+ * @method PagesQuery orderByMetaDescription($order = Criteria::ASC) Order by the meta_description column
  *
  * @method PagesQuery groupById() Group by the id column
  * @method PagesQuery groupByMasterId() Group by the master_id column
@@ -30,6 +32,8 @@ use Site\PagesBundle\Model\PagesQuery;
  * @method PagesQuery groupByContent() Group by the content column
  * @method PagesQuery groupByLang() Group by the lang column
  * @method PagesQuery groupByImages() Group by the images column
+ * @method PagesQuery groupByMetaKeywords() Group by the meta_keywords column
+ * @method PagesQuery groupByMetaDescription() Group by the meta_description column
  *
  * @method PagesQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method PagesQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -44,6 +48,8 @@ use Site\PagesBundle\Model\PagesQuery;
  * @method Pages findOneByContent(string $content) Return the first Pages filtered by the content column
  * @method Pages findOneByLang(string $lang) Return the first Pages filtered by the lang column
  * @method Pages findOneByImages(string $images) Return the first Pages filtered by the images column
+ * @method Pages findOneByMetaKeywords(string $meta_keywords) Return the first Pages filtered by the meta_keywords column
+ * @method Pages findOneByMetaDescription(string $meta_description) Return the first Pages filtered by the meta_description column
  *
  * @method array findById(int $id) Return Pages objects filtered by the id column
  * @method array findByMasterId(int $master_id) Return Pages objects filtered by the master_id column
@@ -52,6 +58,8 @@ use Site\PagesBundle\Model\PagesQuery;
  * @method array findByContent(string $content) Return Pages objects filtered by the content column
  * @method array findByLang(string $lang) Return Pages objects filtered by the lang column
  * @method array findByImages(string $images) Return Pages objects filtered by the images column
+ * @method array findByMetaKeywords(string $meta_keywords) Return Pages objects filtered by the meta_keywords column
+ * @method array findByMetaDescription(string $meta_description) Return Pages objects filtered by the meta_description column
  */
 abstract class BasePagesQuery extends ModelCriteria
 {
@@ -153,7 +161,7 @@ abstract class BasePagesQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT `ID`, `MASTER_ID`, `TITLE`, `SLUG`, `CONTENT`, `LANG`, `IMAGES` FROM `pages` WHERE `ID` = :p0';
+        $sql = 'SELECT `ID`, `MASTER_ID`, `TITLE`, `SLUG`, `CONTENT`, `LANG`, `IMAGES`, `META_KEYWORDS`, `META_DESCRIPTION` FROM `pages` WHERE `ID` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -453,6 +461,64 @@ abstract class BasePagesQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(PagesPeer::IMAGES, $images, $comparison);
+    }
+
+    /**
+     * Filter the query on the meta_keywords column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByMetaKeywords('fooValue');   // WHERE meta_keywords = 'fooValue'
+     * $query->filterByMetaKeywords('%fooValue%'); // WHERE meta_keywords LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $metaKeywords The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return PagesQuery The current query, for fluid interface
+     */
+    public function filterByMetaKeywords($metaKeywords = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($metaKeywords)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $metaKeywords)) {
+                $metaKeywords = str_replace('*', '%', $metaKeywords);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(PagesPeer::META_KEYWORDS, $metaKeywords, $comparison);
+    }
+
+    /**
+     * Filter the query on the meta_description column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByMetaDescription('fooValue');   // WHERE meta_description = 'fooValue'
+     * $query->filterByMetaDescription('%fooValue%'); // WHERE meta_description LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $metaDescription The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return PagesQuery The current query, for fluid interface
+     */
+    public function filterByMetaDescription($metaDescription = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($metaDescription)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $metaDescription)) {
+                $metaDescription = str_replace('*', '%', $metaDescription);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(PagesPeer::META_DESCRIPTION, $metaDescription, $comparison);
     }
 
     /**

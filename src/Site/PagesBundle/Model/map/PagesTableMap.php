@@ -52,6 +52,8 @@ class PagesTableMap extends TableMap
         $this->addColumn('LANG', 'Lang', 'VARCHAR', false, 2, null);
         $this->getColumn('LANG', false)->setPrimaryString(true);
         $this->addColumn('IMAGES', 'Images', 'LONGVARCHAR', false, null, null);
+        $this->addColumn('META_KEYWORDS', 'MetaKeywords', 'LONGVARCHAR', false, null, null);
+        $this->addColumn('META_DESCRIPTION', 'MetaDescription', 'LONGVARCHAR', false, null, null);
         // validators
     } // initialize()
 

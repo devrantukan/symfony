@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database name="default" namespace="Festival\FestivalBundle\Model" defaultIdMethod="native">
+<table name="festival">
+    <column name="id" type="integer" primaryKey="true" required="true" autoIncrement="true"/>
+    <column name="type_id" type="integer"/>
+    <column name="festival_content_title" type="varchar" size="45" required="true"/>
+    <column name="start_date" type="timestamp" required="true"/>
+    <column name="end_date" type="timestamp" required="true"/>
+    <column name="festival_location_id" type="integer"/>
+    <column name="festival_content_id" type="integer"/>
+    <column name="festival_url_id" type="integer"/>
+    <column name="slug" type="varchar" size="45"/>
+    <column name="lang" type="varchar" size="2"/>
+    <foreign-key foreignTable="festival_type">
+      <reference local="type_id" foreign="id"/>
+    </foreign-key>
+    <foreign-key foreignTable="festival_location">
+      <reference local="festival_location_id" foreign="id"/>
+    </foreign-key>
+    <foreign-key foreignTable="festival_content">
+      <reference local="festival_content_id" foreign="id"/>
+    </foreign-key>
+    <foreign-key foreignTable="festival_url">
+      <reference local="festival_url_id" foreign="id"/>
+    </foreign-key>
+</table>
+<table name="festival_location">
+    <column name="id" type="integer" primaryKey="true" required="true" autoIncrement="true"/>
+    <column name="name" type="varchar" size="45" required="true"/>
+    <column name="country" type="varchar" size="45" required="true"/>
+    <column name="state" type="varchar" size="45"/>
+    <column name="city" type="varchar" size="45" required="true"/>
+    <column name="latitude" type="varchar" size="45" required="true"/>
+    <column name="longtitude" type="varchar" size="45" required="true"/>
+    <column name="festival_location_content_id" type="integer"/>
+    <foreign-key foreignTable="festival_location_content">
+      <reference local="festival_location_content_id" foreign="id"/>
+    </foreign-key>
+</table>
+<table name="festival_content">
+    <column name="id" type="integer" primaryKey="true" required="true" autoIncrement="true"/>
+    <column name="type_id" type="integer"/>
+    <column name="festival_id" type="integer" required="true"/>
+    <column name="title" type="varchar" size="90" required="true"/>
+    <column name="subtitle" type="varchar" size="90"/>
+    <column name="content" type="longvarchar"/>
+    <column name="visitor" type="varchar" size="45" />
+    <column name="user_id" type="integer" required="true"/>
+</table>
+<table name="festival_location_content">
+    <column name="id" type="integer" primaryKey="true" required="true" autoIncrement="true"/>
+    <column name="title" type="varchar" size="45" required="true"/>
+    <column name="subtitle" type="varchar" size="90"/>
+    <column name="content" type="longvarchar"/>
+    <column name="user_id" type="integer" required="true"/>
+</table>
+<table name="festival_type">
+    <column name="id" type="integer" primaryKey="true" required="true" autoIncrement="true"/>
+    <column name="description" type="varchar" size="45" required="true"/>
+</table>
+<table name="festival_url">
+    <column name="id" type="integer" primaryKey="true" required="true" autoIncrement="true"/>
+    <column name="url" type="varchar" size="90" required="true"/>
+    <column name="festival_url_type_id" type="integer" required="true"/>
+    <column name="festival_id" type="integer"/>
+    <foreign-key foreignTable="festival_url_type">
+      <reference local="festival_url_type_id" foreign="id"/>
+    </foreign-key>
+</table>
+<table name="festival_url_type">
+    <column name="id" type="integer" primaryKey="true" required="true" autoIncrement="true"/>
+    <column name="description" type="varchar" size="45" required="true"/>
+</table>
+
+</database>

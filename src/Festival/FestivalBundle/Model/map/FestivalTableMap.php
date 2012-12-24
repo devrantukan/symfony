@@ -43,33 +43,15 @@ class FestivalTableMap extends TableMap
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('ID', 'Id', 'INTEGER', true, null, null);
-        $this->addColumn('TITLE', 'Title', 'VARCHAR', false, 100, null);
-        $this->getColumn('TITLE', false)->setPrimaryString(true);
-        $this->addColumn('SLUG', 'Slug', 'VARCHAR', false, 100, null);
-        $this->getColumn('SLUG', false)->setPrimaryString(true);
-        $this->addColumn('DESC', 'Desc', 'LONGVARCHAR', false, null, null);
+        $this->addForeignKey('TYPE_ID', 'TypeId', 'INTEGER', 'festival_type', 'ID', false, null, null);
+        $this->addColumn('FESTIVAL_CONTENT_TITLE', 'FestivalContentTitle', 'VARCHAR', true, 45, null);
+        $this->addColumn('START_DATE', 'StartDate', 'TIMESTAMP', true, null, null);
+        $this->addColumn('END_DATE', 'EndDate', 'TIMESTAMP', true, null, null);
+        $this->addForeignKey('FESTIVAL_LOCATION_ID', 'FestivalLocationId', 'INTEGER', 'festival_location', 'ID', false, null, null);
+        $this->addForeignKey('FESTIVAL_CONTENT_ID', 'FestivalContentId', 'INTEGER', 'festival_content', 'ID', false, null, null);
+        $this->addForeignKey('FESTIVAL_URL_ID', 'FestivalUrlId', 'INTEGER', 'festival_url', 'ID', false, null, null);
+        $this->addColumn('SLUG', 'Slug', 'VARCHAR', false, 45, null);
         $this->addColumn('LANG', 'Lang', 'VARCHAR', false, 2, null);
-        $this->getColumn('LANG', false)->setPrimaryString(true);
-        $this->addColumn('START', 'Start', 'DATE', false, null, null);
-        $this->addColumn('END', 'End', 'DATE', false, null, null);
-        $this->addColumn('LAT', 'Lat', 'DECIMAL', false, null, null);
-        $this->addColumn('LON', 'Lon', 'DECIMAL', false, null, null);
-        $this->addColumn('OFFICIAL_SITE_URL', 'OfficialSiteUrl', 'VARCHAR', false, 100, null);
-        $this->getColumn('OFFICIAL_SITE_URL', false)->setPrimaryString(true);
-        $this->addColumn('FACEBOOK_URL', 'FacebookUrl', 'VARCHAR', false, 100, null);
-        $this->getColumn('FACEBOOK_URL', false)->setPrimaryString(true);
-        $this->addColumn('TWITTER_URL', 'TwitterUrl', 'VARCHAR', false, 100, null);
-        $this->getColumn('TWITTER_URL', false)->setPrimaryString(true);
-        $this->addColumn('YOUTUBE_URL', 'YoutubeUrl', 'VARCHAR', false, 100, null);
-        $this->getColumn('YOUTUBE_URL', false)->setPrimaryString(true);
-        $this->addColumn('WIKIPEDIA_URL', 'WikipediaUrl', 'VARCHAR', false, 100, null);
-        $this->getColumn('WIKIPEDIA_URL', false)->setPrimaryString(true);
-        $this->addColumn('RSS_URL', 'RssUrl', 'VARCHAR', false, 100, null);
-        $this->getColumn('RSS_URL', false)->setPrimaryString(true);
-        $this->addColumn('COUNTRY', 'Country', 'VARCHAR', false, 100, null);
-        $this->getColumn('COUNTRY', false)->setPrimaryString(true);
-        $this->addColumn('LOCATION', 'Location', 'VARCHAR', false, 100, null);
-        $this->getColumn('LOCATION', false)->setPrimaryString(true);
         // validators
     } // initialize()
 
@@ -78,6 +60,10 @@ class FestivalTableMap extends TableMap
      */
     public function buildRelations()
     {
+        $this->addRelation('FestivalType', 'Festival\\FestivalBundle\\Model\\FestivalType', RelationMap::MANY_TO_ONE, array('type_id' => 'id', ), null, null);
+        $this->addRelation('FestivalLocation', 'Festival\\FestivalBundle\\Model\\FestivalLocation', RelationMap::MANY_TO_ONE, array('festival_location_id' => 'id', ), null, null);
+        $this->addRelation('FestivalContent', 'Festival\\FestivalBundle\\Model\\FestivalContent', RelationMap::MANY_TO_ONE, array('festival_content_id' => 'id', ), null, null);
+        $this->addRelation('FestivalUrl', 'Festival\\FestivalBundle\\Model\\FestivalUrl', RelationMap::MANY_TO_ONE, array('festival_url_id' => 'id', ), null, null);
     } // buildRelations()
 
 } // FestivalTableMap
