@@ -2,6 +2,7 @@ set :domain, "festivaltomorrow.com"
 set :application, "festivaltomorrow.com"
 
 set :serverName, "sg111.servergrove.com" # The server's hostname
+set :deploy_to,       "/var/www/vhosts/festivaltomorrow.com/symfony_projects/"
 ssh_options[:port] = 22123
 ssh_options[:paranoid] = false
 default_run_options[:pty] = true  
@@ -19,7 +20,7 @@ role :app,        domain                         # This may be the same as your 
 role :db,         domain, :primary => true       # This is where Symfony2 migrations will run
 
 set  :keep_releases,  3
-set  :deploy_via, :remote_cache
+set  :deploy_via, :copy
 set  :user,       "festiva1"
 set  :use_sudo,   false
 
