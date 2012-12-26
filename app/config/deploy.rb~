@@ -1,5 +1,5 @@
 set :domain, "festivaltomorrow.com"
-set :application, "festivaltomorrow.com"
+set :app, "festivaltomorrow.com"
 
 set :serverName, "sg111.servergrove.com" # The server's hostname
 ssh_options[:port] = 22123
