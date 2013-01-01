@@ -38,17 +38,17 @@ abstract class BaseFestivalUrlPeer
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
     const NUM_HYDRATE_COLUMNS = 4;
 
-    /** the column name for the ID field */
-    const ID = 'festival_url.ID';
+    /** the column name for the id field */
+    const ID = 'festival_url.id';
 
-    /** the column name for the URL field */
-    const URL = 'festival_url.URL';
+    /** the column name for the url field */
+    const URL = 'festival_url.url';
 
-    /** the column name for the FESTIVAL_URL_TYPE_ID field */
-    const FESTIVAL_URL_TYPE_ID = 'festival_url.FESTIVAL_URL_TYPE_ID';
+    /** the column name for the festival_url_type_id field */
+    const FESTIVAL_URL_TYPE_ID = 'festival_url.festival_url_type_id';
 
-    /** the column name for the FESTIVAL_ID field */
-    const FESTIVAL_ID = 'festival_url.FESTIVAL_ID';
+    /** the column name for the festival_id field */
+    const FESTIVAL_ID = 'festival_url.festival_id';
 
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -168,10 +168,10 @@ abstract class BaseFestivalUrlPeer
             $criteria->addSelectColumn(FestivalUrlPeer::FESTIVAL_URL_TYPE_ID);
             $criteria->addSelectColumn(FestivalUrlPeer::FESTIVAL_ID);
         } else {
-            $criteria->addSelectColumn($alias . '.ID');
-            $criteria->addSelectColumn($alias . '.URL');
-            $criteria->addSelectColumn($alias . '.FESTIVAL_URL_TYPE_ID');
-            $criteria->addSelectColumn($alias . '.FESTIVAL_ID');
+            $criteria->addSelectColumn($alias . '.id');
+            $criteria->addSelectColumn($alias . '.url');
+            $criteria->addSelectColumn($alias . '.festival_url_type_id');
+            $criteria->addSelectColumn($alias . '.festival_id');
         }
     }
 
@@ -255,7 +255,7 @@ abstract class BaseFestivalUrlPeer
     /**
      * Prepares the Criteria object and uses the parent doSelect() method to execute a PDOStatement.
      *
-     * Use this method directly if you want to work with an executed statement durirectly (for example
+     * Use this method directly if you want to work with an executed statement directly (for example
      * to perform your own object hydration).
      *
      * @param      Criteria $criteria The Criteria object used to build the SELECT statement.
@@ -360,8 +360,15 @@ abstract class BaseFestivalUrlPeer
      *
      * @return void
      */
-    public static function clearInstancePool()
+    public static function clearInstancePool($and_clear_all_references = false)
     {
+      if ($and_clear_all_references)
+      {
+        foreach (FestivalUrlPeer::$instances as $instance)
+        {
+          $instance->clearAllReferences(true);
+        }
+      }
         FestivalUrlPeer::$instances = array();
     }
 

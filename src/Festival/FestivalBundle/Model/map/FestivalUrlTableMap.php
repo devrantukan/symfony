@@ -42,10 +42,10 @@ class FestivalUrlTableMap extends TableMap
         $this->setPackage('src.Festival.FestivalBundle.Model');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('ID', 'Id', 'INTEGER', true, null, null);
-        $this->addColumn('URL', 'Url', 'VARCHAR', true, 90, null);
-        $this->addForeignKey('FESTIVAL_URL_TYPE_ID', 'FestivalUrlTypeId', 'INTEGER', 'festival_url_type', 'ID', true, null, null);
-        $this->addColumn('FESTIVAL_ID', 'FestivalId', 'INTEGER', false, null, null);
+        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
+        $this->addColumn('url', 'Url', 'VARCHAR', true, 90, null);
+        $this->addForeignKey('festival_url_type_id', 'FestivalUrlTypeId', 'INTEGER', 'festival_url_type', 'id', true, null, null);
+        $this->addColumn('festival_id', 'FestivalId', 'INTEGER', false, null, null);
         // validators
     } // initialize()
 

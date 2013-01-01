@@ -76,9 +76,9 @@ class DefaultController extends Controller
   
         // After model modification getTypeId() should be renamed to getFestivalTypeId()
         $festival_type = FestivalTypeQuery::create()
-        ->filterById($festival->getTypeId())
+        ->filterById($festival->getFestivalTypeId())
         ->findOne();
-	
+
 
 	return $this->render('FestivalFestivalBundle:Default:show.html.twig', array('festival' => $festival, 'festival_content' => $festival_content, 'festival_location' => $festival_location, 'festival_location_content' => $festival_location_content ,'festival_url' => $festival_url , 'festival_url_type' => $festival_url_type, 'festival_type' => $festival_type  ));
     }

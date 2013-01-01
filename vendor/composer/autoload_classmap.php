@@ -567,6 +567,7 @@ return array(
     'TypeSelector' => $baseDir . '/vendor/phing/phing/classes/phing/types/selectors/TypeSelector.php',
     'TypeValidator' => $baseDir . '/vendor/propel/propel1/runtime/lib/validator/TypeValidator.php',
     'TypedefTask' => $baseDir . '/vendor/phing/phing/classes/phing/tasks/system/TypedefTask.php',
+    'TypehintableBehavior' => $baseDir . '/vendor/willdurand/propel-typehintable-behavior/src/TypehintableBehavior.php',
     'Unique' => $baseDir . '/vendor/propel/propel1/generator/lib/model/Unique.php',
     'UniqueValidator' => $baseDir . '/vendor/propel/propel1/runtime/lib/validator/UniqueValidator.php',
     'UnixFileSystem' => $baseDir . '/vendor/phing/phing/classes/phing/system/io/UnixFileSystem.php',

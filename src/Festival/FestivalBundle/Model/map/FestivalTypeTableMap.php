@@ -42,8 +42,8 @@ class FestivalTypeTableMap extends TableMap
         $this->setPackage('src.Festival.FestivalBundle.Model');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('ID', 'Id', 'INTEGER', true, null, null);
-        $this->addColumn('DESCRIPTION', 'Description', 'VARCHAR', true, 45, null);
+        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
+        $this->addColumn('description', 'Description', 'VARCHAR', true, 45, null);
         // validators
     } // initialize()
 
@@ -52,7 +52,7 @@ class FestivalTypeTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('Festival', 'Festival\\FestivalBundle\\Model\\Festival', RelationMap::ONE_TO_MANY, array('id' => 'type_id', ), null, null, 'Festivals');
+        $this->addRelation('Festival', 'Festival\\FestivalBundle\\Model\\Festival', RelationMap::ONE_TO_MANY, array('id' => 'festival_type_id', ), null, null, 'Festivals');
     } // buildRelations()
 
 } // FestivalTypeTableMap

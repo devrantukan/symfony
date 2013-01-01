@@ -22,7 +22,7 @@ use Festival\FestivalBundle\Model\FestivalUrl;
 
 /**
  * @method FestivalQuery orderById($order = Criteria::ASC) Order by the id column
- * @method FestivalQuery orderByTypeId($order = Criteria::ASC) Order by the type_id column
+ * @method FestivalQuery orderByFestivalTypeId($order = Criteria::ASC) Order by the festival_type_id column
  * @method FestivalQuery orderByFestivalContentTitle($order = Criteria::ASC) Order by the festival_content_title column
  * @method FestivalQuery orderByStartDate($order = Criteria::ASC) Order by the start_date column
  * @method FestivalQuery orderByEndDate($order = Criteria::ASC) Order by the end_date column
@@ -33,7 +33,7 @@ use Festival\FestivalBundle\Model\FestivalUrl;
  * @method FestivalQuery orderByLang($order = Criteria::ASC) Order by the lang column
  *
  * @method FestivalQuery groupById() Group by the id column
- * @method FestivalQuery groupByTypeId() Group by the type_id column
+ * @method FestivalQuery groupByFestivalTypeId() Group by the festival_type_id column
  * @method FestivalQuery groupByFestivalContentTitle() Group by the festival_content_title column
  * @method FestivalQuery groupByStartDate() Group by the start_date column
  * @method FestivalQuery groupByEndDate() Group by the end_date column
@@ -66,7 +66,7 @@ use Festival\FestivalBundle\Model\FestivalUrl;
  * @method Festival findOne(PropelPDO $con = null) Return the first Festival matching the query
  * @method Festival findOneOrCreate(PropelPDO $con = null) Return the first Festival matching the query, or a new Festival object populated from the query conditions when no match is found
  *
- * @method Festival findOneByTypeId(int $type_id) Return the first Festival filtered by the type_id column
+ * @method Festival findOneByFestivalTypeId(int $festival_type_id) Return the first Festival filtered by the festival_type_id column
  * @method Festival findOneByFestivalContentTitle(string $festival_content_title) Return the first Festival filtered by the festival_content_title column
  * @method Festival findOneByStartDate(string $start_date) Return the first Festival filtered by the start_date column
  * @method Festival findOneByEndDate(string $end_date) Return the first Festival filtered by the end_date column
@@ -77,7 +77,7 @@ use Festival\FestivalBundle\Model\FestivalUrl;
  * @method Festival findOneByLang(string $lang) Return the first Festival filtered by the lang column
  *
  * @method array findById(int $id) Return Festival objects filtered by the id column
- * @method array findByTypeId(int $type_id) Return Festival objects filtered by the type_id column
+ * @method array findByFestivalTypeId(int $festival_type_id) Return Festival objects filtered by the festival_type_id column
  * @method array findByFestivalContentTitle(string $festival_content_title) Return Festival objects filtered by the festival_content_title column
  * @method array findByStartDate(string $start_date) Return Festival objects filtered by the start_date column
  * @method array findByEndDate(string $end_date) Return Festival objects filtered by the end_date column
@@ -187,7 +187,7 @@ abstract class BaseFestivalQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT `ID`, `TYPE_ID`, `FESTIVAL_CONTENT_TITLE`, `START_DATE`, `END_DATE`, `FESTIVAL_LOCATION_ID`, `FESTIVAL_CONTENT_ID`, `FESTIVAL_URL_ID`, `SLUG`, `LANG` FROM `festival` WHERE `ID` = :p0';
+        $sql = 'SELECT `id`, `festival_type_id`, `festival_content_title`, `start_date`, `end_date`, `festival_location_id`, `festival_content_id`, `festival_url_id`, `slug`, `lang` FROM `festival` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -304,18 +304,18 @@ abstract class BaseFestivalQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the type_id column
+     * Filter the query on the festival_type_id column
      *
      * Example usage:
      * <code>
-     * $query->filterByTypeId(1234); // WHERE type_id = 1234
-     * $query->filterByTypeId(array(12, 34)); // WHERE type_id IN (12, 34)
-     * $query->filterByTypeId(array('min' => 12)); // WHERE type_id > 12
+     * $query->filterByFestivalTypeId(1234); // WHERE festival_type_id = 1234
+     * $query->filterByFestivalTypeId(array(12, 34)); // WHERE festival_type_id IN (12, 34)
+     * $query->filterByFestivalTypeId(array('min' => 12)); // WHERE festival_type_id > 12
      * </code>
      *
      * @see       filterByFestivalType()
      *
-     * @param     mixed $typeId The value to use as filter.
+     * @param     mixed $festivalTypeId The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
@@ -323,16 +323,16 @@ abstract class BaseFestivalQuery extends ModelCriteria
      *
      * @return FestivalQuery The current query, for fluid interface
      */
-    public function filterByTypeId($typeId = null, $comparison = null)
+    public function filterByFestivalTypeId($festivalTypeId = null, $comparison = null)
     {
-        if (is_array($typeId)) {
+        if (is_array($festivalTypeId)) {
             $useMinMax = false;
-            if (isset($typeId['min'])) {
-                $this->addUsingAlias(FestivalPeer::TYPE_ID, $typeId['min'], Criteria::GREATER_EQUAL);
+            if (isset($festivalTypeId['min'])) {
+                $this->addUsingAlias(FestivalPeer::FESTIVAL_TYPE_ID, $festivalTypeId['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
-            if (isset($typeId['max'])) {
-                $this->addUsingAlias(FestivalPeer::TYPE_ID, $typeId['max'], Criteria::LESS_EQUAL);
+            if (isset($festivalTypeId['max'])) {
+                $this->addUsingAlias(FestivalPeer::FESTIVAL_TYPE_ID, $festivalTypeId['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -343,7 +343,7 @@ abstract class BaseFestivalQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(FestivalPeer::TYPE_ID, $typeId, $comparison);
+        return $this->addUsingAlias(FestivalPeer::FESTIVAL_TYPE_ID, $festivalTypeId, $comparison);
     }
 
     /**
@@ -661,14 +661,14 @@ abstract class BaseFestivalQuery extends ModelCriteria
     {
         if ($festivalType instanceof FestivalType) {
             return $this
-                ->addUsingAlias(FestivalPeer::TYPE_ID, $festivalType->getId(), $comparison);
+                ->addUsingAlias(FestivalPeer::FESTIVAL_TYPE_ID, $festivalType->getId(), $comparison);
         } elseif ($festivalType instanceof PropelObjectCollection) {
             if (null === $comparison) {
                 $comparison = Criteria::IN;
             }
 
             return $this
-                ->addUsingAlias(FestivalPeer::TYPE_ID, $festivalType->toKeyValue('PrimaryKey', 'Id'), $comparison);
+                ->addUsingAlias(FestivalPeer::FESTIVAL_TYPE_ID, $festivalType->toKeyValue('PrimaryKey', 'Id'), $comparison);
         } else {
             throw new PropelException('filterByFestivalType() only accepts arguments of type FestivalType or PropelCollection');
         }

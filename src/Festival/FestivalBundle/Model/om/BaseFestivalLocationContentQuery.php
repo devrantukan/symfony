@@ -152,7 +152,7 @@ abstract class BaseFestivalLocationContentQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT `ID`, `TITLE`, `SUBTITLE`, `CONTENT`, `USER_ID` FROM `festival_location_content` WHERE `ID` = :p0';
+        $sql = 'SELECT `id`, `title`, `subtitle`, `content`, `user_id` FROM `festival_location_content` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);

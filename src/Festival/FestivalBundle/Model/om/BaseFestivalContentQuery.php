@@ -23,6 +23,8 @@ use Festival\FestivalBundle\Model\FestivalContentQuery;
  * @method FestivalContentQuery orderByTitle($order = Criteria::ASC) Order by the title column
  * @method FestivalContentQuery orderBySubtitle($order = Criteria::ASC) Order by the subtitle column
  * @method FestivalContentQuery orderByContent($order = Criteria::ASC) Order by the content column
+ * @method FestivalContentQuery orderByMetaKeywords($order = Criteria::ASC) Order by the meta_keywords column
+ * @method FestivalContentQuery orderByMetaDescription($order = Criteria::ASC) Order by the meta_description column
  * @method FestivalContentQuery orderByVisitor($order = Criteria::ASC) Order by the visitor column
  * @method FestivalContentQuery orderByUserId($order = Criteria::ASC) Order by the user_id column
  *
@@ -31,6 +33,8 @@ use Festival\FestivalBundle\Model\FestivalContentQuery;
  * @method FestivalContentQuery groupByTitle() Group by the title column
  * @method FestivalContentQuery groupBySubtitle() Group by the subtitle column
  * @method FestivalContentQuery groupByContent() Group by the content column
+ * @method FestivalContentQuery groupByMetaKeywords() Group by the meta_keywords column
+ * @method FestivalContentQuery groupByMetaDescription() Group by the meta_description column
  * @method FestivalContentQuery groupByVisitor() Group by the visitor column
  * @method FestivalContentQuery groupByUserId() Group by the user_id column
  *
@@ -49,6 +53,8 @@ use Festival\FestivalBundle\Model\FestivalContentQuery;
  * @method FestivalContent findOneByTitle(string $title) Return the first FestivalContent filtered by the title column
  * @method FestivalContent findOneBySubtitle(string $subtitle) Return the first FestivalContent filtered by the subtitle column
  * @method FestivalContent findOneByContent(string $content) Return the first FestivalContent filtered by the content column
+ * @method FestivalContent findOneByMetaKeywords(string $meta_keywords) Return the first FestivalContent filtered by the meta_keywords column
+ * @method FestivalContent findOneByMetaDescription(string $meta_description) Return the first FestivalContent filtered by the meta_description column
  * @method FestivalContent findOneByVisitor(string $visitor) Return the first FestivalContent filtered by the visitor column
  * @method FestivalContent findOneByUserId(int $user_id) Return the first FestivalContent filtered by the user_id column
  *
@@ -57,6 +63,8 @@ use Festival\FestivalBundle\Model\FestivalContentQuery;
  * @method array findByTitle(string $title) Return FestivalContent objects filtered by the title column
  * @method array findBySubtitle(string $subtitle) Return FestivalContent objects filtered by the subtitle column
  * @method array findByContent(string $content) Return FestivalContent objects filtered by the content column
+ * @method array findByMetaKeywords(string $meta_keywords) Return FestivalContent objects filtered by the meta_keywords column
+ * @method array findByMetaDescription(string $meta_description) Return FestivalContent objects filtered by the meta_description column
  * @method array findByVisitor(string $visitor) Return FestivalContent objects filtered by the visitor column
  * @method array findByUserId(int $user_id) Return FestivalContent objects filtered by the user_id column
  */
@@ -160,7 +168,7 @@ abstract class BaseFestivalContentQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT `ID`, `FESTIVAL_ID`, `TITLE`, `SUBTITLE`, `CONTENT`, `VISITOR`, `USER_ID` FROM `festival_content` WHERE `ID` = :p0';
+        $sql = 'SELECT `id`, `festival_id`, `title`, `subtitle`, `content`, `meta_keywords`, `meta_description`, `visitor`, `user_id` FROM `festival_content` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -402,6 +410,64 @@ abstract class BaseFestivalContentQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(FestivalContentPeer::CONTENT, $content, $comparison);
+    }
+
+    /**
+     * Filter the query on the meta_keywords column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByMetaKeywords('fooValue');   // WHERE meta_keywords = 'fooValue'
+     * $query->filterByMetaKeywords('%fooValue%'); // WHERE meta_keywords LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $metaKeywords The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return FestivalContentQuery The current query, for fluid interface
+     */
+    public function filterByMetaKeywords($metaKeywords = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($metaKeywords)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $metaKeywords)) {
+                $metaKeywords = str_replace('*', '%', $metaKeywords);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(FestivalContentPeer::META_KEYWORDS, $metaKeywords, $comparison);
+    }
+
+    /**
+     * Filter the query on the meta_description column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByMetaDescription('fooValue');   // WHERE meta_description = 'fooValue'
+     * $query->filterByMetaDescription('%fooValue%'); // WHERE meta_description LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $metaDescription The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return FestivalContentQuery The current query, for fluid interface
+     */
+    public function filterByMetaDescription($metaDescription = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($metaDescription)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $metaDescription)) {
+                $metaDescription = str_replace('*', '%', $metaDescription);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(FestivalContentPeer::META_DESCRIPTION, $metaDescription, $comparison);
     }
 
     /**

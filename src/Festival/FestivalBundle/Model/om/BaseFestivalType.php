@@ -73,6 +73,12 @@ abstract class BaseFestivalType extends BaseObject implements Persistent
     protected $alreadyInValidation = false;
 
     /**
+     * Flag to prevent endless clearAllReferences($deep=true) loop, if this object is referenced
+     * @var        boolean
+     */
+    protected $alreadyInClearAllReferencesDeep = false;
+
+    /**
      * An array of objects scheduled for deletion.
      * @var		PropelObjectCollection
      */
@@ -106,7 +112,7 @@ abstract class BaseFestivalType extends BaseObject implements Persistent
      */
     public function setId($v)
     {
-        if ($v !== null) {
+        if ($v !== null && is_numeric($v)) {
             $v = (int) $v;
         }
 
@@ -127,7 +133,7 @@ abstract class BaseFestivalType extends BaseObject implements Persistent
      */
     public function setDescription($v)
     {
-        if ($v !== null) {
+        if ($v !== null && is_numeric($v)) {
             $v = (string) $v;
         }
 
@@ -181,7 +187,7 @@ abstract class BaseFestivalType extends BaseObject implements Persistent
             if ($rehydrate) {
                 $this->ensureConsistency();
             }
-
+            $this->postHydrate($row, $startcol, $rehydrate);
             return $startcol + 2; // 2 = FestivalTypePeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
@@ -382,7 +388,7 @@ abstract class BaseFestivalType extends BaseObject implements Persistent
 
             if ($this->collFestivals !== null) {
                 foreach ($this->collFestivals as $referrerFK) {
-                    if (!$referrerFK->isDeleted()) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
                 }
@@ -415,10 +421,10 @@ abstract class BaseFestivalType extends BaseObject implements Persistent
 
          // check the columns in natural order for more readable SQL queries
         if ($this->isColumnModified(FestivalTypePeer::ID)) {
-            $modifiedColumns[':p' . $index++]  = '`ID`';
+            $modifiedColumns[':p' . $index++]  = '`id`';
         }
         if ($this->isColumnModified(FestivalTypePeer::DESCRIPTION)) {
-            $modifiedColumns[':p' . $index++]  = '`DESCRIPTION`';
+            $modifiedColumns[':p' . $index++]  = '`description`';
         }
 
         $sql = sprintf(
@@ -431,10 +437,10 @@ abstract class BaseFestivalType extends BaseObject implements Persistent
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
-                    case '`ID`':
+                    case '`id`':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
-                    case '`DESCRIPTION`':
+                    case '`description`':
                         $stmt->bindValue($identifier, $this->description, PDO::PARAM_STR);
                         break;
                 }
@@ -505,11 +511,11 @@ abstract class BaseFestivalType extends BaseObject implements Persistent
             $this->validationFailures = array();
 
             return true;
-        } else {
-            $this->validationFailures = $res;
-
-            return false;
         }
+
+        $this->validationFailures = $res;
+
+        return false;
     }
 
     /**
@@ -850,13 +856,15 @@ abstract class BaseFestivalType extends BaseObject implements Persistent
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
-     * @return void
+     * @return FestivalType The current object (for fluent API support)
      * @see        addFestivals()
      */
     public function clearFestivals()
     {
         $this->collFestivals = null; // important to set this to null since that means it is uninitialized
         $this->collFestivalsPartial = null;
+
+        return $this;
     }
 
     /**
@@ -928,6 +936,7 @@ abstract class BaseFestivalType extends BaseObject implements Persistent
                       $this->collFestivalsPartial = true;
                     }
 
+                    $collFestivals->getInternalIterator()->rewind();
                     return $collFestivals;
                 }
 
@@ -955,12 +964,15 @@ abstract class BaseFestivalType extends BaseObject implements Persistent
      *
      * @param PropelCollection $festivals A Propel collection.
      * @param PropelPDO $con Optional connection object
+     * @return FestivalType The current object (for fluent API support)
      */
     public function setFestivals(PropelCollection $festivals, PropelPDO $con = null)
     {
-        $this->festivalsScheduledForDeletion = $this->getFestivals(new Criteria(), $con)->diff($festivals);
+        $festivalsToDelete = $this->getFestivals(new Criteria(), $con)->diff($festivals);
 
-        foreach ($this->festivalsScheduledForDeletion as $festivalRemoved) {
+        $this->festivalsScheduledForDeletion = unserialize(serialize($festivalsToDelete));
+
+        foreach ($festivalsToDelete as $festivalRemoved) {
             $festivalRemoved->setFestivalType(null);
         }
 
@@ -971,6 +983,8 @@ abstract class BaseFestivalType extends BaseObject implements Persistent
 
         $this->collFestivals = $festivals;
         $this->collFestivalsPartial = false;
+
+        return $this;
     }
 
     /**
@@ -988,22 +1002,22 @@ abstract class BaseFestivalType extends BaseObject implements Persistent
         if (null === $this->collFestivals || null !== $criteria || $partial) {
             if ($this->isNew() && null === $this->collFestivals) {
                 return 0;
-            } else {
-                if($partial && !$criteria) {
-                    return count($this->getFestivals());
-                }
-                $query = FestivalQuery::create(null, $criteria);
-                if ($distinct) {
-                    $query->distinct();
-                }
-
-                return $query
-                    ->filterByFestivalType($this)
-                    ->count($con);
             }
-        } else {
-            return count($this->collFestivals);
+
+            if($partial && !$criteria) {
+                return count($this->getFestivals());
+            }
+            $query = FestivalQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByFestivalType($this)
+                ->count($con);
         }
+
+        return count($this->collFestivals);
     }
 
     /**
@@ -1037,6 +1051,7 @@ abstract class BaseFestivalType extends BaseObject implements Persistent
 
     /**
      * @param	Festival $festival The festival object to remove.
+     * @return FestivalType The current object (for fluent API support)
      */
     public function removeFestival($festival)
     {
@@ -1049,6 +1064,8 @@ abstract class BaseFestivalType extends BaseObject implements Persistent
             $this->festivalsScheduledForDeletion[]= $festival;
             $festival->setFestivalType(null);
         }
+
+        return $this;
     }
 
 
@@ -1135,6 +1152,7 @@ abstract class BaseFestivalType extends BaseObject implements Persistent
         $this->description = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
+        $this->alreadyInClearAllReferencesDeep = false;
         $this->clearAllReferences();
         $this->resetModified();
         $this->setNew(true);
@@ -1152,12 +1170,15 @@ abstract class BaseFestivalType extends BaseObject implements Persistent
      */
     public function clearAllReferences($deep = false)
     {
-        if ($deep) {
+        if ($deep && !$this->alreadyInClearAllReferencesDeep) {
+            $this->alreadyInClearAllReferencesDeep = true;
             if ($this->collFestivals) {
                 foreach ($this->collFestivals as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
+
+            $this->alreadyInClearAllReferencesDeep = false;
         } // if ($deep)
 
         if ($this->collFestivals instanceof PropelCollection) {

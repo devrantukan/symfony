@@ -73,6 +73,12 @@ abstract class BaseFestivalUrlType extends BaseObject implements Persistent
     protected $alreadyInValidation = false;
 
     /**
+     * Flag to prevent endless clearAllReferences($deep=true) loop, if this object is referenced
+     * @var        boolean
+     */
+    protected $alreadyInClearAllReferencesDeep = false;
+
+    /**
      * An array of objects scheduled for deletion.
      * @var		PropelObjectCollection
      */
@@ -106,7 +112,7 @@ abstract class BaseFestivalUrlType extends BaseObject implements Persistent
      */
     public function setId($v)
     {
-        if ($v !== null) {
+        if ($v !== null && is_numeric($v)) {
             $v = (int) $v;
         }
 
@@ -127,7 +133,7 @@ abstract class BaseFestivalUrlType extends BaseObject implements Persistent
      */
     public function setDescription($v)
     {
-        if ($v !== null) {
+        if ($v !== null && is_numeric($v)) {
             $v = (string) $v;
         }
 
@@ -181,7 +187,7 @@ abstract class BaseFestivalUrlType extends BaseObject implements Persistent
             if ($rehydrate) {
                 $this->ensureConsistency();
             }
-
+            $this->postHydrate($row, $startcol, $rehydrate);
             return $startcol + 2; // 2 = FestivalUrlTypePeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
@@ -381,7 +387,7 @@ abstract class BaseFestivalUrlType extends BaseObject implements Persistent
 
             if ($this->collFestivalUrls !== null) {
                 foreach ($this->collFestivalUrls as $referrerFK) {
-                    if (!$referrerFK->isDeleted()) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
                 }
@@ -414,10 +420,10 @@ abstract class BaseFestivalUrlType extends BaseObject implements Persistent
 
          // check the columns in natural order for more readable SQL queries
         if ($this->isColumnModified(FestivalUrlTypePeer::ID)) {
-            $modifiedColumns[':p' . $index++]  = '`ID`';
+            $modifiedColumns[':p' . $index++]  = '`id`';
         }
         if ($this->isColumnModified(FestivalUrlTypePeer::DESCRIPTION)) {
-            $modifiedColumns[':p' . $index++]  = '`DESCRIPTION`';
+            $modifiedColumns[':p' . $index++]  = '`description`';
         }
 
         $sql = sprintf(
@@ -430,10 +436,10 @@ abstract class BaseFestivalUrlType extends BaseObject implements Persistent
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
-                    case '`ID`':
+                    case '`id`':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
-                    case '`DESCRIPTION`':
+                    case '`description`':
                         $stmt->bindValue($identifier, $this->description, PDO::PARAM_STR);
                         break;
                 }
@@ -504,11 +510,11 @@ abstract class BaseFestivalUrlType extends BaseObject implements Persistent
             $this->validationFailures = array();
 
             return true;
-        } else {
-            $this->validationFailures = $res;
-
-            return false;
         }
+
+        $this->validationFailures = $res;
+
+        return false;
     }
 
     /**
@@ -849,13 +855,15 @@ abstract class BaseFestivalUrlType extends BaseObject implements Persistent
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
-     * @return void
+     * @return FestivalUrlType The current object (for fluent API support)
      * @see        addFestivalUrls()
      */
     public function clearFestivalUrls()
     {
         $this->collFestivalUrls = null; // important to set this to null since that means it is uninitialized
         $this->collFestivalUrlsPartial = null;
+
+        return $this;
     }
 
     /**
@@ -927,6 +935,7 @@ abstract class BaseFestivalUrlType extends BaseObject implements Persistent
                       $this->collFestivalUrlsPartial = true;
                     }
 
+                    $collFestivalUrls->getInternalIterator()->rewind();
                     return $collFestivalUrls;
                 }
 
@@ -954,12 +963,15 @@ abstract class BaseFestivalUrlType extends BaseObject implements Persistent
      *
      * @param PropelCollection $festivalUrls A Propel collection.
      * @param PropelPDO $con Optional connection object
+     * @return FestivalUrlType The current object (for fluent API support)
      */
     public function setFestivalUrls(PropelCollection $festivalUrls, PropelPDO $con = null)
     {
-        $this->festivalUrlsScheduledForDeletion = $this->getFestivalUrls(new Criteria(), $con)->diff($festivalUrls);
+        $festivalUrlsToDelete = $this->getFestivalUrls(new Criteria(), $con)->diff($festivalUrls);
 
-        foreach ($this->festivalUrlsScheduledForDeletion as $festivalUrlRemoved) {
+        $this->festivalUrlsScheduledForDeletion = unserialize(serialize($festivalUrlsToDelete));
+
+        foreach ($festivalUrlsToDelete as $festivalUrlRemoved) {
             $festivalUrlRemoved->setFestivalUrlType(null);
         }
 
@@ -970,6 +982,8 @@ abstract class BaseFestivalUrlType extends BaseObject implements Persistent
 
         $this->collFestivalUrls = $festivalUrls;
         $this->collFestivalUrlsPartial = false;
+
+        return $this;
     }
 
     /**
@@ -987,22 +1001,22 @@ abstract class BaseFestivalUrlType extends BaseObject implements Persistent
         if (null === $this->collFestivalUrls || null !== $criteria || $partial) {
             if ($this->isNew() && null === $this->collFestivalUrls) {
                 return 0;
-            } else {
-                if($partial && !$criteria) {
-                    return count($this->getFestivalUrls());
-                }
-                $query = FestivalUrlQuery::create(null, $criteria);
-                if ($distinct) {
-                    $query->distinct();
-                }
-
-                return $query
-                    ->filterByFestivalUrlType($this)
-                    ->count($con);
             }
-        } else {
-            return count($this->collFestivalUrls);
+
+            if($partial && !$criteria) {
+                return count($this->getFestivalUrls());
+            }
+            $query = FestivalUrlQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByFestivalUrlType($this)
+                ->count($con);
         }
+
+        return count($this->collFestivalUrls);
     }
 
     /**
@@ -1036,6 +1050,7 @@ abstract class BaseFestivalUrlType extends BaseObject implements Persistent
 
     /**
      * @param	FestivalUrl $festivalUrl The festivalUrl object to remove.
+     * @return FestivalUrlType The current object (for fluent API support)
      */
     public function removeFestivalUrl($festivalUrl)
     {
@@ -1045,9 +1060,11 @@ abstract class BaseFestivalUrlType extends BaseObject implements Persistent
                 $this->festivalUrlsScheduledForDeletion = clone $this->collFestivalUrls;
                 $this->festivalUrlsScheduledForDeletion->clear();
             }
-            $this->festivalUrlsScheduledForDeletion[]= $festivalUrl;
+            $this->festivalUrlsScheduledForDeletion[]= clone $festivalUrl;
             $festivalUrl->setFestivalUrlType(null);
         }
+
+        return $this;
     }
 
     /**
@@ -1059,6 +1076,7 @@ abstract class BaseFestivalUrlType extends BaseObject implements Persistent
         $this->description = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
+        $this->alreadyInClearAllReferencesDeep = false;
         $this->clearAllReferences();
         $this->resetModified();
         $this->setNew(true);
@@ -1076,12 +1094,15 @@ abstract class BaseFestivalUrlType extends BaseObject implements Persistent
      */
     public function clearAllReferences($deep = false)
     {
-        if ($deep) {
+        if ($deep && !$this->alreadyInClearAllReferencesDeep) {
+            $this->alreadyInClearAllReferencesDeep = true;
             if ($this->collFestivalUrls) {
                 foreach ($this->collFestivalUrls as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
+
+            $this->alreadyInClearAllReferencesDeep = false;
         } // if ($deep)
 
         if ($this->collFestivalUrls instanceof PropelCollection) {

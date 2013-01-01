@@ -43,6 +43,8 @@
     <column name="title" type="varchar" size="90" required="true"/>
     <column name="subtitle" type="varchar" size="90"/>
     <column name="content" type="longvarchar"/>
+    <column name="meta_keywords" type="longvarchar" />
+	<column name="meta_description" type="longvarchar" />
     <column name="visitor" type="varchar" size="45" />
     <column name="user_id" type="integer" required="true"/>
 </table>

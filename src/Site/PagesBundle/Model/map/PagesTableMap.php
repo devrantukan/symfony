@@ -42,18 +42,18 @@ class PagesTableMap extends TableMap
         $this->setPackage('src.Site.PagesBundle.Model');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('ID', 'Id', 'INTEGER', true, null, null);
-        $this->addColumn('MASTER_ID', 'MasterId', 'INTEGER', true, null, null);
-        $this->addColumn('TITLE', 'Title', 'VARCHAR', false, 100, null);
-        $this->getColumn('TITLE', false)->setPrimaryString(true);
-        $this->addColumn('SLUG', 'Slug', 'VARCHAR', false, 100, null);
-        $this->getColumn('SLUG', false)->setPrimaryString(true);
-        $this->addColumn('CONTENT', 'Content', 'LONGVARCHAR', false, null, null);
-        $this->addColumn('LANG', 'Lang', 'VARCHAR', false, 2, null);
-        $this->getColumn('LANG', false)->setPrimaryString(true);
-        $this->addColumn('IMAGES', 'Images', 'LONGVARCHAR', false, null, null);
-        $this->addColumn('META_KEYWORDS', 'MetaKeywords', 'LONGVARCHAR', false, null, null);
-        $this->addColumn('META_DESCRIPTION', 'MetaDescription', 'LONGVARCHAR', false, null, null);
+        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
+        $this->addColumn('master_id', 'MasterId', 'INTEGER', true, null, null);
+        $this->addColumn('title', 'Title', 'VARCHAR', false, 100, null);
+        $this->getColumn('title', false)->setPrimaryString(true);
+        $this->addColumn('slug', 'Slug', 'VARCHAR', false, 100, null);
+        $this->getColumn('slug', false)->setPrimaryString(true);
+        $this->addColumn('content', 'Content', 'LONGVARCHAR', false, null, null);
+        $this->addColumn('lang', 'Lang', 'VARCHAR', false, 2, null);
+        $this->getColumn('lang', false)->setPrimaryString(true);
+        $this->addColumn('images', 'Images', 'LONGVARCHAR', false, null, null);
+        $this->addColumn('meta_keywords', 'MetaKeywords', 'LONGVARCHAR', false, null, null);
+        $this->addColumn('meta_description', 'MetaDescription', 'LONGVARCHAR', false, null, null);
         // validators
     } // initialize()
 

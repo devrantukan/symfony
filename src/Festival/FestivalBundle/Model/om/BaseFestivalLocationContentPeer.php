@@ -37,20 +37,20 @@ abstract class BaseFestivalLocationContentPeer
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
     const NUM_HYDRATE_COLUMNS = 5;
 
-    /** the column name for the ID field */
-    const ID = 'festival_location_content.ID';
+    /** the column name for the id field */
+    const ID = 'festival_location_content.id';
 
-    /** the column name for the TITLE field */
-    const TITLE = 'festival_location_content.TITLE';
+    /** the column name for the title field */
+    const TITLE = 'festival_location_content.title';
 
-    /** the column name for the SUBTITLE field */
-    const SUBTITLE = 'festival_location_content.SUBTITLE';
+    /** the column name for the subtitle field */
+    const SUBTITLE = 'festival_location_content.subtitle';
 
-    /** the column name for the CONTENT field */
-    const CONTENT = 'festival_location_content.CONTENT';
+    /** the column name for the content field */
+    const CONTENT = 'festival_location_content.content';
 
-    /** the column name for the USER_ID field */
-    const USER_ID = 'festival_location_content.USER_ID';
+    /** the column name for the user_id field */
+    const USER_ID = 'festival_location_content.user_id';
 
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -171,11 +171,11 @@ abstract class BaseFestivalLocationContentPeer
             $criteria->addSelectColumn(FestivalLocationContentPeer::CONTENT);
             $criteria->addSelectColumn(FestivalLocationContentPeer::USER_ID);
         } else {
-            $criteria->addSelectColumn($alias . '.ID');
-            $criteria->addSelectColumn($alias . '.TITLE');
-            $criteria->addSelectColumn($alias . '.SUBTITLE');
-            $criteria->addSelectColumn($alias . '.CONTENT');
-            $criteria->addSelectColumn($alias . '.USER_ID');
+            $criteria->addSelectColumn($alias . '.id');
+            $criteria->addSelectColumn($alias . '.title');
+            $criteria->addSelectColumn($alias . '.subtitle');
+            $criteria->addSelectColumn($alias . '.content');
+            $criteria->addSelectColumn($alias . '.user_id');
         }
     }
 
@@ -259,7 +259,7 @@ abstract class BaseFestivalLocationContentPeer
     /**
      * Prepares the Criteria object and uses the parent doSelect() method to execute a PDOStatement.
      *
-     * Use this method directly if you want to work with an executed statement durirectly (for example
+     * Use this method directly if you want to work with an executed statement directly (for example
      * to perform your own object hydration).
      *
      * @param      Criteria $criteria The Criteria object used to build the SELECT statement.
@@ -364,8 +364,15 @@ abstract class BaseFestivalLocationContentPeer
      *
      * @return void
      */
-    public static function clearInstancePool()
+    public static function clearInstancePool($and_clear_all_references = false)
     {
+      if ($and_clear_all_references)
+      {
+        foreach (FestivalLocationContentPeer::$instances as $instance)
+        {
+          $instance->clearAllReferences(true);
+        }
+      }
         FestivalLocationContentPeer::$instances = array();
     }
 

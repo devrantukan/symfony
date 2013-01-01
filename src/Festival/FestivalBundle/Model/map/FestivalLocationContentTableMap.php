@@ -42,11 +42,11 @@ class FestivalLocationContentTableMap extends TableMap
         $this->setPackage('src.Festival.FestivalBundle.Model');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('ID', 'Id', 'INTEGER', true, null, null);
-        $this->addColumn('TITLE', 'Title', 'VARCHAR', true, 45, null);
-        $this->addColumn('SUBTITLE', 'Subtitle', 'VARCHAR', false, 90, null);
-        $this->addColumn('CONTENT', 'Content', 'LONGVARCHAR', false, null, null);
-        $this->addColumn('USER_ID', 'UserId', 'INTEGER', true, null, null);
+        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
+        $this->addColumn('title', 'Title', 'VARCHAR', true, 45, null);
+        $this->addColumn('subtitle', 'Subtitle', 'VARCHAR', false, 90, null);
+        $this->addColumn('content', 'Content', 'LONGVARCHAR', false, null, null);
+        $this->addColumn('user_id', 'UserId', 'INTEGER', true, null, null);
         // validators
     } // initialize()
 

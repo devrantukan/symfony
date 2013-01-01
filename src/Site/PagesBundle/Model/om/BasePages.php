@@ -105,6 +105,12 @@ abstract class BasePages extends BaseObject implements Persistent
     protected $alreadyInValidation = false;
 
     /**
+     * Flag to prevent endless clearAllReferences($deep=true) loop, if this object is referenced
+     * @var        boolean
+     */
+    protected $alreadyInClearAllReferencesDeep = false;
+
+    /**
      * Get the [id] column value.
      *
      * @return int
@@ -202,7 +208,7 @@ abstract class BasePages extends BaseObject implements Persistent
      */
     public function setId($v)
     {
-        if ($v !== null) {
+        if ($v !== null && is_numeric($v)) {
             $v = (int) $v;
         }
 
@@ -223,7 +229,7 @@ abstract class BasePages extends BaseObject implements Persistent
      */
     public function setMasterId($v)
     {
-        if ($v !== null) {
+        if ($v !== null && is_numeric($v)) {
             $v = (int) $v;
         }
 
@@ -244,7 +250,7 @@ abstract class BasePages extends BaseObject implements Persistent
      */
     public function setTitle($v)
     {
-        if ($v !== null) {
+        if ($v !== null && is_numeric($v)) {
             $v = (string) $v;
         }
 
@@ -265,7 +271,7 @@ abstract class BasePages extends BaseObject implements Persistent
      */
     public function setSlug($v)
     {
-        if ($v !== null) {
+        if ($v !== null && is_numeric($v)) {
             $v = (string) $v;
         }
 
@@ -286,7 +292,7 @@ abstract class BasePages extends BaseObject implements Persistent
      */
     public function setContent($v)
     {
-        if ($v !== null) {
+        if ($v !== null && is_numeric($v)) {
             $v = (string) $v;
         }
 
@@ -307,7 +313,7 @@ abstract class BasePages extends BaseObject implements Persistent
      */
     public function setLang($v)
     {
-        if ($v !== null) {
+        if ($v !== null && is_numeric($v)) {
             $v = (string) $v;
         }
 
@@ -328,7 +334,7 @@ abstract class BasePages extends BaseObject implements Persistent
      */
     public function setImages($v)
     {
-        if ($v !== null) {
+        if ($v !== null && is_numeric($v)) {
             $v = (string) $v;
         }
 
@@ -349,7 +355,7 @@ abstract class BasePages extends BaseObject implements Persistent
      */
     public function setMetaKeywords($v)
     {
-        if ($v !== null) {
+        if ($v !== null && is_numeric($v)) {
             $v = (string) $v;
         }
 
@@ -370,7 +376,7 @@ abstract class BasePages extends BaseObject implements Persistent
      */
     public function setMetaDescription($v)
     {
-        if ($v !== null) {
+        if ($v !== null && is_numeric($v)) {
             $v = (string) $v;
         }
 
@@ -431,7 +437,7 @@ abstract class BasePages extends BaseObject implements Persistent
             if ($rehydrate) {
                 $this->ensureConsistency();
             }
-
+            $this->postHydrate($row, $startcol, $rehydrate);
             return $startcol + 9; // 9 = PagesPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
@@ -645,31 +651,31 @@ abstract class BasePages extends BaseObject implements Persistent
 
          // check the columns in natural order for more readable SQL queries
         if ($this->isColumnModified(PagesPeer::ID)) {
-            $modifiedColumns[':p' . $index++]  = '`ID`';
+            $modifiedColumns[':p' . $index++]  = '`id`';
         }
         if ($this->isColumnModified(PagesPeer::MASTER_ID)) {
-            $modifiedColumns[':p' . $index++]  = '`MASTER_ID`';
+            $modifiedColumns[':p' . $index++]  = '`master_id`';
         }
         if ($this->isColumnModified(PagesPeer::TITLE)) {
-            $modifiedColumns[':p' . $index++]  = '`TITLE`';
+            $modifiedColumns[':p' . $index++]  = '`title`';
         }
         if ($this->isColumnModified(PagesPeer::SLUG)) {
-            $modifiedColumns[':p' . $index++]  = '`SLUG`';
+            $modifiedColumns[':p' . $index++]  = '`slug`';
         }
         if ($this->isColumnModified(PagesPeer::CONTENT)) {
-            $modifiedColumns[':p' . $index++]  = '`CONTENT`';
+            $modifiedColumns[':p' . $index++]  = '`content`';
         }
         if ($this->isColumnModified(PagesPeer::LANG)) {
-            $modifiedColumns[':p' . $index++]  = '`LANG`';
+            $modifiedColumns[':p' . $index++]  = '`lang`';
         }
         if ($this->isColumnModified(PagesPeer::IMAGES)) {
-            $modifiedColumns[':p' . $index++]  = '`IMAGES`';
+            $modifiedColumns[':p' . $index++]  = '`images`';
         }
         if ($this->isColumnModified(PagesPeer::META_KEYWORDS)) {
-            $modifiedColumns[':p' . $index++]  = '`META_KEYWORDS`';
+            $modifiedColumns[':p' . $index++]  = '`meta_keywords`';
         }
         if ($this->isColumnModified(PagesPeer::META_DESCRIPTION)) {
-            $modifiedColumns[':p' . $index++]  = '`META_DESCRIPTION`';
+            $modifiedColumns[':p' . $index++]  = '`meta_description`';
         }
 
         $sql = sprintf(
@@ -682,31 +688,31 @@ abstract class BasePages extends BaseObject implements Persistent
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
-                    case '`ID`':
+                    case '`id`':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
-                    case '`MASTER_ID`':
+                    case '`master_id`':
                         $stmt->bindValue($identifier, $this->master_id, PDO::PARAM_INT);
                         break;
-                    case '`TITLE`':
+                    case '`title`':
                         $stmt->bindValue($identifier, $this->title, PDO::PARAM_STR);
                         break;
-                    case '`SLUG`':
+                    case '`slug`':
                         $stmt->bindValue($identifier, $this->slug, PDO::PARAM_STR);
                         break;
-                    case '`CONTENT`':
+                    case '`content`':
                         $stmt->bindValue($identifier, $this->content, PDO::PARAM_STR);
                         break;
-                    case '`LANG`':
+                    case '`lang`':
                         $stmt->bindValue($identifier, $this->lang, PDO::PARAM_STR);
                         break;
-                    case '`IMAGES`':
+                    case '`images`':
                         $stmt->bindValue($identifier, $this->images, PDO::PARAM_STR);
                         break;
-                    case '`META_KEYWORDS`':
+                    case '`meta_keywords`':
                         $stmt->bindValue($identifier, $this->meta_keywords, PDO::PARAM_STR);
                         break;
-                    case '`META_DESCRIPTION`':
+                    case '`meta_description`':
                         $stmt->bindValue($identifier, $this->meta_description, PDO::PARAM_STR);
                         break;
                 }
@@ -777,11 +783,11 @@ abstract class BasePages extends BaseObject implements Persistent
             $this->validationFailures = array();
 
             return true;
-        } else {
-            $this->validationFailures = $res;
-
-            return false;
         }
+
+        $this->validationFailures = $res;
+
+        return false;
     }
 
     /**
@@ -1154,6 +1160,7 @@ abstract class BasePages extends BaseObject implements Persistent
         $this->meta_description = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
+        $this->alreadyInClearAllReferencesDeep = false;
         $this->clearAllReferences();
         $this->resetModified();
         $this->setNew(true);
@@ -1171,7 +1178,10 @@ abstract class BasePages extends BaseObject implements Persistent
      */
     public function clearAllReferences($deep = false)
     {
-        if ($deep) {
+        if ($deep && !$this->alreadyInClearAllReferencesDeep) {
+            $this->alreadyInClearAllReferencesDeep = true;
+
+            $this->alreadyInClearAllReferencesDeep = false;
         } // if ($deep)
 
     }

@@ -19,8 +19,9 @@
         "jms/security-extra-bundle": "1.2.*",
         "jms/di-extra-bundle": "1.1.*",
         "propel/propel-bundle": "1.1.*",
-        "jms/i18n-routing-bundle": "dev-master"
-
+        "jms/i18n-routing-bundle": "dev-master",
+        "friendsofsymfony/user-bundle": "*",
+        "willdurand/propel-typehintable-behavior": "*"
 
     },
     "scripts": {

@@ -161,7 +161,7 @@ abstract class BasePagesQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT `ID`, `MASTER_ID`, `TITLE`, `SLUG`, `CONTENT`, `LANG`, `IMAGES`, `META_KEYWORDS`, `META_DESCRIPTION` FROM `pages` WHERE `ID` = :p0';
+        $sql = 'SELECT `id`, `master_id`, `title`, `slug`, `content`, `lang`, `images`, `meta_keywords`, `meta_description` FROM `pages` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);

@@ -71,6 +71,18 @@ abstract class BaseFestivalContent extends BaseObject implements Persistent
     protected $content;
 
     /**
+     * The value for the meta_keywords field.
+     * @var        string
+     */
+    protected $meta_keywords;
+
+    /**
+     * The value for the meta_description field.
+     * @var        string
+     */
+    protected $meta_description;
+
+    /**
      * The value for the visitor field.
      * @var        string
      */
@@ -101,6 +113,12 @@ abstract class BaseFestivalContent extends BaseObject implements Persistent
      * @var        boolean
      */
     protected $alreadyInValidation = false;
+
+    /**
+     * Flag to prevent endless clearAllReferences($deep=true) loop, if this object is referenced
+     * @var        boolean
+     */
+    protected $alreadyInClearAllReferencesDeep = false;
 
     /**
      * An array of objects scheduled for deletion.
@@ -159,6 +177,26 @@ abstract class BaseFestivalContent extends BaseObject implements Persistent
     }
 
     /**
+     * Get the [meta_keywords] column value.
+     *
+     * @return string
+     */
+    public function getMetaKeywords()
+    {
+        return $this->meta_keywords;
+    }
+
+    /**
+     * Get the [meta_description] column value.
+     *
+     * @return string
+     */
+    public function getMetaDescription()
+    {
+        return $this->meta_description;
+    }
+
+    /**
      * Get the [visitor] column value.
      *
      * @return string
@@ -186,7 +224,7 @@ abstract class BaseFestivalContent extends BaseObject implements Persistent
      */
     public function setId($v)
     {
-        if ($v !== null) {
+        if ($v !== null && is_numeric($v)) {
             $v = (int) $v;
         }
 
@@ -207,7 +245,7 @@ abstract class BaseFestivalContent extends BaseObject implements Persistent
      */
     public function setFestivalId($v)
     {
-        if ($v !== null) {
+        if ($v !== null && is_numeric($v)) {
             $v = (int) $v;
         }
 
@@ -228,7 +266,7 @@ abstract class BaseFestivalContent extends BaseObject implements Persistent
      */
     public function setTitle($v)
     {
-        if ($v !== null) {
+        if ($v !== null && is_numeric($v)) {
             $v = (string) $v;
         }
 
@@ -249,7 +287,7 @@ abstract class BaseFestivalContent extends BaseObject implements Persistent
      */
     public function setSubtitle($v)
     {
-        if ($v !== null) {
+        if ($v !== null && is_numeric($v)) {
             $v = (string) $v;
         }
 
@@ -270,7 +308,7 @@ abstract class BaseFestivalContent extends BaseObject implements Persistent
      */
     public function setContent($v)
     {
-        if ($v !== null) {
+        if ($v !== null && is_numeric($v)) {
             $v = (string) $v;
         }
 
@@ -284,6 +322,48 @@ abstract class BaseFestivalContent extends BaseObject implements Persistent
     } // setContent()
 
     /**
+     * Set the value of [meta_keywords] column.
+     *
+     * @param string $v new value
+     * @return FestivalContent The current object (for fluent API support)
+     */
+    public function setMetaKeywords($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (string) $v;
+        }
+
+        if ($this->meta_keywords !== $v) {
+            $this->meta_keywords = $v;
+            $this->modifiedColumns[] = FestivalContentPeer::META_KEYWORDS;
+        }
+
+
+        return $this;
+    } // setMetaKeywords()
+
+    /**
+     * Set the value of [meta_description] column.
+     *
+     * @param string $v new value
+     * @return FestivalContent The current object (for fluent API support)
+     */
+    public function setMetaDescription($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (string) $v;
+        }
+
+        if ($this->meta_description !== $v) {
+            $this->meta_description = $v;
+            $this->modifiedColumns[] = FestivalContentPeer::META_DESCRIPTION;
+        }
+
+
+        return $this;
+    } // setMetaDescription()
+
+    /**
      * Set the value of [visitor] column.
      *
      * @param string $v new value
@@ -291,7 +371,7 @@ abstract class BaseFestivalContent extends BaseObject implements Persistent
      */
     public function setVisitor($v)
     {
-        if ($v !== null) {
+        if ($v !== null && is_numeric($v)) {
             $v = (string) $v;
         }
 
@@ -312,7 +392,7 @@ abstract class BaseFestivalContent extends BaseObject implements Persistent
      */
     public function setUserId($v)
     {
-        if ($v !== null) {
+        if ($v !== null && is_numeric($v)) {
             $v = (int) $v;
         }
 
@@ -362,8 +442,10 @@ abstract class BaseFestivalContent extends BaseObject implements Persistent
             $this->title = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
             $this->subtitle = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
             $this->content = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
-            $this->visitor = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
-            $this->user_id = ($row[$startcol + 6] !== null) ? (int) $row[$startcol + 6] : null;
+            $this->meta_keywords = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
+            $this->meta_description = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
+            $this->visitor = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
+            $this->user_id = ($row[$startcol + 8] !== null) ? (int) $row[$startcol + 8] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -371,8 +453,8 @@ abstract class BaseFestivalContent extends BaseObject implements Persistent
             if ($rehydrate) {
                 $this->ensureConsistency();
             }
-
-            return $startcol + 7; // 7 = FestivalContentPeer::NUM_HYDRATE_COLUMNS.
+            $this->postHydrate($row, $startcol, $rehydrate);
+            return $startcol + 9; // 9 = FestivalContentPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating FestivalContent object", $e);
@@ -572,7 +654,7 @@ abstract class BaseFestivalContent extends BaseObject implements Persistent
 
             if ($this->collFestivals !== null) {
                 foreach ($this->collFestivals as $referrerFK) {
-                    if (!$referrerFK->isDeleted()) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
                 }
@@ -605,25 +687,31 @@ abstract class BaseFestivalContent extends BaseObject implements Persistent
 
          // check the columns in natural order for more readable SQL queries
         if ($this->isColumnModified(FestivalContentPeer::ID)) {
-            $modifiedColumns[':p' . $index++]  = '`ID`';
+            $modifiedColumns[':p' . $index++]  = '`id`';
         }
         if ($this->isColumnModified(FestivalContentPeer::FESTIVAL_ID)) {
-            $modifiedColumns[':p' . $index++]  = '`FESTIVAL_ID`';
+            $modifiedColumns[':p' . $index++]  = '`festival_id`';
         }
         if ($this->isColumnModified(FestivalContentPeer::TITLE)) {
-            $modifiedColumns[':p' . $index++]  = '`TITLE`';
+            $modifiedColumns[':p' . $index++]  = '`title`';
         }
         if ($this->isColumnModified(FestivalContentPeer::SUBTITLE)) {
-            $modifiedColumns[':p' . $index++]  = '`SUBTITLE`';
+            $modifiedColumns[':p' . $index++]  = '`subtitle`';
         }
         if ($this->isColumnModified(FestivalContentPeer::CONTENT)) {
-            $modifiedColumns[':p' . $index++]  = '`CONTENT`';
+            $modifiedColumns[':p' . $index++]  = '`content`';
+        }
+        if ($this->isColumnModified(FestivalContentPeer::META_KEYWORDS)) {
+            $modifiedColumns[':p' . $index++]  = '`meta_keywords`';
+        }
+        if ($this->isColumnModified(FestivalContentPeer::META_DESCRIPTION)) {
+            $modifiedColumns[':p' . $index++]  = '`meta_description`';
         }
         if ($this->isColumnModified(FestivalContentPeer::VISITOR)) {
-            $modifiedColumns[':p' . $index++]  = '`VISITOR`';
+            $modifiedColumns[':p' . $index++]  = '`visitor`';
         }
         if ($this->isColumnModified(FestivalContentPeer::USER_ID)) {
-            $modifiedColumns[':p' . $index++]  = '`USER_ID`';
+            $modifiedColumns[':p' . $index++]  = '`user_id`';
         }
 
         $sql = sprintf(
@@ -636,25 +724,31 @@ abstract class BaseFestivalContent extends BaseObject implements Persistent
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
-                    case '`ID`':
+                    case '`id`':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
-                    case '`FESTIVAL_ID`':
+                    case '`festival_id`':
                         $stmt->bindValue($identifier, $this->festival_id, PDO::PARAM_INT);
                         break;
-                    case '`TITLE`':
+                    case '`title`':
                         $stmt->bindValue($identifier, $this->title, PDO::PARAM_STR);
                         break;
-                    case '`SUBTITLE`':
+                    case '`subtitle`':
                         $stmt->bindValue($identifier, $this->subtitle, PDO::PARAM_STR);
                         break;
-                    case '`CONTENT`':
+                    case '`content`':
                         $stmt->bindValue($identifier, $this->content, PDO::PARAM_STR);
                         break;
-                    case '`VISITOR`':
+                    case '`meta_keywords`':
+                        $stmt->bindValue($identifier, $this->meta_keywords, PDO::PARAM_STR);
+                        break;
+                    case '`meta_description`':
+                        $stmt->bindValue($identifier, $this->meta_description, PDO::PARAM_STR);
+                        break;
+                    case '`visitor`':
                         $stmt->bindValue($identifier, $this->visitor, PDO::PARAM_STR);
                         break;
-                    case '`USER_ID`':
+                    case '`user_id`':
                         $stmt->bindValue($identifier, $this->user_id, PDO::PARAM_INT);
                         break;
                 }
@@ -725,11 +819,11 @@ abstract class BaseFestivalContent extends BaseObject implements Persistent
             $this->validationFailures = array();
 
             return true;
-        } else {
-            $this->validationFailures = $res;
-
-            return false;
         }
+
+        $this->validationFailures = $res;
+
+        return false;
     }
 
     /**
@@ -815,9 +909,15 @@ abstract class BaseFestivalContent extends BaseObject implements Persistent
                 return $this->getContent();
                 break;
             case 5:
-                return $this->getVisitor();
+                return $this->getMetaKeywords();
                 break;
             case 6:
+                return $this->getMetaDescription();
+                break;
+            case 7:
+                return $this->getVisitor();
+                break;
+            case 8:
                 return $this->getUserId();
                 break;
             default:
@@ -854,8 +954,10 @@ abstract class BaseFestivalContent extends BaseObject implements Persistent
             $keys[2] => $this->getTitle(),
             $keys[3] => $this->getSubtitle(),
             $keys[4] => $this->getContent(),
-            $keys[5] => $this->getVisitor(),
-            $keys[6] => $this->getUserId(),
+            $keys[5] => $this->getMetaKeywords(),
+            $keys[6] => $this->getMetaDescription(),
+            $keys[7] => $this->getVisitor(),
+            $keys[8] => $this->getUserId(),
         );
         if ($includeForeignObjects) {
             if (null !== $this->collFestivals) {
@@ -911,9 +1013,15 @@ abstract class BaseFestivalContent extends BaseObject implements Persistent
                 $this->setContent($value);
                 break;
             case 5:
-                $this->setVisitor($value);
+                $this->setMetaKeywords($value);
                 break;
             case 6:
+                $this->setMetaDescription($value);
+                break;
+            case 7:
+                $this->setVisitor($value);
+                break;
+            case 8:
                 $this->setUserId($value);
                 break;
         } // switch()
@@ -945,8 +1053,10 @@ abstract class BaseFestivalContent extends BaseObject implements Persistent
         if (array_key_exists($keys[2], $arr)) $this->setTitle($arr[$keys[2]]);
         if (array_key_exists($keys[3], $arr)) $this->setSubtitle($arr[$keys[3]]);
         if (array_key_exists($keys[4], $arr)) $this->setContent($arr[$keys[4]]);
-        if (array_key_exists($keys[5], $arr)) $this->setVisitor($arr[$keys[5]]);
-        if (array_key_exists($keys[6], $arr)) $this->setUserId($arr[$keys[6]]);
+        if (array_key_exists($keys[5], $arr)) $this->setMetaKeywords($arr[$keys[5]]);
+        if (array_key_exists($keys[6], $arr)) $this->setMetaDescription($arr[$keys[6]]);
+        if (array_key_exists($keys[7], $arr)) $this->setVisitor($arr[$keys[7]]);
+        if (array_key_exists($keys[8], $arr)) $this->setUserId($arr[$keys[8]]);
     }
 
     /**
@@ -963,6 +1073,8 @@ abstract class BaseFestivalContent extends BaseObject implements Persistent
         if ($this->isColumnModified(FestivalContentPeer::TITLE)) $criteria->add(FestivalContentPeer::TITLE, $this->title);
         if ($this->isColumnModified(FestivalContentPeer::SUBTITLE)) $criteria->add(FestivalContentPeer::SUBTITLE, $this->subtitle);
         if ($this->isColumnModified(FestivalContentPeer::CONTENT)) $criteria->add(FestivalContentPeer::CONTENT, $this->content);
+        if ($this->isColumnModified(FestivalContentPeer::META_KEYWORDS)) $criteria->add(FestivalContentPeer::META_KEYWORDS, $this->meta_keywords);
+        if ($this->isColumnModified(FestivalContentPeer::META_DESCRIPTION)) $criteria->add(FestivalContentPeer::META_DESCRIPTION, $this->meta_description);
         if ($this->isColumnModified(FestivalContentPeer::VISITOR)) $criteria->add(FestivalContentPeer::VISITOR, $this->visitor);
         if ($this->isColumnModified(FestivalContentPeer::USER_ID)) $criteria->add(FestivalContentPeer::USER_ID, $this->user_id);
 
@@ -1032,6 +1144,8 @@ abstract class BaseFestivalContent extends BaseObject implements Persistent
         $copyObj->setTitle($this->getTitle());
         $copyObj->setSubtitle($this->getSubtitle());
         $copyObj->setContent($this->getContent());
+        $copyObj->setMetaKeywords($this->getMetaKeywords());
+        $copyObj->setMetaDescription($this->getMetaDescription());
         $copyObj->setVisitor($this->getVisitor());
         $copyObj->setUserId($this->getUserId());
 
@@ -1120,13 +1234,15 @@ abstract class BaseFestivalContent extends BaseObject implements Persistent
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
-     * @return void
+     * @return FestivalContent The current object (for fluent API support)
      * @see        addFestivals()
      */
     public function clearFestivals()
     {
         $this->collFestivals = null; // important to set this to null since that means it is uninitialized
         $this->collFestivalsPartial = null;
+
+        return $this;
     }
 
     /**
@@ -1198,6 +1314,7 @@ abstract class BaseFestivalContent extends BaseObject implements Persistent
                       $this->collFestivalsPartial = true;
                     }
 
+                    $collFestivals->getInternalIterator()->rewind();
                     return $collFestivals;
                 }
 
@@ -1225,12 +1342,15 @@ abstract class BaseFestivalContent extends BaseObject implements Persistent
      *
      * @param PropelCollection $festivals A Propel collection.
      * @param PropelPDO $con Optional connection object
+     * @return FestivalContent The current object (for fluent API support)
      */
     public function setFestivals(PropelCollection $festivals, PropelPDO $con = null)
     {
-        $this->festivalsScheduledForDeletion = $this->getFestivals(new Criteria(), $con)->diff($festivals);
+        $festivalsToDelete = $this->getFestivals(new Criteria(), $con)->diff($festivals);
 
-        foreach ($this->festivalsScheduledForDeletion as $festivalRemoved) {
+        $this->festivalsScheduledForDeletion = unserialize(serialize($festivalsToDelete));
+
+        foreach ($festivalsToDelete as $festivalRemoved) {
             $festivalRemoved->setFestivalContent(null);
         }
 
@@ -1241,6 +1361,8 @@ abstract class BaseFestivalContent extends BaseObject implements Persistent
 
         $this->collFestivals = $festivals;
         $this->collFestivalsPartial = false;
+
+        return $this;
     }
 
     /**
@@ -1258,22 +1380,22 @@ abstract class BaseFestivalContent extends BaseObject implements Persistent
         if (null === $this->collFestivals || null !== $criteria || $partial) {
             if ($this->isNew() && null === $this->collFestivals) {
                 return 0;
-            } else {
-                if($partial && !$criteria) {
-                    return count($this->getFestivals());
-                }
-                $query = FestivalQuery::create(null, $criteria);
-                if ($distinct) {
-                    $query->distinct();
-                }
-
-                return $query
-                    ->filterByFestivalContent($this)
-                    ->count($con);
             }
-        } else {
-            return count($this->collFestivals);
+
+            if($partial && !$criteria) {
+                return count($this->getFestivals());
+            }
+            $query = FestivalQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByFestivalContent($this)
+                ->count($con);
         }
+
+        return count($this->collFestivals);
     }
 
     /**
@@ -1307,6 +1429,7 @@ abstract class BaseFestivalContent extends BaseObject implements Persistent
 
     /**
      * @param	Festival $festival The festival object to remove.
+     * @return FestivalContent The current object (for fluent API support)
      */
     public function removeFestival($festival)
     {
@@ -1319,6 +1442,8 @@ abstract class BaseFestivalContent extends BaseObject implements Persistent
             $this->festivalsScheduledForDeletion[]= $festival;
             $festival->setFestivalContent(null);
         }
+
+        return $this;
     }
 
 
@@ -1406,10 +1531,13 @@ abstract class BaseFestivalContent extends BaseObject implements Persistent
         $this->title = null;
         $this->subtitle = null;
         $this->content = null;
+        $this->meta_keywords = null;
+        $this->meta_description = null;
         $this->visitor = null;
         $this->user_id = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
+        $this->alreadyInClearAllReferencesDeep = false;
         $this->clearAllReferences();
         $this->resetModified();
         $this->setNew(true);
@@ -1427,12 +1555,15 @@ abstract class BaseFestivalContent extends BaseObject implements Persistent
      */
     public function clearAllReferences($deep = false)
     {
-        if ($deep) {
+        if ($deep && !$this->alreadyInClearAllReferencesDeep) {
+            $this->alreadyInClearAllReferencesDeep = true;
             if ($this->collFestivals) {
                 foreach ($this->collFestivals as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
+
+            $this->alreadyInClearAllReferencesDeep = false;
         } // if ($deep)
 
         if ($this->collFestivals instanceof PropelCollection) {

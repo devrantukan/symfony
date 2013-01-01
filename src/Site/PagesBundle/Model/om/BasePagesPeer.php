@@ -37,32 +37,32 @@ abstract class BasePagesPeer
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
     const NUM_HYDRATE_COLUMNS = 9;
 
-    /** the column name for the ID field */
-    const ID = 'pages.ID';
+    /** the column name for the id field */
+    const ID = 'pages.id';
 
-    /** the column name for the MASTER_ID field */
-    const MASTER_ID = 'pages.MASTER_ID';
+    /** the column name for the master_id field */
+    const MASTER_ID = 'pages.master_id';
 
-    /** the column name for the TITLE field */
-    const TITLE = 'pages.TITLE';
+    /** the column name for the title field */
+    const TITLE = 'pages.title';
 
-    /** the column name for the SLUG field */
-    const SLUG = 'pages.SLUG';
+    /** the column name for the slug field */
+    const SLUG = 'pages.slug';
 
-    /** the column name for the CONTENT field */
-    const CONTENT = 'pages.CONTENT';
+    /** the column name for the content field */
+    const CONTENT = 'pages.content';
 
-    /** the column name for the LANG field */
-    const LANG = 'pages.LANG';
+    /** the column name for the lang field */
+    const LANG = 'pages.lang';
 
-    /** the column name for the IMAGES field */
-    const IMAGES = 'pages.IMAGES';
+    /** the column name for the images field */
+    const IMAGES = 'pages.images';
 
-    /** the column name for the META_KEYWORDS field */
-    const META_KEYWORDS = 'pages.META_KEYWORDS';
+    /** the column name for the meta_keywords field */
+    const META_KEYWORDS = 'pages.meta_keywords';
 
-    /** the column name for the META_DESCRIPTION field */
-    const META_DESCRIPTION = 'pages.META_DESCRIPTION';
+    /** the column name for the meta_description field */
+    const META_DESCRIPTION = 'pages.meta_description';
 
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -187,15 +187,15 @@ abstract class BasePagesPeer
             $criteria->addSelectColumn(PagesPeer::META_KEYWORDS);
             $criteria->addSelectColumn(PagesPeer::META_DESCRIPTION);
         } else {
-            $criteria->addSelectColumn($alias . '.ID');
-            $criteria->addSelectColumn($alias . '.MASTER_ID');
-            $criteria->addSelectColumn($alias . '.TITLE');
-            $criteria->addSelectColumn($alias . '.SLUG');
-            $criteria->addSelectColumn($alias . '.CONTENT');
-            $criteria->addSelectColumn($alias . '.LANG');
-            $criteria->addSelectColumn($alias . '.IMAGES');
-            $criteria->addSelectColumn($alias . '.META_KEYWORDS');
-            $criteria->addSelectColumn($alias . '.META_DESCRIPTION');
+            $criteria->addSelectColumn($alias . '.id');
+            $criteria->addSelectColumn($alias . '.master_id');
+            $criteria->addSelectColumn($alias . '.title');
+            $criteria->addSelectColumn($alias . '.slug');
+            $criteria->addSelectColumn($alias . '.content');
+            $criteria->addSelectColumn($alias . '.lang');
+            $criteria->addSelectColumn($alias . '.images');
+            $criteria->addSelectColumn($alias . '.meta_keywords');
+            $criteria->addSelectColumn($alias . '.meta_description');
         }
     }
 
@@ -279,7 +279,7 @@ abstract class BasePagesPeer
     /**
      * Prepares the Criteria object and uses the parent doSelect() method to execute a PDOStatement.
      *
-     * Use this method directly if you want to work with an executed statement durirectly (for example
+     * Use this method directly if you want to work with an executed statement directly (for example
      * to perform your own object hydration).
      *
      * @param      Criteria $criteria The Criteria object used to build the SELECT statement.
@@ -384,8 +384,15 @@ abstract class BasePagesPeer
      *
      * @return void
      */
-    public static function clearInstancePool()
+    public static function clearInstancePool($and_clear_all_references = false)
     {
+      if ($and_clear_all_references)
+      {
+        foreach (PagesPeer::$instances as $instance)
+        {
+          $instance->clearAllReferences(true);
+        }
+      }
         PagesPeer::$instances = array();
     }
 

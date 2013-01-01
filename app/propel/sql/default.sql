@@ -4,6 +4,70 @@
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- ---------------------------------------------------------------------
+-- fos_user
+-- ---------------------------------------------------------------------
+
+DROP TABLE IF EXISTS `fos_user`;
+
+CREATE TABLE `fos_user`
+(
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `username` VARCHAR(255),
+    `username_canonical` VARCHAR(255),
+    `email` VARCHAR(255),
+    `email_canonical` VARCHAR(255),
+    `enabled` TINYINT(1) DEFAULT 0,
+    `salt` VARCHAR(255) NOT NULL,
+    `password` VARCHAR(255) NOT NULL,
+    `last_login` DATETIME,
+    `locked` TINYINT(1) DEFAULT 0,
+    `expired` TINYINT(1) DEFAULT 0,
+    `expires_at` DATETIME,
+    `confirmation_token` VARCHAR(255),
+    `password_requested_at` DATETIME,
+    `credentials_expired` TINYINT(1) DEFAULT 0,
+    `credentials_expire_at` DATETIME,
+    `roles` TEXT,
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `fos_user_U_1` (`username_canonical`),
+    UNIQUE INDEX `fos_user_U_2` (`email_canonical`)
+) ENGINE=MyISAM;
+
+-- ---------------------------------------------------------------------
+-- fos_group
+-- ---------------------------------------------------------------------
+
+DROP TABLE IF EXISTS `fos_group`;
+
+CREATE TABLE `fos_group`
+(
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(255) NOT NULL,
+    `roles` TEXT,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM;
+
+-- ---------------------------------------------------------------------
+-- fos_user_group
+-- ---------------------------------------------------------------------
+
+DROP TABLE IF EXISTS `fos_user_group`;
+
+CREATE TABLE `fos_user_group`
+(
+    `fos_user_id` INTEGER NOT NULL,
+    `fos_group_id` INTEGER NOT NULL,
+    PRIMARY KEY (`fos_user_id`,`fos_group_id`),
+    INDEX `fos_user_group_FI_2` (`fos_group_id`),
+    CONSTRAINT `fos_user_group_FK_1`
+        FOREIGN KEY (`fos_user_id`)
+        REFERENCES `fos_user` (`id`),
+    CONSTRAINT `fos_user_group_FK_2`
+        FOREIGN KEY (`fos_group_id`)
+        REFERENCES `fos_group` (`id`)
+) ENGINE=MyISAM;
+
+-- ---------------------------------------------------------------------
 -- festival
 -- ---------------------------------------------------------------------
 
@@ -12,7 +76,7 @@ DROP TABLE IF EXISTS `festival`;
 CREATE TABLE `festival`
 (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `type_id` INTEGER,
+    `festival_type_id` INTEGER,
     `festival_content_title` VARCHAR(45) NOT NULL,
     `start_date` DATETIME NOT NULL,
     `end_date` DATETIME NOT NULL,
@@ -22,12 +86,12 @@ CREATE TABLE `festival`
     `slug` VARCHAR(45),
     `lang` VARCHAR(2),
     PRIMARY KEY (`id`),
-    INDEX `festival_FI_1` (`type_id`),
+    INDEX `festival_FI_1` (`festival_type_id`),
     INDEX `festival_FI_2` (`festival_location_id`),
     INDEX `festival_FI_3` (`festival_content_id`),
     INDEX `festival_FI_4` (`festival_url_id`),
     CONSTRAINT `festival_FK_1`
-        FOREIGN KEY (`type_id`)
+        FOREIGN KEY (`festival_type_id`)
         REFERENCES `festival_type` (`id`),
     CONSTRAINT `festival_FK_2`
         FOREIGN KEY (`festival_location_id`)
@@ -76,6 +140,8 @@ CREATE TABLE `festival_content`
     `title` VARCHAR(90) NOT NULL,
     `subtitle` VARCHAR(90),
     `content` TEXT,
+    `meta_keywords` TEXT,
+    `meta_description` TEXT,
     `visitor` VARCHAR(45),
     `user_id` INTEGER NOT NULL,
     PRIMARY KEY (`id`)

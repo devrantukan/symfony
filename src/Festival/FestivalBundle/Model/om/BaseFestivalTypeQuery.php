@@ -140,7 +140,7 @@ abstract class BaseFestivalTypeQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT `ID`, `DESCRIPTION` FROM `festival_type` WHERE `ID` = :p0';
+        $sql = 'SELECT `id`, `description` FROM `festival_type` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -298,7 +298,7 @@ abstract class BaseFestivalTypeQuery extends ModelCriteria
     {
         if ($festival instanceof Festival) {
             return $this
-                ->addUsingAlias(FestivalTypePeer::ID, $festival->getTypeId(), $comparison);
+                ->addUsingAlias(FestivalTypePeer::ID, $festival->getFestivalTypeId(), $comparison);
         } elseif ($festival instanceof PropelObjectCollection) {
             return $this
                 ->useFestivalQuery()

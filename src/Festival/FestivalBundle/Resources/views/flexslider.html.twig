@@ -1,0 +1,15 @@
+<div class="flexslider">
+						
+							<ul class="slides">
+							
+							{% for image in images %}
+							<li>
+								<figure>
+									<img src="{{ asset('') }}{{ image }}" alt="" />
+								</figure>
+							</li>
+							{% endfor %}
+				
+							</ul><!--end slides-->
+						
+</div><!--end flexslider-->	

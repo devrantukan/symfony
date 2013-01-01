@@ -1,5 +1,5 @@
 {
-    "hash": "f41f2fac7332320484c74fdd0a1871b6",
+    "hash": "001c9bae1ce01ef75c33dfeef5bd92f8",
     "packages": [
         {
             "name": "doctrine/common",
@@ -275,23 +275,94 @@
             ]
         },
         {
+            "name": "friendsofsymfony/user-bundle",
+            "version": "dev-master",
+            "target-dir": "FOS/UserBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/FriendsOfSymfony/FOSUserBundle",
+                "reference": "401434d6c0ee395e91aebd42caf353d001bed282"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/FriendsOfSymfony/FOSUserBundle/archive/401434d6c0ee395e91aebd42caf353d001bed282.zip",
+                "reference": "401434d6c0ee395e91aebd42caf353d001bed282",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2",
+                "symfony/framework-bundle": ">=2.1,<2.3-dev",
+                "symfony/security-bundle": ">=2.1,<2.3-dev"
+            },
+            "require-dev": {
+                "twig/twig": "*",
+                "doctrine/doctrine-bundle": "*",
+                "swiftmailer/swiftmailer": "*",
+                "willdurand/propel-typehintable-behavior": "dev-master",
+                "symfony/validator": "2.1.*",
+                "symfony/yaml": "2.1.*"
+            },
+            "suggest": {
+                "doctrine/couchdb-odm-bundle": "*",
+                "doctrine/doctrine-bundle": "*",
+                "doctrine/mongodb-odm-bundle": "*"
+            },
+            "time": "2012-12-28 16:42:49",
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "installation-source": "source",
+            "autoload": {
+                "psr-0": {
+                    "FOS\\UserBundle": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Christophe Coevoet",
+                    "email": "stof@notk.org"
+                },
+                {
+                    "name": "Thibault Duplessis",
+                    "email": "thibault.duplessis@gmail.com",
+                    "homepage": "http://ornicar.github.com"
+                },
+                {
+                    "name": "FriendsOfSymfony Community",
+                    "homepage": "https://github.com/friendsofsymfony/FOSUserBundle/contributors"
+                }
+            ],
+            "description": "Symfony FOSUserBundle",
+            "homepage": "http://friendsofsymfony.github.com",
+            "keywords": [
+                "User management"
+            ]
+        },
+        {
             "name": "jdorn/sql-formatter",
             "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "git://github.com/jdorn/sql-formatter.git",
-                "reference": "bccfd5ad5c490bb5ff3c8930015f352188b193f6"
+                "reference": "9aac5ea51a1c13af3e67a7d7ba7e528f94c52485"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/jdorn/sql-formatter/archive/bccfd5ad5c490bb5ff3c8930015f352188b193f6.zip",
-                "reference": "bccfd5ad5c490bb5ff3c8930015f352188b193f6",
+                "url": "https://github.com/jdorn/sql-formatter/archive/9aac5ea51a1c13af3e67a7d7ba7e528f94c52485.zip",
+                "reference": "9aac5ea51a1c13af3e67a7d7ba7e528f94c52485",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.2.4"
             },
-            "time": "2012-12-26 06:46:31",
+            "time": "2012-12-27 16:16:30",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -988,19 +1059,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/propelorm/Propel",
-                "reference": "2e8eb940021d05e8ca41328f8ac25d36baf7e08b"
+                "reference": "97bd6ab41650962bca151ad89ecd1c7ad3eadfc8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/propelorm/Propel/archive/2e8eb940021d05e8ca41328f8ac25d36baf7e08b.zip",
-                "reference": "2e8eb940021d05e8ca41328f8ac25d36baf7e08b",
+                "url": "https://github.com/propelorm/Propel/archive/97bd6ab41650962bca151ad89ecd1c7ad3eadfc8.zip",
+                "reference": "97bd6ab41650962bca151ad89ecd1c7ad3eadfc8",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.2.4",
                 "phing/phing": "2.4.12"
             },
-            "time": "2012-12-22 17:03:58",
+            "time": "2012-12-29 14:20:46",
             "bin": [
                 "generator/bin/propel-gen",
                 "generator/bin/propel-gen.bat"
@@ -1145,12 +1216,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sensio/SensioGeneratorBundle",
-                "reference": "v2.1.4"
+                "reference": "v2.1.5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/sensio/SensioGeneratorBundle/archive/v2.1.4.zip",
-                "reference": "v2.1.4",
+                "url": "https://github.com/sensio/SensioGeneratorBundle/archive/v2.1.5.zip",
+                "reference": "v2.1.5",
                 "shasum": ""
             },
             "require": {
@@ -1419,12 +1490,12 @@
             "source": {
                 "type": "git",
                 "url": "git://github.com/symfony/symfony.git",
-                "reference": "8fd34e4eae26c55c7aec04b9f452e10557b8bc89"
+                "reference": "9b71f30ade6b1458567dc2bcd4e09cfff0875178"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/symfony/symfony/archive/8fd34e4eae26c55c7aec04b9f452e10557b8bc89.zip",
-                "reference": "8fd34e4eae26c55c7aec04b9f452e10557b8bc89",
+                "url": "https://github.com/symfony/symfony/archive/9b71f30ade6b1458567dc2bcd4e09cfff0875178.zip",
+                "reference": "9b71f30ade6b1458567dc2bcd4e09cfff0875178",
                 "shasum": ""
             },
             "require": {
@@ -1473,7 +1544,7 @@
                 "propel/propel1": "dev-master",
                 "monolog/monolog": "1.*"
             },
-            "time": "2012-12-23 18:08:33",
+            "time": "2012-12-28 22:58:46",
             "type": "library",
             "installation-source": "source",
             "autoload": {
@@ -1556,18 +1627,18 @@
             "source": {
                 "type": "git",
                 "url": "git://github.com/fabpot/Twig.git",
-                "reference": "a65e7e4e2e5726a42a29e609fad008f8a9600594"
+                "reference": "1b1a6e7de018d300e6eb67727f3717c24f4540ba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/fabpot/Twig/archive/a65e7e4e2e5726a42a29e609fad008f8a9600594.zip",
-                "reference": "a65e7e4e2e5726a42a29e609fad008f8a9600594",
+                "url": "https://github.com/fabpot/Twig/archive/1b1a6e7de018d300e6eb67727f3717c24f4540ba.zip",
+                "reference": "1b1a6e7de018d300e6eb67727f3717c24f4540ba",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.2.4"
             },
-            "time": "2012-12-25 10:06:30",
+            "time": "2012-12-27 16:33:50",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -1598,6 +1669,49 @@
             "homepage": "http://twig.sensiolabs.org",
             "keywords": [
                 "templating"
+            ]
+        },
+        {
+            "name": "willdurand/propel-typehintable-behavior",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/willdurand/TypehintableBehavior",
+                "reference": "1.0.3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/willdurand/TypehintableBehavior/archive/1.0.3.zip",
+                "reference": "1.0.3",
+                "shasum": ""
+            },
+            "require": {
+                "propel/propel1": "1.6.*"
+            },
+            "time": "2012-07-15 14:03:24",
+            "type": "library",
+            "installation-source": "source",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "William DURAND",
+                    "email": "william.durand1@gmail.com",
+                    "homepage": "http://www.willdurand.fr"
+                }
+            ],
+            "description": "Insane Propel behavior that helps you to be compliant with third-party interfaces by adding type hint to generated methods.",
+            "keywords": [
+                "propel",
+                "Behavior",
+                "typehint"
             ]
         }
     ],

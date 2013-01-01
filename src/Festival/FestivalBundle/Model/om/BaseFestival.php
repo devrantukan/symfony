@@ -53,10 +53,10 @@ abstract class BaseFestival extends BaseObject implements Persistent
     protected $id;
 
     /**
-     * The value for the type_id field.
+     * The value for the festival_type_id field.
      * @var        int
      */
-    protected $type_id;
+    protected $festival_type_id;
 
     /**
      * The value for the festival_content_title field.
@@ -141,6 +141,12 @@ abstract class BaseFestival extends BaseObject implements Persistent
     protected $alreadyInValidation = false;
 
     /**
+     * Flag to prevent endless clearAllReferences($deep=true) loop, if this object is referenced
+     * @var        boolean
+     */
+    protected $alreadyInClearAllReferencesDeep = false;
+
+    /**
      * Get the [id] column value.
      *
      * @return int
@@ -151,13 +157,13 @@ abstract class BaseFestival extends BaseObject implements Persistent
     }
 
     /**
-     * Get the [type_id] column value.
+     * Get the [festival_type_id] column value.
      *
      * @return int
      */
-    public function getTypeId()
+    public function getFestivalTypeId()
     {
-        return $this->type_id;
+        return $this->festival_type_id;
     }
 
     /**
@@ -189,22 +195,25 @@ abstract class BaseFestival extends BaseObject implements Persistent
             // while technically this is not a default value of null,
             // this seems to be closest in meaning.
             return null;
-        } else {
-            try {
-                $dt = new DateTime($this->start_date);
-            } catch (Exception $x) {
-                throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->start_date, true), $x);
-            }
+        }
+
+        try {
+            $dt = new DateTime($this->start_date);
+        } catch (Exception $x) {
+            throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->start_date, true), $x);
         }
 
         if ($format === null) {
             // Because propel.useDateTimeClass is true, we return a DateTime object.
             return $dt;
-        } elseif (strpos($format, '%') !== false) {
-            return strftime($format, $dt->format('U'));
-        } else {
-            return $dt->format($format);
         }
+
+        if (strpos($format, '%') !== false) {
+            return strftime($format, $dt->format('U'));
+        }
+
+        return $dt->format($format);
+
     }
 
     /**
@@ -226,22 +235,25 @@ abstract class BaseFestival extends BaseObject implements Persistent
             // while technically this is not a default value of null,
             // this seems to be closest in meaning.
             return null;
-        } else {
-            try {
-                $dt = new DateTime($this->end_date);
-            } catch (Exception $x) {
-                throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->end_date, true), $x);
-            }
+        }
+
+        try {
+            $dt = new DateTime($this->end_date);
+        } catch (Exception $x) {
+            throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->end_date, true), $x);
         }
 
         if ($format === null) {
             // Because propel.useDateTimeClass is true, we return a DateTime object.
             return $dt;
-        } elseif (strpos($format, '%') !== false) {
-            return strftime($format, $dt->format('U'));
-        } else {
-            return $dt->format($format);
         }
+
+        if (strpos($format, '%') !== false) {
+            return strftime($format, $dt->format('U'));
+        }
+
+        return $dt->format($format);
+
     }
 
     /**
@@ -302,7 +314,7 @@ abstract class BaseFestival extends BaseObject implements Persistent
      */
     public function setId($v)
     {
-        if ($v !== null) {
+        if ($v !== null && is_numeric($v)) {
             $v = (int) $v;
         }
 
@@ -316,20 +328,20 @@ abstract class BaseFestival extends BaseObject implements Persistent
     } // setId()
 
     /**
-     * Set the value of [type_id] column.
+     * Set the value of [festival_type_id] column.
      *
      * @param int $v new value
      * @return Festival The current object (for fluent API support)
      */
-    public function setTypeId($v)
+    public function setFestivalTypeId($v)
     {
-        if ($v !== null) {
+        if ($v !== null && is_numeric($v)) {
             $v = (int) $v;
         }
 
-        if ($this->type_id !== $v) {
-            $this->type_id = $v;
-            $this->modifiedColumns[] = FestivalPeer::TYPE_ID;
+        if ($this->festival_type_id !== $v) {
+            $this->festival_type_id = $v;
+            $this->modifiedColumns[] = FestivalPeer::FESTIVAL_TYPE_ID;
         }
 
         if ($this->aFestivalType !== null && $this->aFestivalType->getId() !== $v) {
@@ -338,7 +350,7 @@ abstract class BaseFestival extends BaseObject implements Persistent
 
 
         return $this;
-    } // setTypeId()
+    } // setFestivalTypeId()
 
     /**
      * Set the value of [festival_content_title] column.
@@ -348,7 +360,7 @@ abstract class BaseFestival extends BaseObject implements Persistent
      */
     public function setFestivalContentTitle($v)
     {
-        if ($v !== null) {
+        if ($v !== null && is_numeric($v)) {
             $v = (string) $v;
         }
 
@@ -415,7 +427,7 @@ abstract class BaseFestival extends BaseObject implements Persistent
      */
     public function setFestivalLocationId($v)
     {
-        if ($v !== null) {
+        if ($v !== null && is_numeric($v)) {
             $v = (int) $v;
         }
 
@@ -440,7 +452,7 @@ abstract class BaseFestival extends BaseObject implements Persistent
      */
     public function setFestivalContentId($v)
     {
-        if ($v !== null) {
+        if ($v !== null && is_numeric($v)) {
             $v = (int) $v;
         }
 
@@ -465,7 +477,7 @@ abstract class BaseFestival extends BaseObject implements Persistent
      */
     public function setFestivalUrlId($v)
     {
-        if ($v !== null) {
+        if ($v !== null && is_numeric($v)) {
             $v = (int) $v;
         }
 
@@ -490,7 +502,7 @@ abstract class BaseFestival extends BaseObject implements Persistent
      */
     public function setSlug($v)
     {
-        if ($v !== null) {
+        if ($v !== null && is_numeric($v)) {
             $v = (string) $v;
         }
 
@@ -511,7 +523,7 @@ abstract class BaseFestival extends BaseObject implements Persistent
      */
     public function setLang($v)
     {
-        if ($v !== null) {
+        if ($v !== null && is_numeric($v)) {
             $v = (string) $v;
         }
 
@@ -557,7 +569,7 @@ abstract class BaseFestival extends BaseObject implements Persistent
         try {
 
             $this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
-            $this->type_id = ($row[$startcol + 1] !== null) ? (int) $row[$startcol + 1] : null;
+            $this->festival_type_id = ($row[$startcol + 1] !== null) ? (int) $row[$startcol + 1] : null;
             $this->festival_content_title = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
             $this->start_date = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
             $this->end_date = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
@@ -573,7 +585,7 @@ abstract class BaseFestival extends BaseObject implements Persistent
             if ($rehydrate) {
                 $this->ensureConsistency();
             }
-
+            $this->postHydrate($row, $startcol, $rehydrate);
             return $startcol + 10; // 10 = FestivalPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
@@ -597,7 +609,7 @@ abstract class BaseFestival extends BaseObject implements Persistent
     public function ensureConsistency()
     {
 
-        if ($this->aFestivalType !== null && $this->type_id !== $this->aFestivalType->getId()) {
+        if ($this->aFestivalType !== null && $this->festival_type_id !== $this->aFestivalType->getId()) {
             $this->aFestivalType = null;
         }
         if ($this->aFestivalLocation !== null && $this->festival_location_id !== $this->aFestivalLocation->getId()) {
@@ -836,34 +848,34 @@ abstract class BaseFestival extends BaseObject implements Persistent
 
          // check the columns in natural order for more readable SQL queries
         if ($this->isColumnModified(FestivalPeer::ID)) {
-            $modifiedColumns[':p' . $index++]  = '`ID`';
+            $modifiedColumns[':p' . $index++]  = '`id`';
         }
-        if ($this->isColumnModified(FestivalPeer::TYPE_ID)) {
-            $modifiedColumns[':p' . $index++]  = '`TYPE_ID`';
+        if ($this->isColumnModified(FestivalPeer::FESTIVAL_TYPE_ID)) {
+            $modifiedColumns[':p' . $index++]  = '`festival_type_id`';
         }
         if ($this->isColumnModified(FestivalPeer::FESTIVAL_CONTENT_TITLE)) {
-            $modifiedColumns[':p' . $index++]  = '`FESTIVAL_CONTENT_TITLE`';
+            $modifiedColumns[':p' . $index++]  = '`festival_content_title`';
         }
         if ($this->isColumnModified(FestivalPeer::START_DATE)) {
-            $modifiedColumns[':p' . $index++]  = '`START_DATE`';
+            $modifiedColumns[':p' . $index++]  = '`start_date`';
         }
         if ($this->isColumnModified(FestivalPeer::END_DATE)) {
-            $modifiedColumns[':p' . $index++]  = '`END_DATE`';
+            $modifiedColumns[':p' . $index++]  = '`end_date`';
         }
         if ($this->isColumnModified(FestivalPeer::FESTIVAL_LOCATION_ID)) {
-            $modifiedColumns[':p' . $index++]  = '`FESTIVAL_LOCATION_ID`';
+            $modifiedColumns[':p' . $index++]  = '`festival_location_id`';
         }
         if ($this->isColumnModified(FestivalPeer::FESTIVAL_CONTENT_ID)) {
-            $modifiedColumns[':p' . $index++]  = '`FESTIVAL_CONTENT_ID`';
+            $modifiedColumns[':p' . $index++]  = '`festival_content_id`';
         }
         if ($this->isColumnModified(FestivalPeer::FESTIVAL_URL_ID)) {
-            $modifiedColumns[':p' . $index++]  = '`FESTIVAL_URL_ID`';
+            $modifiedColumns[':p' . $index++]  = '`festival_url_id`';
         }
         if ($this->isColumnModified(FestivalPeer::SLUG)) {
-            $modifiedColumns[':p' . $index++]  = '`SLUG`';
+            $modifiedColumns[':p' . $index++]  = '`slug`';
         }
         if ($this->isColumnModified(FestivalPeer::LANG)) {
-            $modifiedColumns[':p' . $index++]  = '`LANG`';
+            $modifiedColumns[':p' . $index++]  = '`lang`';
         }
 
         $sql = sprintf(
@@ -876,34 +888,34 @@ abstract class BaseFestival extends BaseObject implements Persistent
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
-                    case '`ID`':
+                    case '`id`':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
-                    case '`TYPE_ID`':
-                        $stmt->bindValue($identifier, $this->type_id, PDO::PARAM_INT);
+                    case '`festival_type_id`':
+                        $stmt->bindValue($identifier, $this->festival_type_id, PDO::PARAM_INT);
                         break;
-                    case '`FESTIVAL_CONTENT_TITLE`':
+                    case '`festival_content_title`':
                         $stmt->bindValue($identifier, $this->festival_content_title, PDO::PARAM_STR);
                         break;
-                    case '`START_DATE`':
+                    case '`start_date`':
                         $stmt->bindValue($identifier, $this->start_date, PDO::PARAM_STR);
                         break;
-                    case '`END_DATE`':
+                    case '`end_date`':
                         $stmt->bindValue($identifier, $this->end_date, PDO::PARAM_STR);
                         break;
-                    case '`FESTIVAL_LOCATION_ID`':
+                    case '`festival_location_id`':
                         $stmt->bindValue($identifier, $this->festival_location_id, PDO::PARAM_INT);
                         break;
-                    case '`FESTIVAL_CONTENT_ID`':
+                    case '`festival_content_id`':
                         $stmt->bindValue($identifier, $this->festival_content_id, PDO::PARAM_INT);
                         break;
-                    case '`FESTIVAL_URL_ID`':
+                    case '`festival_url_id`':
                         $stmt->bindValue($identifier, $this->festival_url_id, PDO::PARAM_INT);
                         break;
-                    case '`SLUG`':
+                    case '`slug`':
                         $stmt->bindValue($identifier, $this->slug, PDO::PARAM_STR);
                         break;
-                    case '`LANG`':
+                    case '`lang`':
                         $stmt->bindValue($identifier, $this->lang, PDO::PARAM_STR);
                         break;
                 }
@@ -974,11 +986,11 @@ abstract class BaseFestival extends BaseObject implements Persistent
             $this->validationFailures = array();
 
             return true;
-        } else {
-            $this->validationFailures = $res;
-
-            return false;
         }
+
+        $this->validationFailures = $res;
+
+        return false;
     }
 
     /**
@@ -1074,7 +1086,7 @@ abstract class BaseFestival extends BaseObject implements Persistent
                 return $this->getId();
                 break;
             case 1:
-                return $this->getTypeId();
+                return $this->getFestivalTypeId();
                 break;
             case 2:
                 return $this->getFestivalContentTitle();
@@ -1130,7 +1142,7 @@ abstract class BaseFestival extends BaseObject implements Persistent
         $keys = FestivalPeer::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getId(),
-            $keys[1] => $this->getTypeId(),
+            $keys[1] => $this->getFestivalTypeId(),
             $keys[2] => $this->getFestivalContentTitle(),
             $keys[3] => $this->getStartDate(),
             $keys[4] => $this->getEndDate(),
@@ -1191,7 +1203,7 @@ abstract class BaseFestival extends BaseObject implements Persistent
                 $this->setId($value);
                 break;
             case 1:
-                $this->setTypeId($value);
+                $this->setFestivalTypeId($value);
                 break;
             case 2:
                 $this->setFestivalContentTitle($value);
@@ -1242,7 +1254,7 @@ abstract class BaseFestival extends BaseObject implements Persistent
         $keys = FestivalPeer::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
-        if (array_key_exists($keys[1], $arr)) $this->setTypeId($arr[$keys[1]]);
+        if (array_key_exists($keys[1], $arr)) $this->setFestivalTypeId($arr[$keys[1]]);
         if (array_key_exists($keys[2], $arr)) $this->setFestivalContentTitle($arr[$keys[2]]);
         if (array_key_exists($keys[3], $arr)) $this->setStartDate($arr[$keys[3]]);
         if (array_key_exists($keys[4], $arr)) $this->setEndDate($arr[$keys[4]]);
@@ -1263,7 +1275,7 @@ abstract class BaseFestival extends BaseObject implements Persistent
         $criteria = new Criteria(FestivalPeer::DATABASE_NAME);
 
         if ($this->isColumnModified(FestivalPeer::ID)) $criteria->add(FestivalPeer::ID, $this->id);
-        if ($this->isColumnModified(FestivalPeer::TYPE_ID)) $criteria->add(FestivalPeer::TYPE_ID, $this->type_id);
+        if ($this->isColumnModified(FestivalPeer::FESTIVAL_TYPE_ID)) $criteria->add(FestivalPeer::FESTIVAL_TYPE_ID, $this->festival_type_id);
         if ($this->isColumnModified(FestivalPeer::FESTIVAL_CONTENT_TITLE)) $criteria->add(FestivalPeer::FESTIVAL_CONTENT_TITLE, $this->festival_content_title);
         if ($this->isColumnModified(FestivalPeer::START_DATE)) $criteria->add(FestivalPeer::START_DATE, $this->start_date);
         if ($this->isColumnModified(FestivalPeer::END_DATE)) $criteria->add(FestivalPeer::END_DATE, $this->end_date);
@@ -1335,7 +1347,7 @@ abstract class BaseFestival extends BaseObject implements Persistent
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
-        $copyObj->setTypeId($this->getTypeId());
+        $copyObj->setFestivalTypeId($this->getFestivalTypeId());
         $copyObj->setFestivalContentTitle($this->getFestivalContentTitle());
         $copyObj->setStartDate($this->getStartDate());
         $copyObj->setEndDate($this->getEndDate());
@@ -1412,9 +1424,9 @@ abstract class BaseFestival extends BaseObject implements Persistent
     public function setFestivalType(FestivalType $v = null)
     {
         if ($v === null) {
-            $this->setTypeId(NULL);
+            $this->setFestivalTypeId(NULL);
         } else {
-            $this->setTypeId($v->getId());
+            $this->setFestivalTypeId($v->getId());
         }
 
         $this->aFestivalType = $v;
@@ -1434,13 +1446,14 @@ abstract class BaseFestival extends BaseObject implements Persistent
      * Get the associated FestivalType object
      *
      * @param PropelPDO $con Optional Connection object.
+     * @param $doQuery Executes a query to get the object if required
      * @return FestivalType The associated FestivalType object.
      * @throws PropelException
      */
-    public function getFestivalType(PropelPDO $con = null)
+    public function getFestivalType(PropelPDO $con = null, $doQuery = true)
     {
-        if ($this->aFestivalType === null && ($this->type_id !== null)) {
-            $this->aFestivalType = FestivalTypeQuery::create()->findPk($this->type_id, $con);
+        if ($this->aFestivalType === null && ($this->festival_type_id !== null) && $doQuery) {
+            $this->aFestivalType = FestivalTypeQuery::create()->findPk($this->festival_type_id, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
                 to this object.  This level of coupling may, however, be
@@ -1485,12 +1498,13 @@ abstract class BaseFestival extends BaseObject implements Persistent
      * Get the associated FestivalLocation object
      *
      * @param PropelPDO $con Optional Connection object.
+     * @param $doQuery Executes a query to get the object if required
      * @return FestivalLocation The associated FestivalLocation object.
      * @throws PropelException
      */
-    public function getFestivalLocation(PropelPDO $con = null)
+    public function getFestivalLocation(PropelPDO $con = null, $doQuery = true)
     {
-        if ($this->aFestivalLocation === null && ($this->festival_location_id !== null)) {
+        if ($this->aFestivalLocation === null && ($this->festival_location_id !== null) && $doQuery) {
             $this->aFestivalLocation = FestivalLocationQuery::create()->findPk($this->festival_location_id, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
@@ -1536,12 +1550,13 @@ abstract class BaseFestival extends BaseObject implements Persistent
      * Get the associated FestivalContent object
      *
      * @param PropelPDO $con Optional Connection object.
+     * @param $doQuery Executes a query to get the object if required
      * @return FestivalContent The associated FestivalContent object.
      * @throws PropelException
      */
-    public function getFestivalContent(PropelPDO $con = null)
+    public function getFestivalContent(PropelPDO $con = null, $doQuery = true)
     {
-        if ($this->aFestivalContent === null && ($this->festival_content_id !== null)) {
+        if ($this->aFestivalContent === null && ($this->festival_content_id !== null) && $doQuery) {
             $this->aFestivalContent = FestivalContentQuery::create()->findPk($this->festival_content_id, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
@@ -1587,12 +1602,13 @@ abstract class BaseFestival extends BaseObject implements Persistent
      * Get the associated FestivalUrl object
      *
      * @param PropelPDO $con Optional Connection object.
+     * @param $doQuery Executes a query to get the object if required
      * @return FestivalUrl The associated FestivalUrl object.
      * @throws PropelException
      */
-    public function getFestivalUrl(PropelPDO $con = null)
+    public function getFestivalUrl(PropelPDO $con = null, $doQuery = true)
     {
-        if ($this->aFestivalUrl === null && ($this->festival_url_id !== null)) {
+        if ($this->aFestivalUrl === null && ($this->festival_url_id !== null) && $doQuery) {
             $this->aFestivalUrl = FestivalUrlQuery::create()->findPk($this->festival_url_id, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
@@ -1612,7 +1628,7 @@ abstract class BaseFestival extends BaseObject implements Persistent
     public function clear()
     {
         $this->id = null;
-        $this->type_id = null;
+        $this->festival_type_id = null;
         $this->festival_content_title = null;
         $this->start_date = null;
         $this->end_date = null;
@@ -1623,6 +1639,7 @@ abstract class BaseFestival extends BaseObject implements Persistent
         $this->lang = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
+        $this->alreadyInClearAllReferencesDeep = false;
         $this->clearAllReferences();
         $this->resetModified();
         $this->setNew(true);
@@ -1640,7 +1657,22 @@ abstract class BaseFestival extends BaseObject implements Persistent
      */
     public function clearAllReferences($deep = false)
     {
-        if ($deep) {
+        if ($deep && !$this->alreadyInClearAllReferencesDeep) {
+            $this->alreadyInClearAllReferencesDeep = true;
+            if ($this->aFestivalType instanceof Persistent) {
+              $this->aFestivalType->clearAllReferences($deep);
+            }
+            if ($this->aFestivalLocation instanceof Persistent) {
+              $this->aFestivalLocation->clearAllReferences($deep);
+            }
+            if ($this->aFestivalContent instanceof Persistent) {
+              $this->aFestivalContent->clearAllReferences($deep);
+            }
+            if ($this->aFestivalUrl instanceof Persistent) {
+              $this->aFestivalUrl->clearAllReferences($deep);
+            }
+
+            $this->alreadyInClearAllReferencesDeep = false;
         } // if ($deep)
 
         $this->aFestivalType = null;

@@ -42,14 +42,14 @@ class FestivalLocationTableMap extends TableMap
         $this->setPackage('src.Festival.FestivalBundle.Model');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('ID', 'Id', 'INTEGER', true, null, null);
-        $this->addColumn('NAME', 'Name', 'VARCHAR', true, 45, null);
-        $this->addColumn('COUNTRY', 'Country', 'VARCHAR', true, 45, null);
-        $this->addColumn('STATE', 'State', 'VARCHAR', false, 45, null);
-        $this->addColumn('CITY', 'City', 'VARCHAR', true, 45, null);
-        $this->addColumn('LATITUDE', 'Latitude', 'VARCHAR', true, 45, null);
-        $this->addColumn('LONGTITUDE', 'Longtitude', 'VARCHAR', true, 45, null);
-        $this->addForeignKey('FESTIVAL_LOCATION_CONTENT_ID', 'FestivalLocationContentId', 'INTEGER', 'festival_location_content', 'ID', false, null, null);
+        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
+        $this->addColumn('name', 'Name', 'VARCHAR', true, 45, null);
+        $this->addColumn('country', 'Country', 'VARCHAR', true, 45, null);
+        $this->addColumn('state', 'State', 'VARCHAR', false, 45, null);
+        $this->addColumn('city', 'City', 'VARCHAR', true, 45, null);
+        $this->addColumn('latitude', 'Latitude', 'VARCHAR', true, 45, null);
+        $this->addColumn('longtitude', 'Longtitude', 'VARCHAR', true, 45, null);
+        $this->addForeignKey('festival_location_content_id', 'FestivalLocationContentId', 'INTEGER', 'festival_location_content', 'id', false, null, null);
         // validators
     } // initialize()
 

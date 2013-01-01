@@ -38,29 +38,29 @@ abstract class BaseFestivalLocationPeer
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
     const NUM_HYDRATE_COLUMNS = 8;
 
-    /** the column name for the ID field */
-    const ID = 'festival_location.ID';
+    /** the column name for the id field */
+    const ID = 'festival_location.id';
 
-    /** the column name for the NAME field */
-    const NAME = 'festival_location.NAME';
+    /** the column name for the name field */
+    const NAME = 'festival_location.name';
 
-    /** the column name for the COUNTRY field */
-    const COUNTRY = 'festival_location.COUNTRY';
+    /** the column name for the country field */
+    const COUNTRY = 'festival_location.country';
 
-    /** the column name for the STATE field */
-    const STATE = 'festival_location.STATE';
+    /** the column name for the state field */
+    const STATE = 'festival_location.state';
 
-    /** the column name for the CITY field */
-    const CITY = 'festival_location.CITY';
+    /** the column name for the city field */
+    const CITY = 'festival_location.city';
 
-    /** the column name for the LATITUDE field */
-    const LATITUDE = 'festival_location.LATITUDE';
+    /** the column name for the latitude field */
+    const LATITUDE = 'festival_location.latitude';
 
-    /** the column name for the LONGTITUDE field */
-    const LONGTITUDE = 'festival_location.LONGTITUDE';
+    /** the column name for the longtitude field */
+    const LONGTITUDE = 'festival_location.longtitude';
 
-    /** the column name for the FESTIVAL_LOCATION_CONTENT_ID field */
-    const FESTIVAL_LOCATION_CONTENT_ID = 'festival_location.FESTIVAL_LOCATION_CONTENT_ID';
+    /** the column name for the festival_location_content_id field */
+    const FESTIVAL_LOCATION_CONTENT_ID = 'festival_location.festival_location_content_id';
 
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -184,14 +184,14 @@ abstract class BaseFestivalLocationPeer
             $criteria->addSelectColumn(FestivalLocationPeer::LONGTITUDE);
             $criteria->addSelectColumn(FestivalLocationPeer::FESTIVAL_LOCATION_CONTENT_ID);
         } else {
-            $criteria->addSelectColumn($alias . '.ID');
-            $criteria->addSelectColumn($alias . '.NAME');
-            $criteria->addSelectColumn($alias . '.COUNTRY');
-            $criteria->addSelectColumn($alias . '.STATE');
-            $criteria->addSelectColumn($alias . '.CITY');
-            $criteria->addSelectColumn($alias . '.LATITUDE');
-            $criteria->addSelectColumn($alias . '.LONGTITUDE');
-            $criteria->addSelectColumn($alias . '.FESTIVAL_LOCATION_CONTENT_ID');
+            $criteria->addSelectColumn($alias . '.id');
+            $criteria->addSelectColumn($alias . '.name');
+            $criteria->addSelectColumn($alias . '.country');
+            $criteria->addSelectColumn($alias . '.state');
+            $criteria->addSelectColumn($alias . '.city');
+            $criteria->addSelectColumn($alias . '.latitude');
+            $criteria->addSelectColumn($alias . '.longtitude');
+            $criteria->addSelectColumn($alias . '.festival_location_content_id');
         }
     }
 
@@ -275,7 +275,7 @@ abstract class BaseFestivalLocationPeer
     /**
      * Prepares the Criteria object and uses the parent doSelect() method to execute a PDOStatement.
      *
-     * Use this method directly if you want to work with an executed statement durirectly (for example
+     * Use this method directly if you want to work with an executed statement directly (for example
      * to perform your own object hydration).
      *
      * @param      Criteria $criteria The Criteria object used to build the SELECT statement.
@@ -380,8 +380,15 @@ abstract class BaseFestivalLocationPeer
      *
      * @return void
      */
-    public static function clearInstancePool()
+    public static function clearInstancePool($and_clear_all_references = false)
     {
+      if ($and_clear_all_references)
+      {
+        foreach (FestivalLocationPeer::$instances as $instance)
+        {
+          $instance->clearAllReferences(true);
+        }
+      }
         FestivalLocationPeer::$instances = array();
     }
 

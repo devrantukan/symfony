@@ -37,11 +37,11 @@ abstract class BaseFestivalUrlTypePeer
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
     const NUM_HYDRATE_COLUMNS = 2;
 
-    /** the column name for the ID field */
-    const ID = 'festival_url_type.ID';
+    /** the column name for the id field */
+    const ID = 'festival_url_type.id';
 
-    /** the column name for the DESCRIPTION field */
-    const DESCRIPTION = 'festival_url_type.DESCRIPTION';
+    /** the column name for the description field */
+    const DESCRIPTION = 'festival_url_type.description';
 
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -159,8 +159,8 @@ abstract class BaseFestivalUrlTypePeer
             $criteria->addSelectColumn(FestivalUrlTypePeer::ID);
             $criteria->addSelectColumn(FestivalUrlTypePeer::DESCRIPTION);
         } else {
-            $criteria->addSelectColumn($alias . '.ID');
-            $criteria->addSelectColumn($alias . '.DESCRIPTION');
+            $criteria->addSelectColumn($alias . '.id');
+            $criteria->addSelectColumn($alias . '.description');
         }
     }
 
@@ -244,7 +244,7 @@ abstract class BaseFestivalUrlTypePeer
     /**
      * Prepares the Criteria object and uses the parent doSelect() method to execute a PDOStatement.
      *
-     * Use this method directly if you want to work with an executed statement durirectly (for example
+     * Use this method directly if you want to work with an executed statement directly (for example
      * to perform your own object hydration).
      *
      * @param      Criteria $criteria The Criteria object used to build the SELECT statement.
@@ -349,8 +349,15 @@ abstract class BaseFestivalUrlTypePeer
      *
      * @return void
      */
-    public static function clearInstancePool()
+    public static function clearInstancePool($and_clear_all_references = false)
     {
+      if ($and_clear_all_references)
+      {
+        foreach (FestivalUrlTypePeer::$instances as $instance)
+        {
+          $instance->clearAllReferences(true);
+        }
+      }
         FestivalUrlTypePeer::$instances = array();
     }
 

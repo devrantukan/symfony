@@ -24,6 +24,7 @@ class AppKernel extends Kernel
             new Festival\GuestBundle\FestivalGuestBundle(),
             new Festival\FestivalBundle\FestivalFestivalBundle(),
             new Site\PagesBundle\SitePagesBundle(),
+        	new FOS\UserBundle\FOSUserBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

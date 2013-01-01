@@ -42,11 +42,11 @@ class UserTableMap extends TableMap
         $this->setPackage('src.Festival.UserBundle.Model');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('ID', 'Id', 'INTEGER', true, null, null);
-        $this->addColumn('NAME', 'Name', 'VARCHAR', false, 100, null);
-        $this->getColumn('NAME', false)->setPrimaryString(true);
-        $this->addColumn('SURNAME', 'Surname', 'VARCHAR', false, 100, null);
-        $this->getColumn('SURNAME', false)->setPrimaryString(true);
+        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
+        $this->addColumn('name', 'Name', 'VARCHAR', false, 100, null);
+        $this->getColumn('name', false)->setPrimaryString(true);
+        $this->addColumn('surname', 'Surname', 'VARCHAR', false, 100, null);
+        $this->getColumn('surname', false)->setPrimaryString(true);
         // validators
     } // initialize()
 

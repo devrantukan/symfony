@@ -42,16 +42,16 @@ class FestivalTableMap extends TableMap
         $this->setPackage('src.Festival.FestivalBundle.Model');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('ID', 'Id', 'INTEGER', true, null, null);
-        $this->addForeignKey('TYPE_ID', 'TypeId', 'INTEGER', 'festival_type', 'ID', false, null, null);
-        $this->addColumn('FESTIVAL_CONTENT_TITLE', 'FestivalContentTitle', 'VARCHAR', true, 45, null);
-        $this->addColumn('START_DATE', 'StartDate', 'TIMESTAMP', true, null, null);
-        $this->addColumn('END_DATE', 'EndDate', 'TIMESTAMP', true, null, null);
-        $this->addForeignKey('FESTIVAL_LOCATION_ID', 'FestivalLocationId', 'INTEGER', 'festival_location', 'ID', false, null, null);
-        $this->addForeignKey('FESTIVAL_CONTENT_ID', 'FestivalContentId', 'INTEGER', 'festival_content', 'ID', false, null, null);
-        $this->addForeignKey('FESTIVAL_URL_ID', 'FestivalUrlId', 'INTEGER', 'festival_url', 'ID', false, null, null);
-        $this->addColumn('SLUG', 'Slug', 'VARCHAR', false, 45, null);
-        $this->addColumn('LANG', 'Lang', 'VARCHAR', false, 2, null);
+        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
+        $this->addForeignKey('festival_type_id', 'FestivalTypeId', 'INTEGER', 'festival_type', 'id', false, null, null);
+        $this->addColumn('festival_content_title', 'FestivalContentTitle', 'VARCHAR', true, 45, null);
+        $this->addColumn('start_date', 'StartDate', 'TIMESTAMP', true, null, null);
+        $this->addColumn('end_date', 'EndDate', 'TIMESTAMP', true, null, null);
+        $this->addForeignKey('festival_location_id', 'FestivalLocationId', 'INTEGER', 'festival_location', 'id', false, null, null);
+        $this->addForeignKey('festival_content_id', 'FestivalContentId', 'INTEGER', 'festival_content', 'id', false, null, null);
+        $this->addForeignKey('festival_url_id', 'FestivalUrlId', 'INTEGER', 'festival_url', 'id', false, null, null);
+        $this->addColumn('slug', 'Slug', 'VARCHAR', false, 45, null);
+        $this->addColumn('lang', 'Lang', 'VARCHAR', false, 2, null);
         // validators
     } // initialize()
 
@@ -60,7 +60,7 @@ class FestivalTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('FestivalType', 'Festival\\FestivalBundle\\Model\\FestivalType', RelationMap::MANY_TO_ONE, array('type_id' => 'id', ), null, null);
+        $this->addRelation('FestivalType', 'Festival\\FestivalBundle\\Model\\FestivalType', RelationMap::MANY_TO_ONE, array('festival_type_id' => 'id', ), null, null);
         $this->addRelation('FestivalLocation', 'Festival\\FestivalBundle\\Model\\FestivalLocation', RelationMap::MANY_TO_ONE, array('festival_location_id' => 'id', ), null, null);
         $this->addRelation('FestivalContent', 'Festival\\FestivalBundle\\Model\\FestivalContent', RelationMap::MANY_TO_ONE, array('festival_content_id' => 'id', ), null, null);
         $this->addRelation('FestivalUrl', 'Festival\\FestivalBundle\\Model\\FestivalUrl', RelationMap::MANY_TO_ONE, array('festival_url_id' => 'id', ), null, null);

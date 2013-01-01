@@ -29,34 +29,40 @@ abstract class BaseFestivalContentPeer
     const TM_CLASS = 'FestivalContentTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 7;
+    const NUM_COLUMNS = 9;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 7;
+    const NUM_HYDRATE_COLUMNS = 9;
 
-    /** the column name for the ID field */
-    const ID = 'festival_content.ID';
+    /** the column name for the id field */
+    const ID = 'festival_content.id';
 
-    /** the column name for the FESTIVAL_ID field */
-    const FESTIVAL_ID = 'festival_content.FESTIVAL_ID';
+    /** the column name for the festival_id field */
+    const FESTIVAL_ID = 'festival_content.festival_id';
 
-    /** the column name for the TITLE field */
-    const TITLE = 'festival_content.TITLE';
+    /** the column name for the title field */
+    const TITLE = 'festival_content.title';
 
-    /** the column name for the SUBTITLE field */
-    const SUBTITLE = 'festival_content.SUBTITLE';
+    /** the column name for the subtitle field */
+    const SUBTITLE = 'festival_content.subtitle';
 
-    /** the column name for the CONTENT field */
-    const CONTENT = 'festival_content.CONTENT';
+    /** the column name for the content field */
+    const CONTENT = 'festival_content.content';
 
-    /** the column name for the VISITOR field */
-    const VISITOR = 'festival_content.VISITOR';
+    /** the column name for the meta_keywords field */
+    const META_KEYWORDS = 'festival_content.meta_keywords';
 
-    /** the column name for the USER_ID field */
-    const USER_ID = 'festival_content.USER_ID';
+    /** the column name for the meta_description field */
+    const META_DESCRIPTION = 'festival_content.meta_description';
+
+    /** the column name for the visitor field */
+    const VISITOR = 'festival_content.visitor';
+
+    /** the column name for the user_id field */
+    const USER_ID = 'festival_content.user_id';
 
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -77,12 +83,12 @@ abstract class BaseFestivalContentPeer
      * e.g. FestivalContentPeer::$fieldNames[FestivalContentPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('Id', 'FestivalId', 'Title', 'Subtitle', 'Content', 'Visitor', 'UserId', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'festivalId', 'title', 'subtitle', 'content', 'visitor', 'userId', ),
-        BasePeer::TYPE_COLNAME => array (FestivalContentPeer::ID, FestivalContentPeer::FESTIVAL_ID, FestivalContentPeer::TITLE, FestivalContentPeer::SUBTITLE, FestivalContentPeer::CONTENT, FestivalContentPeer::VISITOR, FestivalContentPeer::USER_ID, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'FESTIVAL_ID', 'TITLE', 'SUBTITLE', 'CONTENT', 'VISITOR', 'USER_ID', ),
-        BasePeer::TYPE_FIELDNAME => array ('id', 'festival_id', 'title', 'subtitle', 'content', 'visitor', 'user_id', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, )
+        BasePeer::TYPE_PHPNAME => array ('Id', 'FestivalId', 'Title', 'Subtitle', 'Content', 'MetaKeywords', 'MetaDescription', 'Visitor', 'UserId', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'festivalId', 'title', 'subtitle', 'content', 'metaKeywords', 'metaDescription', 'visitor', 'userId', ),
+        BasePeer::TYPE_COLNAME => array (FestivalContentPeer::ID, FestivalContentPeer::FESTIVAL_ID, FestivalContentPeer::TITLE, FestivalContentPeer::SUBTITLE, FestivalContentPeer::CONTENT, FestivalContentPeer::META_KEYWORDS, FestivalContentPeer::META_DESCRIPTION, FestivalContentPeer::VISITOR, FestivalContentPeer::USER_ID, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'FESTIVAL_ID', 'TITLE', 'SUBTITLE', 'CONTENT', 'META_KEYWORDS', 'META_DESCRIPTION', 'VISITOR', 'USER_ID', ),
+        BasePeer::TYPE_FIELDNAME => array ('id', 'festival_id', 'title', 'subtitle', 'content', 'meta_keywords', 'meta_description', 'visitor', 'user_id', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, )
     );
 
     /**
@@ -92,12 +98,12 @@ abstract class BaseFestivalContentPeer
      * e.g. FestivalContentPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'FestivalId' => 1, 'Title' => 2, 'Subtitle' => 3, 'Content' => 4, 'Visitor' => 5, 'UserId' => 6, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'festivalId' => 1, 'title' => 2, 'subtitle' => 3, 'content' => 4, 'visitor' => 5, 'userId' => 6, ),
-        BasePeer::TYPE_COLNAME => array (FestivalContentPeer::ID => 0, FestivalContentPeer::FESTIVAL_ID => 1, FestivalContentPeer::TITLE => 2, FestivalContentPeer::SUBTITLE => 3, FestivalContentPeer::CONTENT => 4, FestivalContentPeer::VISITOR => 5, FestivalContentPeer::USER_ID => 6, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'FESTIVAL_ID' => 1, 'TITLE' => 2, 'SUBTITLE' => 3, 'CONTENT' => 4, 'VISITOR' => 5, 'USER_ID' => 6, ),
-        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'festival_id' => 1, 'title' => 2, 'subtitle' => 3, 'content' => 4, 'visitor' => 5, 'user_id' => 6, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, )
+        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'FestivalId' => 1, 'Title' => 2, 'Subtitle' => 3, 'Content' => 4, 'MetaKeywords' => 5, 'MetaDescription' => 6, 'Visitor' => 7, 'UserId' => 8, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'festivalId' => 1, 'title' => 2, 'subtitle' => 3, 'content' => 4, 'metaKeywords' => 5, 'metaDescription' => 6, 'visitor' => 7, 'userId' => 8, ),
+        BasePeer::TYPE_COLNAME => array (FestivalContentPeer::ID => 0, FestivalContentPeer::FESTIVAL_ID => 1, FestivalContentPeer::TITLE => 2, FestivalContentPeer::SUBTITLE => 3, FestivalContentPeer::CONTENT => 4, FestivalContentPeer::META_KEYWORDS => 5, FestivalContentPeer::META_DESCRIPTION => 6, FestivalContentPeer::VISITOR => 7, FestivalContentPeer::USER_ID => 8, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'FESTIVAL_ID' => 1, 'TITLE' => 2, 'SUBTITLE' => 3, 'CONTENT' => 4, 'META_KEYWORDS' => 5, 'META_DESCRIPTION' => 6, 'VISITOR' => 7, 'USER_ID' => 8, ),
+        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'festival_id' => 1, 'title' => 2, 'subtitle' => 3, 'content' => 4, 'meta_keywords' => 5, 'meta_description' => 6, 'visitor' => 7, 'user_id' => 8, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, )
     );
 
     /**
@@ -176,16 +182,20 @@ abstract class BaseFestivalContentPeer
             $criteria->addSelectColumn(FestivalContentPeer::TITLE);
             $criteria->addSelectColumn(FestivalContentPeer::SUBTITLE);
             $criteria->addSelectColumn(FestivalContentPeer::CONTENT);
+            $criteria->addSelectColumn(FestivalContentPeer::META_KEYWORDS);
+            $criteria->addSelectColumn(FestivalContentPeer::META_DESCRIPTION);
             $criteria->addSelectColumn(FestivalContentPeer::VISITOR);
             $criteria->addSelectColumn(FestivalContentPeer::USER_ID);
         } else {
-            $criteria->addSelectColumn($alias . '.ID');
-            $criteria->addSelectColumn($alias . '.FESTIVAL_ID');
-            $criteria->addSelectColumn($alias . '.TITLE');
-            $criteria->addSelectColumn($alias . '.SUBTITLE');
-            $criteria->addSelectColumn($alias . '.CONTENT');
-            $criteria->addSelectColumn($alias . '.VISITOR');
-            $criteria->addSelectColumn($alias . '.USER_ID');
+            $criteria->addSelectColumn($alias . '.id');
+            $criteria->addSelectColumn($alias . '.festival_id');
+            $criteria->addSelectColumn($alias . '.title');
+            $criteria->addSelectColumn($alias . '.subtitle');
+            $criteria->addSelectColumn($alias . '.content');
+            $criteria->addSelectColumn($alias . '.meta_keywords');
+            $criteria->addSelectColumn($alias . '.meta_description');
+            $criteria->addSelectColumn($alias . '.visitor');
+            $criteria->addSelectColumn($alias . '.user_id');
         }
     }
 
@@ -269,7 +279,7 @@ abstract class BaseFestivalContentPeer
     /**
      * Prepares the Criteria object and uses the parent doSelect() method to execute a PDOStatement.
      *
-     * Use this method directly if you want to work with an executed statement durirectly (for example
+     * Use this method directly if you want to work with an executed statement directly (for example
      * to perform your own object hydration).
      *
      * @param      Criteria $criteria The Criteria object used to build the SELECT statement.
@@ -374,8 +384,15 @@ abstract class BaseFestivalContentPeer
      *
      * @return void
      */
-    public static function clearInstancePool()
+    public static function clearInstancePool($and_clear_all_references = false)
     {
+      if ($and_clear_all_references)
+      {
+        foreach (FestivalContentPeer::$instances as $instance)
+        {
+          $instance->clearAllReferences(true);
+        }
+      }
         FestivalContentPeer::$instances = array();
     }
 

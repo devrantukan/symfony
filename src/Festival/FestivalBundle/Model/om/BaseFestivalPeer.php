@@ -41,35 +41,35 @@ abstract class BaseFestivalPeer
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
     const NUM_HYDRATE_COLUMNS = 10;
 
-    /** the column name for the ID field */
-    const ID = 'festival.ID';
+    /** the column name for the id field */
+    const ID = 'festival.id';
 
-    /** the column name for the TYPE_ID field */
-    const TYPE_ID = 'festival.TYPE_ID';
+    /** the column name for the festival_type_id field */
+    const FESTIVAL_TYPE_ID = 'festival.festival_type_id';
 
-    /** the column name for the FESTIVAL_CONTENT_TITLE field */
-    const FESTIVAL_CONTENT_TITLE = 'festival.FESTIVAL_CONTENT_TITLE';
+    /** the column name for the festival_content_title field */
+    const FESTIVAL_CONTENT_TITLE = 'festival.festival_content_title';
 
-    /** the column name for the START_DATE field */
-    const START_DATE = 'festival.START_DATE';
+    /** the column name for the start_date field */
+    const START_DATE = 'festival.start_date';
 
-    /** the column name for the END_DATE field */
-    const END_DATE = 'festival.END_DATE';
+    /** the column name for the end_date field */
+    const END_DATE = 'festival.end_date';
 
-    /** the column name for the FESTIVAL_LOCATION_ID field */
-    const FESTIVAL_LOCATION_ID = 'festival.FESTIVAL_LOCATION_ID';
+    /** the column name for the festival_location_id field */
+    const FESTIVAL_LOCATION_ID = 'festival.festival_location_id';
 
-    /** the column name for the FESTIVAL_CONTENT_ID field */
-    const FESTIVAL_CONTENT_ID = 'festival.FESTIVAL_CONTENT_ID';
+    /** the column name for the festival_content_id field */
+    const FESTIVAL_CONTENT_ID = 'festival.festival_content_id';
 
-    /** the column name for the FESTIVAL_URL_ID field */
-    const FESTIVAL_URL_ID = 'festival.FESTIVAL_URL_ID';
+    /** the column name for the festival_url_id field */
+    const FESTIVAL_URL_ID = 'festival.festival_url_id';
 
-    /** the column name for the SLUG field */
-    const SLUG = 'festival.SLUG';
+    /** the column name for the slug field */
+    const SLUG = 'festival.slug';
 
-    /** the column name for the LANG field */
-    const LANG = 'festival.LANG';
+    /** the column name for the lang field */
+    const LANG = 'festival.lang';
 
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -90,11 +90,11 @@ abstract class BaseFestivalPeer
      * e.g. FestivalPeer::$fieldNames[FestivalPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('Id', 'TypeId', 'FestivalContentTitle', 'StartDate', 'EndDate', 'FestivalLocationId', 'FestivalContentId', 'FestivalUrlId', 'Slug', 'Lang', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'typeId', 'festivalContentTitle', 'startDate', 'endDate', 'festivalLocationId', 'festivalContentId', 'festivalUrlId', 'slug', 'lang', ),
-        BasePeer::TYPE_COLNAME => array (FestivalPeer::ID, FestivalPeer::TYPE_ID, FestivalPeer::FESTIVAL_CONTENT_TITLE, FestivalPeer::START_DATE, FestivalPeer::END_DATE, FestivalPeer::FESTIVAL_LOCATION_ID, FestivalPeer::FESTIVAL_CONTENT_ID, FestivalPeer::FESTIVAL_URL_ID, FestivalPeer::SLUG, FestivalPeer::LANG, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'TYPE_ID', 'FESTIVAL_CONTENT_TITLE', 'START_DATE', 'END_DATE', 'FESTIVAL_LOCATION_ID', 'FESTIVAL_CONTENT_ID', 'FESTIVAL_URL_ID', 'SLUG', 'LANG', ),
-        BasePeer::TYPE_FIELDNAME => array ('id', 'type_id', 'festival_content_title', 'start_date', 'end_date', 'festival_location_id', 'festival_content_id', 'festival_url_id', 'slug', 'lang', ),
+        BasePeer::TYPE_PHPNAME => array ('Id', 'FestivalTypeId', 'FestivalContentTitle', 'StartDate', 'EndDate', 'FestivalLocationId', 'FestivalContentId', 'FestivalUrlId', 'Slug', 'Lang', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'festivalTypeId', 'festivalContentTitle', 'startDate', 'endDate', 'festivalLocationId', 'festivalContentId', 'festivalUrlId', 'slug', 'lang', ),
+        BasePeer::TYPE_COLNAME => array (FestivalPeer::ID, FestivalPeer::FESTIVAL_TYPE_ID, FestivalPeer::FESTIVAL_CONTENT_TITLE, FestivalPeer::START_DATE, FestivalPeer::END_DATE, FestivalPeer::FESTIVAL_LOCATION_ID, FestivalPeer::FESTIVAL_CONTENT_ID, FestivalPeer::FESTIVAL_URL_ID, FestivalPeer::SLUG, FestivalPeer::LANG, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'FESTIVAL_TYPE_ID', 'FESTIVAL_CONTENT_TITLE', 'START_DATE', 'END_DATE', 'FESTIVAL_LOCATION_ID', 'FESTIVAL_CONTENT_ID', 'FESTIVAL_URL_ID', 'SLUG', 'LANG', ),
+        BasePeer::TYPE_FIELDNAME => array ('id', 'festival_type_id', 'festival_content_title', 'start_date', 'end_date', 'festival_location_id', 'festival_content_id', 'festival_url_id', 'slug', 'lang', ),
         BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
     );
 
@@ -105,11 +105,11 @@ abstract class BaseFestivalPeer
      * e.g. FestivalPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'TypeId' => 1, 'FestivalContentTitle' => 2, 'StartDate' => 3, 'EndDate' => 4, 'FestivalLocationId' => 5, 'FestivalContentId' => 6, 'FestivalUrlId' => 7, 'Slug' => 8, 'Lang' => 9, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'typeId' => 1, 'festivalContentTitle' => 2, 'startDate' => 3, 'endDate' => 4, 'festivalLocationId' => 5, 'festivalContentId' => 6, 'festivalUrlId' => 7, 'slug' => 8, 'lang' => 9, ),
-        BasePeer::TYPE_COLNAME => array (FestivalPeer::ID => 0, FestivalPeer::TYPE_ID => 1, FestivalPeer::FESTIVAL_CONTENT_TITLE => 2, FestivalPeer::START_DATE => 3, FestivalPeer::END_DATE => 4, FestivalPeer::FESTIVAL_LOCATION_ID => 5, FestivalPeer::FESTIVAL_CONTENT_ID => 6, FestivalPeer::FESTIVAL_URL_ID => 7, FestivalPeer::SLUG => 8, FestivalPeer::LANG => 9, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'TYPE_ID' => 1, 'FESTIVAL_CONTENT_TITLE' => 2, 'START_DATE' => 3, 'END_DATE' => 4, 'FESTIVAL_LOCATION_ID' => 5, 'FESTIVAL_CONTENT_ID' => 6, 'FESTIVAL_URL_ID' => 7, 'SLUG' => 8, 'LANG' => 9, ),
-        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'type_id' => 1, 'festival_content_title' => 2, 'start_date' => 3, 'end_date' => 4, 'festival_location_id' => 5, 'festival_content_id' => 6, 'festival_url_id' => 7, 'slug' => 8, 'lang' => 9, ),
+        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'FestivalTypeId' => 1, 'FestivalContentTitle' => 2, 'StartDate' => 3, 'EndDate' => 4, 'FestivalLocationId' => 5, 'FestivalContentId' => 6, 'FestivalUrlId' => 7, 'Slug' => 8, 'Lang' => 9, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'festivalTypeId' => 1, 'festivalContentTitle' => 2, 'startDate' => 3, 'endDate' => 4, 'festivalLocationId' => 5, 'festivalContentId' => 6, 'festivalUrlId' => 7, 'slug' => 8, 'lang' => 9, ),
+        BasePeer::TYPE_COLNAME => array (FestivalPeer::ID => 0, FestivalPeer::FESTIVAL_TYPE_ID => 1, FestivalPeer::FESTIVAL_CONTENT_TITLE => 2, FestivalPeer::START_DATE => 3, FestivalPeer::END_DATE => 4, FestivalPeer::FESTIVAL_LOCATION_ID => 5, FestivalPeer::FESTIVAL_CONTENT_ID => 6, FestivalPeer::FESTIVAL_URL_ID => 7, FestivalPeer::SLUG => 8, FestivalPeer::LANG => 9, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'FESTIVAL_TYPE_ID' => 1, 'FESTIVAL_CONTENT_TITLE' => 2, 'START_DATE' => 3, 'END_DATE' => 4, 'FESTIVAL_LOCATION_ID' => 5, 'FESTIVAL_CONTENT_ID' => 6, 'FESTIVAL_URL_ID' => 7, 'SLUG' => 8, 'LANG' => 9, ),
+        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'festival_type_id' => 1, 'festival_content_title' => 2, 'start_date' => 3, 'end_date' => 4, 'festival_location_id' => 5, 'festival_content_id' => 6, 'festival_url_id' => 7, 'slug' => 8, 'lang' => 9, ),
         BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
     );
 
@@ -185,7 +185,7 @@ abstract class BaseFestivalPeer
     {
         if (null === $alias) {
             $criteria->addSelectColumn(FestivalPeer::ID);
-            $criteria->addSelectColumn(FestivalPeer::TYPE_ID);
+            $criteria->addSelectColumn(FestivalPeer::FESTIVAL_TYPE_ID);
             $criteria->addSelectColumn(FestivalPeer::FESTIVAL_CONTENT_TITLE);
             $criteria->addSelectColumn(FestivalPeer::START_DATE);
             $criteria->addSelectColumn(FestivalPeer::END_DATE);
@@ -195,16 +195,16 @@ abstract class BaseFestivalPeer
             $criteria->addSelectColumn(FestivalPeer::SLUG);
             $criteria->addSelectColumn(FestivalPeer::LANG);
         } else {
-            $criteria->addSelectColumn($alias . '.ID');
-            $criteria->addSelectColumn($alias . '.TYPE_ID');
-            $criteria->addSelectColumn($alias . '.FESTIVAL_CONTENT_TITLE');
-            $criteria->addSelectColumn($alias . '.START_DATE');
-            $criteria->addSelectColumn($alias . '.END_DATE');
-            $criteria->addSelectColumn($alias . '.FESTIVAL_LOCATION_ID');
-            $criteria->addSelectColumn($alias . '.FESTIVAL_CONTENT_ID');
-            $criteria->addSelectColumn($alias . '.FESTIVAL_URL_ID');
-            $criteria->addSelectColumn($alias . '.SLUG');
-            $criteria->addSelectColumn($alias . '.LANG');
+            $criteria->addSelectColumn($alias . '.id');
+            $criteria->addSelectColumn($alias . '.festival_type_id');
+            $criteria->addSelectColumn($alias . '.festival_content_title');
+            $criteria->addSelectColumn($alias . '.start_date');
+            $criteria->addSelectColumn($alias . '.end_date');
+            $criteria->addSelectColumn($alias . '.festival_location_id');
+            $criteria->addSelectColumn($alias . '.festival_content_id');
+            $criteria->addSelectColumn($alias . '.festival_url_id');
+            $criteria->addSelectColumn($alias . '.slug');
+            $criteria->addSelectColumn($alias . '.lang');
         }
     }
 
@@ -288,7 +288,7 @@ abstract class BaseFestivalPeer
     /**
      * Prepares the Criteria object and uses the parent doSelect() method to execute a PDOStatement.
      *
-     * Use this method directly if you want to work with an executed statement durirectly (for example
+     * Use this method directly if you want to work with an executed statement directly (for example
      * to perform your own object hydration).
      *
      * @param      Criteria $criteria The Criteria object used to build the SELECT statement.
@@ -393,8 +393,15 @@ abstract class BaseFestivalPeer
      *
      * @return void
      */
-    public static function clearInstancePool()
+    public static function clearInstancePool($and_clear_all_references = false)
     {
+      if ($and_clear_all_references)
+      {
+        foreach (FestivalPeer::$instances as $instance)
+        {
+          $instance->clearAllReferences(true);
+        }
+      }
         FestivalPeer::$instances = array();
     }
 
@@ -537,7 +544,7 @@ abstract class BaseFestivalPeer
             $con = Propel::getConnection(FestivalPeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
-        $criteria->addJoin(FestivalPeer::TYPE_ID, FestivalTypePeer::ID, $join_behavior);
+        $criteria->addJoin(FestivalPeer::FESTIVAL_TYPE_ID, FestivalTypePeer::ID, $join_behavior);
 
         $stmt = BasePeer::doCount($criteria, $con);
 
@@ -727,7 +734,7 @@ abstract class BaseFestivalPeer
         $startcol = FestivalPeer::NUM_HYDRATE_COLUMNS;
         FestivalTypePeer::addSelectColumns($criteria);
 
-        $criteria->addJoin(FestivalPeer::TYPE_ID, FestivalTypePeer::ID, $join_behavior);
+        $criteria->addJoin(FestivalPeer::FESTIVAL_TYPE_ID, FestivalTypePeer::ID, $join_behavior);
 
         $stmt = BasePeer::doSelect($criteria, $con);
         $results = array();
@@ -1009,7 +1016,7 @@ abstract class BaseFestivalPeer
             $con = Propel::getConnection(FestivalPeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
-        $criteria->addJoin(FestivalPeer::TYPE_ID, FestivalTypePeer::ID, $join_behavior);
+        $criteria->addJoin(FestivalPeer::FESTIVAL_TYPE_ID, FestivalTypePeer::ID, $join_behavior);
 
         $criteria->addJoin(FestivalPeer::FESTIVAL_LOCATION_ID, FestivalLocationPeer::ID, $join_behavior);
 
@@ -1063,7 +1070,7 @@ abstract class BaseFestivalPeer
         FestivalUrlPeer::addSelectColumns($criteria);
         $startcol6 = $startcol5 + FestivalUrlPeer::NUM_HYDRATE_COLUMNS;
 
-        $criteria->addJoin(FestivalPeer::TYPE_ID, FestivalTypePeer::ID, $join_behavior);
+        $criteria->addJoin(FestivalPeer::FESTIVAL_TYPE_ID, FestivalTypePeer::ID, $join_behavior);
 
         $criteria->addJoin(FestivalPeer::FESTIVAL_LOCATION_ID, FestivalLocationPeer::ID, $join_behavior);
 
@@ -1259,7 +1266,7 @@ abstract class BaseFestivalPeer
             $con = Propel::getConnection(FestivalPeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
-        $criteria->addJoin(FestivalPeer::TYPE_ID, FestivalTypePeer::ID, $join_behavior);
+        $criteria->addJoin(FestivalPeer::FESTIVAL_TYPE_ID, FestivalTypePeer::ID, $join_behavior);
 
         $criteria->addJoin(FestivalPeer::FESTIVAL_CONTENT_ID, FestivalContentPeer::ID, $join_behavior);
 
@@ -1314,7 +1321,7 @@ abstract class BaseFestivalPeer
             $con = Propel::getConnection(FestivalPeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
-        $criteria->addJoin(FestivalPeer::TYPE_ID, FestivalTypePeer::ID, $join_behavior);
+        $criteria->addJoin(FestivalPeer::FESTIVAL_TYPE_ID, FestivalTypePeer::ID, $join_behavior);
 
         $criteria->addJoin(FestivalPeer::FESTIVAL_LOCATION_ID, FestivalLocationPeer::ID, $join_behavior);
 
@@ -1369,7 +1376,7 @@ abstract class BaseFestivalPeer
             $con = Propel::getConnection(FestivalPeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
-        $criteria->addJoin(FestivalPeer::TYPE_ID, FestivalTypePeer::ID, $join_behavior);
+        $criteria->addJoin(FestivalPeer::FESTIVAL_TYPE_ID, FestivalTypePeer::ID, $join_behavior);
 
         $criteria->addJoin(FestivalPeer::FESTIVAL_LOCATION_ID, FestivalLocationPeer::ID, $join_behavior);
 
@@ -1543,7 +1550,7 @@ abstract class BaseFestivalPeer
         FestivalUrlPeer::addSelectColumns($criteria);
         $startcol5 = $startcol4 + FestivalUrlPeer::NUM_HYDRATE_COLUMNS;
 
-        $criteria->addJoin(FestivalPeer::TYPE_ID, FestivalTypePeer::ID, $join_behavior);
+        $criteria->addJoin(FestivalPeer::FESTIVAL_TYPE_ID, FestivalTypePeer::ID, $join_behavior);
 
         $criteria->addJoin(FestivalPeer::FESTIVAL_CONTENT_ID, FestivalContentPeer::ID, $join_behavior);
 
@@ -1665,7 +1672,7 @@ abstract class BaseFestivalPeer
         FestivalUrlPeer::addSelectColumns($criteria);
         $startcol5 = $startcol4 + FestivalUrlPeer::NUM_HYDRATE_COLUMNS;
 
-        $criteria->addJoin(FestivalPeer::TYPE_ID, FestivalTypePeer::ID, $join_behavior);
+        $criteria->addJoin(FestivalPeer::FESTIVAL_TYPE_ID, FestivalTypePeer::ID, $join_behavior);
 
         $criteria->addJoin(FestivalPeer::FESTIVAL_LOCATION_ID, FestivalLocationPeer::ID, $join_behavior);
 
@@ -1787,7 +1794,7 @@ abstract class BaseFestivalPeer
         FestivalContentPeer::addSelectColumns($criteria);
         $startcol5 = $startcol4 + FestivalContentPeer::NUM_HYDRATE_COLUMNS;
 
-        $criteria->addJoin(FestivalPeer::TYPE_ID, FestivalTypePeer::ID, $join_behavior);
+        $criteria->addJoin(FestivalPeer::FESTIVAL_TYPE_ID, FestivalTypePeer::ID, $join_behavior);
 
         $criteria->addJoin(FestivalPeer::FESTIVAL_LOCATION_ID, FestivalLocationPeer::ID, $join_behavior);
 

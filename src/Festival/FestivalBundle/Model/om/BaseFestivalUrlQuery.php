@@ -153,7 +153,7 @@ abstract class BaseFestivalUrlQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT `ID`, `URL`, `FESTIVAL_URL_TYPE_ID`, `FESTIVAL_ID` FROM `festival_url` WHERE `ID` = :p0';
+        $sql = 'SELECT `id`, `url`, `festival_url_type_id`, `festival_id` FROM `festival_url` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);

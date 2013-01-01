@@ -1,58 +1,575 @@
 <!DOCTYPE html>
 <html lang="{{ app.request.get('_locale') }}">
-    <head>
-        <meta charset="UTF-8" />
-        <title>{% block title %}Demo Bundle{% endblock %}</title>
-        <link rel="icon" sizes="16x16" href="{{ asset('favicon.ico') }}" />
-        <link rel="stylesheet" href="{{ asset('bundles/acmedemo/css/demo.css') }}" />
-    </head>
-    <body>
-        <div id="symfony-wrapper">
-            <div id="symfony-header">
-            <h1>Festival Alarm</h1>  
+<!--[if lt IE 7 ]><html class="ie ie6" lang="{{ app.request.get('_locale') }}"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="{{ app.request.get('_locale') }}"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="{{ app.request.get('_locale') }}"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="{{ app.request.get('_locale') }}"> <!--<![endif]-->
+<head>
+
+	<!-- Basic Page Needs
+  ================================================== -->
+	<meta charset="utf-8">
+	<title>{% block title %}Demo Bundle{% endblock %}</title>
+	<meta name="description" content="{% block description %}{% endblock %}">
+	<meta name="keywords" content="{% block keywords %}{% endblock %}">
+
+	<!-- Mobile Specific Metas
+  ================================================== -->
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<!-- CSS
+  ================================================== -->
+	<link rel="stylesheet" href="{{ asset('bundles/festivalfestival/css/base.css') }}" />
+    <link rel="stylesheet" href="{{ asset('bundles/festivalfestival/css/layout.css') }}" />
+    <link rel="stylesheet" href="{{ asset('bundles/festivalfestival/css/skeleton.css') }}" />
+
+	<!--[if lt IE 9]>
+		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+
+	<!-- Favicons
+	================================================== -->
+    <link rel="icon" sizes="16x16" href="{{ asset('favicon.ico') }}" />
+	<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+	<link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+	<link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+
+	<!-- Fonts
+	================================================== -->	
+	<link href='http://fonts.googleapis.com/css?family=Oxygen:400,700,300' rel='stylesheet' type='text/css'>
+
+</head>
+<body>
+	<div class="page">
+
+		<div class="band header">
+	
+			<header class="container main">
+		<div class="one-third column">
+		&nbsp
+		</div>
+		
+				<div class="one-third column ">
+					<h1 class="logo"><a href="">Mad-kim</a></h1>
+				</div>
+					<div class="one-third column " style="float:right;text-align: right;">
+			
+					{# Small menu to access other languages #}
+			    		{% for index, lang in {'tr':'Turkish', 'en':'English'} %}
+			       		{% if index != app.request.get('_locale') %}
+			       		<a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale': index})) }}">{{ lang|trans }}</a></li>
+			       		{% endif %}
+			    		{% endfor %}
+			    		
+					
+					
+					</div>
+					
+					<!--http://themeforest.net/wiki/referral/basics-referral/banners-and-logos/-->
+					<a class="banner" href="#"><img src="images/banners/pd_468x60_v4.gif" alt="" /></a>
+				
+				
+			</header><!--end container-->
+			
+		</div><!--end band-->	
+		
+		<div class="band navigation">
+	
+			<nav class="container primary">
+		
+				<div class="sixteen columns">
+				
+					<ul>
+					
+						<li><a href="#">Hakkımızda</a>
+						
+							<ul>
+								<li><a href="#"><span>- </span>Firmamız</a></li>
+								<li><a href="#"><span>- </span>Tarihçe</a></li>
+								<li><a href="#"><span>- </span>Misyon</a></li>
+								<li><a href="#"><span>- </span>Vizyon</a></li>
+								<li><a href="#"><span>- </span>Çevre</a></li>
+							</ul>
+						
+						</li>
+						<li><a href="#">İşletmelerimiz</a>
+						
+							<ul>
+								<li><a href="#"><span>- </span>Güdecek Krom Cevheri Ocağı İşletmesi</a></li>
+								<li><a href="#"><span>- </span>Güdecek Krom Zenginleştirme Tesisi</a></li>
+								<li><a href="#"><span>- </span>Harmancık – Tavşanlı Bölgesi Manyezit Ocaklarımız</a></li>
+								<li><a href="#"><span>- </span>Bursa, Orhaneli Bej Mermer Ocağı İşletmesi</a></li>
+								<li><a href="#"><span>- </span>İstanbul, Danamandıra Kalker Ocağı İşletmesi</a></li>
+								<li><a href="#"><span>- </span>Eskişehir, Beylikova Sepiyolit Ocağı İşletmesi</a></li>
+							</ul>
+						
+						</li>
+						<li><a href="#">Ürünlerimiz</a>
+												
+							<ul>
+								<li><a href="#"><span>- </span>Krom - Konsantre Krom</a></li>
+								<li><a href="#"><span>- </span>Krom - Parça Krom</a></li>
+								<li><a href="#"><span>- </span>Bej Mermer (Blok)</a></li>
+								<li><a href="#"><span>- </span>Manyezit - Öğütülmiş</a></li>
+								<li><a href="#"><span>- </span>Manyezit - Kırılmış</a></li>
+								<li><a href="#"><span>- </span>Kalker</a></li>
+								<li><a href="#"><span>- </span>Sepiyolit</a></li>
+							</ul>
+						
+						</li>
+						<li><a href="#">Referanslarımız</a></li>
+						<li><a href="#">Duyurular</a></li>
+						<li><a href="#">İletişim</a></li>
+						
+					
+					</ul>
+				
+				</div>
+				
+			</nav><!--end container-->
+			
+		</div><!--end band-->	
+		
+			<div class="band chief">
+		
+				<div class="container">
+			
+					<div class="sixteen columns">
+						flexslider will be here
+					</div>
+					
+					<div id="welcome" class="sixteen columns">
+					    {% for flashMessage in app.session.flashbag.get('notice') %}
+			                <div class="flash-message">
+			                    <em>Notice</em>: {{ flashMessage }}
+			                </div>
+			            {% endfor %}
+			
+			            {% block content_header %}
+			                <ul id="menu">
+			                    {% block content_header_more %}
+			                        <li><a href="{{ path('_demo') }}">Demo Home</a></li>
+			                    {% endblock %}
+			                </ul>
+			
+			                <div style="clear: both"></div>
+			            {% endblock %}
+						    {% block content %}
+			                {% endblock %}
+			                {% if code is defined %}
+			                <h2>Code behind this page</h2>
+			                <div class="symfony-content">{{ code|raw }}</div>
+			            {% endif %}
+								
+					</div>
+
+					<div class="one-third column feature">&nbsp;</div>
+					<div class="one-third column feature">&nbsp;</div>
+					<div class="one-third column feature">
+						
+						<h2>Three</h2>
+						<img src="http://lorempixum.com/400/100/nature/3" />
+						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent euismod ultrices ante, ac laoreet nulla vestibulum adipiscing. Nam quis justo in augue auctor imperdiet. Curabitur aliquet orci sit amet est posuere consectetur.</p>
+					</div>
+						
+					<div class="ten columns">
+					
+						<article>
+						
+							<div class="three columns alpha thumbnail">
+							
+								<figure>
+								
+									<img src="{{ asset('bundles/sitepages/images/thumb_iceland.jpg') }}" alt="iceland" />
+								
+								</figure>
+							
+							</div><!--three-->	
+						
+							<div class="seven columns omega">
+							
+								<p class="breadcrumbs"><a href="#">Breadcrumb</a> &gt; <a href="#">trail</a></p>
+								
+								<h2>The Evolving Role of Social Media</h2>
+								
+								<p class="meta">Posted by <a href="#">Charlie</a> 1 hour ago <a href="#">30 comments</a></p>
+								
+								<p>A few years ago, news organizations were unsure about social. Journalists were apprehensive to create Twitter accounts and media companies questioned whether a branded Facebook fan page was necessary.</p>
+													
+							</div><!--seven-->	
+							
+							<hr />			
+						
+						</article><!--blog post-->
+					
+						<article>
+						
+							<div class="three columns alpha thumbnail">
+							
+								<figure>
+								
+									<img src="{{ asset('bundles/festivalfestival/images/thumb_iceland.jpg') }}" alt="iceland" />
+								
+								</figure>
+							
+							</div><!--three-->	
+						
+							<div class="seven columns omega">
+							
+								<p class="breadcrumbs"><a href="#">Breadcrumb</a> &gt; <a href="#">trail</a></p>
+								
+								<h2>The Evolving Role of Social Media</h2>
+								
+								<p class="meta">Posted by <a href="#">Charlie</a> 1 hour ago <a href="#">30 comments</a></p>
+								
+								<p>A few years ago, news organizations were unsure about social. Journalists were apprehensive to create Twitter accounts and media companies questioned whether a branded Facebook fan page was necessary.</p>
+													
+							</div><!--seven-->	
+							
+							<hr />			
+						
+						</article><!--blog post-->
+					
+						<article>
+						
+							<div class="three columns alpha thumbnail">
+							
+								<figure>
+								
+									<img src="{{ asset('bundles/festivalfestival/images/thumb_iceland.jpg') }}" alt="iceland" />
+								
+								</figure>
+							
+							</div><!--three-->	
+						
+							<div class="seven columns omega">
+							
+								<p class="breadcrumbs"><a href="#">Breadcrumb</a> &gt; <a href="#">trail</a></p>
+								
+								<h2>The Evolving Role of Social Media</h2>
+								
+								<p class="meta">Posted by <a href="#">Charlie</a> 1 hour ago <a href="#">30 comments</a></p>
+								
+								<p>A few years ago, news organizations were unsure about social. Journalists were apprehensive to create Twitter accounts and media companies questioned whether a branded Facebook fan page was necessary.</p>
+													
+							</div><!--seven-->	
+							
+							<hr />			
+						
+						</article><!--blog post-->
+					
+						<article>
+						
+							<div class="three columns alpha thumbnail">
+							
+								<figure>
+								
+									<img src="{{ asset('bundles/festivalfestival/images/thumb_iceland.jpg') }}" alt="iceland" />
+								
+								</figure>
+							
+							</div><!--three-->	
+						
+							<div class="seven columns omega">
+							
+								<p class="breadcrumbs"><a href="#">Breadcrumb</a> &gt; <a href="#">trail</a></p>
+								
+								<h2>The Evolving Role of Social Media</h2>
+								
+								<p class="meta">Posted by <a href="#">Charlie</a> 1 hour ago <a href="#">30 comments</a></p>
+								
+								<p>A few years ago, news organizations were unsure about social. Journalists were apprehensive to create Twitter accounts and media companies questioned whether a branded Facebook fan page was necessary.</p>
+													
+							</div><!--seven-->	
+							
+							<hr />			
+						
+						</article><!--blog post-->
+						
+						<nav class="pagination">
+						
+							<ul>
+							
+								<li><a class="selected" href="#">1</a></li>
+								<li><a href="#">2</a></li>
+								<li><a href="#">3</a></li>
+								<li><a href="#">4</a></li>
+								<li><a href="#">5</a></li>
+								<li><a href="#">6</a></li>
+							
+							</ul>
+						
+						</nav><!--end pagination-->												
+					
+					</div><!--end ten-->			
+			
+					<aside class="six columns">
+						
+						<div class="sub subscribe clearfix">
+						
+							<header>
+							
+								<h4>Subscribe</h4>
+							
+							</header>
+							
+							<div class="three columns alpha">
+							
+								<span class="icon rss">r</span>
+								
+								<p><em>18,857</em><br />
+								subscribers</p>
+							
+							</div><!--end alpha-->
+							
+							<div class="three columns omega">
+							
+								<span class="icon twitter">t</span>
+								
+								<p><em>13,756</em><br />
+								followers</p>
+							
+							</div><!--end omega-->
+						
+						</div><!--end sub subscribe-->	
+						
+						<div class="sub search">
+						
+							<header>
+							
+								<h4>Search</h4>
+							
+							</header>
+							
+							<form class="search clearfix">
+							
+								<input type="search" placeholder="eg: Cheese" value="">
+								
+								<button type="submit">Search</button>
+							
+							</form><!--end search-->
+						
+						</div><!--end sub search-->	
+						
+						<div class="sub sponsors clearfix">
+						
+							<header>
+							
+								<h4>Sponsors</h4>
+							
+							</header>
+							
+							<!--http://themeforest.net/wiki/referral/basics-referral/banners-and-logos/-->
+							<a class="mini" href="#"><img src="{{ asset('bundles/festivalfestival/images/banners/cc_260x120_v4.gif') }}" alt="" /></a>
+							<a class="mini" href="#"><img src="{{ asset('bundles/festivalfestival/images/banners/pd_260x120_v4.gif') }}" alt="" /></a>
+							<a class="mini" href="#"><img src="{{ asset('bundles/festivalfestival/images/banners/tf_260x120_v2.gif') }}" alt="" /></a>
+							<a class="mini" href="#"><img src="{{ asset('bundles/festivalfestival/images/banners/vh_260x120_v1.gif') }}" alt="" /></a>
+							
+							<a class="maxi" href="#"><img src="images/banners/gr_300x250_v3.gif" alt="" /></a>
+							<a class="maxi" href="#"><img src="images/banners/tf_300x250_v1.gif" alt="" /></a>
+																
+						</div><!--end sub sponsors-->	
+										
+						<div class="sub popular">
+						
+							<header>
+							
+								<h4>Most Popular</h4>
+							
+							</header>
+							
+							<ul class="tabs">					
+								<li><a class="active" href="#popular">Popular</a></li>
+								<li><a class="" href="#recent">Recent</a></li>
+								<li><a class="" href="#tags">Tags</a></li>					
+							</ul>
+							
+							<ul class="tabs-content">
+								<li class="active" id="popular">The tabs are clean and simple unordered-list markup and basic CSS.</li>
+								<li id="recent">The tabs are cross-browser, but don't need a ton of hacky CSS or markup.</li>
+							  	<li id="tags">The tabs work like a charm even on mobile devices.</li>
+							</ul>
+																
+						</div><!--end sub popular-->	
+						
+						<div class="sub news">
+						
+							<header>
+							
+								<h4>Magazine News</h4>
+							
+							</header>
+							
+							<form class="subscribe clearfix">
+							
+								<input type="email" placeholder="you@domain" value="">
+								
+								<button type="submit">Subscribe</button>
+							
+							</form><!--end search-->
+																
+						</div><!--end sub news-->
+						
+						<div class="sub categories clearfix">
+						
+							<header>
+							
+								<h4>Categories</h4>
+							
+							</header>
+							
+							<div class="three columns alpha">
+							
+								<ul class="categories">
+								
+									<li><a href="#">Facebook</a></li>
+									<li><a href="#">Twitter</a></li>
+									<li><a href="#">YouTube</a></li>
+								
+								</ul><!--end cats-->
+							
+							</div><!--end alpha-->
+							
+							<div class="three columns omega">
+							
+								<ul class="categories">
+								
+									<li><a href="#">About</a></li>
+									<li><a href="#">Contact</a></li>
+									<li><a href="#">Write for us</a></li>
+								
+								</ul><!--end cats-->
+							
+							</div><!--end omega-->
+																
+						</div><!--end sub cats-->	
+						
+						<div class="sub video">
+						
+							<header>
+							
+								<h4>Video of the Week</h4>
+							
+							</header>
+							
+							<figure>
+							
+								<div class="embed">
+								
+								<iframe src="http://player.vimeo.com/video/22679618" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>					
+								
+								</div><!--end embed-->
+								
+								<figcaption>
+								
+									<a href="http://vimeo.com/22679618">Apache</a> from <a href="http://vimeo.com/oneedo">oneedo</a>
+								
+								</figcaption>
+							
+							</figure>
+																					
+						</div><!--end sub video-->				
+					
+					</aside><!--end six-->
+					
+				</div><!--end container-->
+				
+			</div><!--end band-->	
+		
+		<div class="band footer">	
+		
+			<footer class="container main">
+			
+				<div class="four columns">
+				
+					<h3 class="logo"><a href="#">Magazine</a></h3>
+				
+					<p>Magazine was founded in 2012. </p>
+	
+					<p>Magazine is a full service Web Design, Marketing and Advertising Company geared to help small to medium size businesses create a plan to succeed. Form Graphics, Print (Display ad, brochures, etc.), Internet research & Marketing and Web Site Design and Development, Magazine can do it all for you.</p>
+					
+					<p>Our mission is to serve our clients big or small with the same passion, integrity, loyalty and effectiveness</p>
+					
+				</div><!--end four-->
+			
+				<div class="four columns">
+						
+					<header>
+						<h4>Twitter</h4>
+					</header>
+					
+					<div class="tweet"></div>
+					
+				</div><!--end four-->
+			
+				<div class="four columns">
+						
+					<header>
+						<h4>Recent Posts</h4>
+					</header>
+						
+					<ul>
+					
+						<li>TVGuide.com Watchlist Predicts Fall TV Shows Success</li>				
+						<li>7 Ways to Create a Memorable Customer Experience With Social</li>				
+						<li>Apple Gives Its Key Execs $400 Million in Bonuses</li>				
+						<li>How 5 Tech Giants Are Giving Back to Education</li>						
+					
+					</ul>
+						
+				</div><!--end four-->
+			
+				<div class="four columns">
+						
+					<header>
+						<h4>Flickr</h4>
+					</header>
+					
+					<div class="flickr"></div>	
+						
+				</div><!--end four-->			
+		
+			</footer><!-- container -->
+		
+		</div><!--end band-->
+		
+		<div class="band bottom">	
+		
+			<footer class="container">		
+			
+				<div class="eight columns first-credit">
+					<p>Copyright &copy; 2012 <a href="#">Magazine</a> All Rights Reserved.</p>
+				</div><!--end eight-->
+			
+				<div class="eight columns last-credit">
+					<p>Powered by Webdesigntuts+ - Designed &amp; Developed By <a href="#">Mahdi El Hanafi</a>.</p>		
+				</div><!--end eight-->
+		
+			</footer><!-- container -->
+		
+		</div><!--end band-->
+
+	</div><!--end page-->	
 
 
-<nav>
-    <ul>
-    {# Small menu to access other languages #}
-    {% for index, lang in {'tr':'Turkish','fr':'French', 'en':'English'} %}
-       {% if index != app.request.get('_locale') %}
-       <li><a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale': index })) }}">{{ lang|trans }}</a></li>
-       {% endif %}
-    {% endfor %}
-    </ul>
-</nav>
-          
-	    </div>
-	    
+	<!-- JS
+	================================================== -->
+	<script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+	<script src="{{ asset('bundles/sitepages/js/tabs.js') }}"></script>	
+	
+	<!--plugins-->
+    <script src="{{ asset('bundles/sitepages/js/jquery.tweet.js') }}"></script>	
+	<script src="{{ asset('bundles/sitepages/js/jquery.flickrush.js') }}"></script>	
+	<script src="{{ asset('bundles/sitepages/js/jquery.flexslider.js') }}"></script>	
+	<!--instantiate js plugins-->
+	<script src="{{ asset('bundles/sitepages/js/whatever.js') }}"></script>	
+	
 
-            {% for flashMessage in app.session.flashbag.get('notice') %}
-                <div class="flash-message">
-                    <em>Notice</em>: {{ flashMessage }}
-                </div>
-            {% endfor %}
 
-            {% block content_header %}
-                <ul id="menu">
-                    {% block content_header_more %}
-                        <li><a href="{{ path('_demo') }}">Demo Home</a></li>
-                    {% endblock %}
-                </ul>
-
-                <div style="clear: both"></div>
-            {% endblock %}
-
-            <div class="symfony-content">
-                {% block content %}
-                {% endblock %}
-            </div>
-
-            {% if code is defined %}
-                <h2>Code behind this page</h2>
-                <div class="symfony-content">{{ code|raw }}</div>
-            {% endif %}
-        </div>
-    </body>
+<!-- End Document
+================================================== -->
+</body>
 </html>
+
 
 
