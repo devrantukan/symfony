@@ -7,8 +7,7 @@
 {% block content %}
 
 {% for festival in festivals %}
- 	<a href="{{ path('_festival_show', {'slug': festival.slug}) }}">{{ festival.title }}</a>
-        <li>{{ festival.desc }}</li>
+ 	<a href="{{ path('_festival_show', {'slug': festival.slug}) }}">{{ festival.festivalContentTitle }}</a>
     {% else %}
         <li>{% trans %}No festivals found{% endtrans %}</li>
 {% endfor %}

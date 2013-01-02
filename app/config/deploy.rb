@@ -23,12 +23,13 @@ set  :keep_releases,  3
 set  :deploy_via, :copy
 set  :user,       "festiva1"
 set  :use_sudo,   false
+set  :use_composer, true
 
 
 
 
 # Update vendors during the deploy
-set :update_vendors, true
+set :update_vendors,    true 
 
 # Set some paths to be shared between versions
 set :shared_files,    ["app/config/parameters.ini"]

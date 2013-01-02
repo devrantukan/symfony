@@ -2,7 +2,7 @@ set :domain, "festivaltomorrow.com"
 set :application, "festivaltomorrow.com"
 
 set :serverName, "sg111.servergrove.com" # The server's hostname
-set :deploy_to,       "/var/www/vhosts/yourdomain.com/symfony_projects/"
+set :deploy_to,       "/var/www/vhosts/festivaltomorrow.com/symfony_projects/"
 ssh_options[:port] = 22123
 ssh_options[:paranoid] = false
 default_run_options[:pty] = true  
@@ -28,7 +28,7 @@ set  :use_sudo,   false
 
 
 # Update vendors during the deploy
-set :update_vendors, true
+set :update_vendors,    true 
 
 # Set some paths to be shared between versions
 set :shared_files,    ["app/config/parameters.ini"]
